@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Proposal</title>
+    <style>
+        /* Add your CSS styling here */
+        .readonly-field {
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            padding: 8px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Proposal Details</h2>
+    <div>
+        <label for="proposal_id">Proposal ID:</label>
+        <div id="proposal_id" class="readonly-field"></div>
+    </div>
+    <div>
+        <label for="title">Title:</label>
+        <div id="title" class="readonly-field"></div>
+    </div>
+    <div>
+        <label for="college">College:</label>
+        <div id="college" class="readonly-field"></div>
+    </div>
+    <div>
+        <label for="department">Department:</label>
+        <div id="department" class="readonly-field"></div>
+    </div>
+    <div>
+        <label for="objectives">Objectives:</label>
+        <div id="objectives" class="readonly-field"></div>
+    </div>
+    <button onclick="goBack()">Back to List</button>
+
+    <script>
+        const scriptURL = 'YOUR_GOOGLE_APPS_SCRIPT_URL';
+
+        // Function to fetch proposal details
+        async function fetchProposalDetails(proposalId) {
+            const response = await fetch(scriptURL, {
+                method: 'POST',
+                body: JSON.stringify({ action: 'read', proposal_id: proposalId }),
+                headers: { 'Content-Type': 'application/json' }
+            });
+            const proposal = await response.json();
+            document.getElementById('proposal_id').textContent = proposal.proposal_id;
+            document.getElementById('title').textContent = proposal.title;
+            document.getElementById('college').textContent = proposal.college;
+            document.getElementById('department').textContent = proposal.department;
+            document.getElementById('objectives').textContent = proposal.objectives;
+        }
+
+        // Get proposal_id from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const proposalId = urlParams.get('proposal_id');
+        if (proposalId) {
+            fetchProposalDetails(proposalId);
+        } else {
+            alert('No proposal ID provided.');
+            // Optionally, redirect to another page
+        }
+
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+</body>
+</html>

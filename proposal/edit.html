@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Proposal</title>
+</head>
+<body>
+    <h2>Edit Proposal</h2>
+    <form id="edit-proposal-form" onsubmit="submitForm(event)">
+        <input type="hidden" id="proposal_id">
+        <input type="text" id="title" placeholder="Title" required>
+        <input type="text" id="college" placeholder="College" required>
+        <input type="text" id="department" placeholder="Department" required>
+        <textarea id="objectives" placeholder="Objectives" required></textarea>
+        <button type="submit">Update Proposal</button>
+    </form>
+    <script>
+        const scriptURL = 'YOUR_GOOGLE_APPS_SCRIPT_URL';
+
+        // Function to fetch proposal details
+        async function fetchProposalDetails(proposalId) {
+            const response = await fetch(scriptURL, {
+                method: 'POST',
+                body: JSON.stringify({ action: 'read', proposal_id: proposalId }),
+                headers: { 'Content-Type': 'application/json' }
+            });
+            const proposal = await response.json();
+            document.getElementById('proposal_id').value = proposal.proposal_id;
+            document.getElementById('title').value = proposal.title;
+            document.getElementById('college').value = proposal.college;
+            document.getElementById('department').value = proposal.department;
+            document.getElementById('objectives').value = proposal.objectives;
+        }
+
+        // Call this function with the appropriate proposal_id when the page loads
+        const urlParams = new URLSearchParams(window.location.search);
+        const proposalId = urlParams.get('proposal_id');
+        if (proposalId) {
+            fetchProposalDetails(proposalId);
+        }
+
+        async function submitForm(event) {
+            event.preventDefault();
+            const proposalData = {
+                action: 'update',
+                proposal_id: document.getElementById('proposal_id').value,
+                title: document.getElementById('title').value,
+                college: document.getElementById('college').value,
+                department: document.getElementById('department').value,
+                objectives: document.getElementById('objectives').value
+            };
+            const response = await fetch(scriptURL, {
+                method: 'POST',
+                body: JSON.stringify(proposalData),
+                headers: { 'Content-Type': 'application/json' }
+            });
+            const result = await response.json();
+            alert(result.status);
+        }
+    </script>
+</body>
+</html>

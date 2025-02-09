@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proposal Tracking System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h2 {
+            margin-bottom: 10px;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        input, textarea {
+            display: block;
+            margin-bottom: 10px;
+            padding: 8px;
+            width: 300px;
+        }
+        button {
+            padding: 8px 12px;
+            margin-right: 5px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+    </style>
+</head>
+<body>
+    <h2>Proposal Tracking System</h2>
+
+    <!-- Form for Adding/Editing Proposals -->
+    <form id="proposal-form" onsubmit="handleFormSubmit(event)">
+        <input type="hidden" id="proposal_id">
+        <input type="text" id="title" placeholder="Title" required>
+        <input type="text" id="college" placeholder="College" required>
+        <input type="text" id="department" placeholder="Department" required>
+        <textarea id="objectives" placeholder="Objectives" required></textarea>
+        <button type="submit">Save Proposal</button>
+        <button type="button" onclick="resetForm()">Cancel</button>
+    </form>
+
+    <!-- Table to Display Proposals -->
+    <h3>Proposals</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Proposal ID</th>
+                <th>Title</th>
+                <th>College</th>
+                <th>Department</th>
+                <th>Objectives</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="proposal-list"></tbody>
+    </table>
+
+    <script>
+        const scriptURL = 'YOUR_GOOGLE_APPS_SCRIPT_URL';
+
+        // Fetch and Display Proposals
+        async function fetchProposals() {
+            const response = await fetch(scriptURL, {
+                method: 'POST',
+                body: JSON.stringify({ action: 'read' }),
+                headers: { 'Content-Type': 'application/json' }
+            });
+            const result = await response.json();
+            if (result.success) {
+                const proposals = result.data;
+                const tableBody = document.getElementById('proposal-list');
+                tableBody.innerHTML = '';
+                proposals.forEach(proposal => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${proposal.proposal_id}</td>
+                        <td>${proposal.title}</td>
+                        <td>${proposal.college}</td>
+                        <td>${proposal.department}</td>
+                        <td>${proposal.objectives}</td>
+                        <td>
+                            <button onclick="editProposal('${proposal.proposal_id}')">Edit</button>
+                            <button onclick="deleteProposal('${proposal.proposal_id}')">Delete</button>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            } else {
+                alert('Failed to fetch proposals');
+            }
+        }
+
+        // Handle Form Submission for Add/Edit
+        async function handleFormSubmit(event) {
+            event.preventDefault();
+            const proposalData = {
+                action: document.getElementById('proposal_id').value ? 'update' : 'create',
+                proposal_id: document.getElementById('proposal_id').value || generateUniqueId(),
+                title: document.getElementById('title').value,
+                college: document.getElementById('college').value,
+                department: document.getElementById('department').value,
+                objectives: document.getElementById('objectives').value
+            };
+            const response = await fetch(scriptURL, {
+                method: 'POST',
+                body: JSON.stringify(proposalData),
+                headers: { 'Content-Type': 'application/json' }
+            });
+            const result = await response.json();
+            alert(result.data);
+            resetForm();
+            fetchProposals();
+        }
+
+        // Edit Proposal
+        function editProposal(proposalId) {
+            const row = Array.from(document.querySelectorAll('#proposal-list tr')).find(
+                row => row.children[0].textContent === proposalId
+            );
+            if (row) {
+                document.getElementById('proposal_id').value = proposalId;
+                document.getElementById('title').value = row.children[1].textContent;
+                document.getElementById('college').value = row.children[2].textContent;
+                document.getElementById('department').value = row.children[3].textContent;
+                document.getElementById('objectives').value = row.children[4].textContent;
+            }
+        }
+
+        // Delete Proposal
+        async function deleteProposal(proposalId) {
+            if (confirm('Are you sure you want to delete this proposal?')) {
+                const response = await fetch(scriptURL, {
+                    method: 'POST',
+                    body: JSON.stringify({ action: 'delete', proposal_id: proposalId }),
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                const result = await response.json();
+                alert(result.data);
+                fetchProposals();
+            }
+        }
+
+        // Reset Form
+        function resetForm() {
+            document.getElementById('proposal-form').reset();
+            document.getElementById('proposal_id').value = '';
+        }
+
+        // Generate Unique ID for New Proposals
+        function generateUniqueId() {
+            return 'proposal_' + Date.now();
+        }
+
+        // Initialize
+        fetchProposals();
+    </script>
+</body>
+</html>

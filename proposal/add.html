@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Proposal</title>
+</head>
+<body>
+    <h2>Add New Proposal</h2>
+    <form id="add-proposal-form" onsubmit="submitForm(event)">
+        <input type="text" id="title" placeholder="Title" required>
+        <input type="text" id="college" placeholder="College" required>
+        <input type="text" id="department" placeholder="Department" required>
+        <textarea id="objectives" placeholder="Objectives" required></textarea>
+        <button type="submit">Add Proposal</button>
+    </form>
+    <script>
+        const scriptURL = 'YOUR_GOOGLE_APPS_SCRIPT_URL';
+
+        async function submitForm(event) {
+            event.preventDefault();
+            const proposalData = {
+                action: 'create',
+                title: document.getElementById('title').value,
+                college: document.getElementById('college').value,
+                department: document.getElementById('department').value,
+                objectives: document.getElementById('objectives').value
+            };
+            const response = await fetch(scriptURL, {
+                method: 'POST',
+                body: JSON.stringify(proposalData),
+                headers: { 'Content-Type': 'application/json' }
+            });
+            const result = await response.json();
+            alert(result.status);
+            document.getElementById('add-proposal-form').reset();
+        }
+    </script>
+</body>
+</html>
