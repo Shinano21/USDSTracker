@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Management</title>
+</head>
+<body>
+    <h2>Account Management</h2>
+
+    <h3>Create Account</h3>
+    <input type="text" id="newUsername" placeholder="Username">
+    <input type="password" id="newPassword" placeholder="Password">
+    <select id="newRole">
+        <option value="user">User</option>
+        <option value="admin">Admin</option>
+    </select>
+    <button onclick="createAccount()">Create Account</button>
+
+    <h3>Delete Account</h3>
+    <input type="text" id="deleteUsername" placeholder="Username to delete">
+    <button onclick="deleteAccount()">Delete Account</button>
+
+    <script>
+        async function createAccount() {
+            let username = document.getElementById("newUsername").value;
+            let password = document.getElementById("newPassword").value;
+            let role = document.getElementById("newRole").value;
+
+            const response = await fetch("https://script.google.com/macros/s/AKfycbwB7e94XZVjLQkdCdR0_9jhE3DFONVWYfx8Wum6vITjYSm4SjxV2GTQlEIOMX1l1L3l/exec", {
+                method: "POST",
+                body: JSON.stringify({ action: "createAccount", username, password, role }),
+                headers: { "Content-Type": "application/json" }
+            });
+
+            const result = await response.json();
+            alert(result.message);
+        }
+
+        async function deleteAccount() {
+            let username = document.getElementById("deleteUsername").value;
+
+            const response = await fetch("https://script.google.com/macros/s/AKfycbwB7e94XZVjLQkdCdR0_9jhE3DFONVWYfx8Wum6vITjYSm4SjxV2GTQlEIOMX1l1L3l/exec", {
+                method: "POST",
+                body: JSON.stringify({ action: "deleteAccount", username }),
+                headers: { "Content-Type": "application/json" }
+            });
+
+            const result = await response.json();
+            alert(result.message);
+        }
+    </script>
+</body>
+</html>
