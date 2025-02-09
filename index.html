@@ -17,7 +17,7 @@
             let password = document.getElementById("password").value;
 
             try {
-                const response = await fetch("https://script.google.com/macros/s/AKfycbwZfrw8V3XTSA9qfV6SbTTJEJiTeZI9ug_QuCeGg5RZzJ1luDauCLb6smfrMcGGybjd/exec", {
+                const response = await fetch("https://script.google.com/macros/s/AKfycbw2PwWaE2zg3SWyeUJJAODFUK26dWTxGiNVH7gspdHK8QFYDKcxwV05RQ2YFLxzSoyn/exec", {
                     method: "POST",
                     body: JSON.stringify({ action: "login", username, password }),
                     headers: { "Content-Type": "application/json" }
