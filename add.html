@@ -23,7 +23,7 @@
             max-width: 1200px;
             text-align: center;
         }
-        h2 {
+        h2, h3 {
             margin-bottom: 20px;
             color: #333;
         }
@@ -81,6 +81,11 @@
             margin-top: 5px;
             text-align: left;
         }
+        .section {
+            border-top: 1px solid #ccc;
+            padding-top: 20px;
+            margin-top: 20px;
+        }
         @media (max-width: 768px) {
             .form-grid {
                 grid-template-columns: 1fr;
@@ -96,112 +101,194 @@
         <h2>Proposal Submission</h2>
         <form id="proposalForm" action="https://script.google.com/macros/s/AKfycbyHKJ6-qlH4F3dLdUNuu2mcyiQHhv7kTd7cfWnqustB9nD3aquVk0xkmmp4t7Uj620/exec" method="POST">
             <input type="hidden" name="type" value="proposal">
+
+            <!-- Proposal Id and Title -->
             <div class="form-grid">
                 <div>
-                    <label for="particulars">Title of Activity:</label>
-                    <textarea id="particulars" name="particulars" rows="4" placeholder="Enter title..." required></textarea>
+                    <label for="proposalId">Proposal Id:</label>
+                    <input type="text" id="proposalId" name="proposalId" placeholder="Enter proposal ID" required>
                 </div>
                 <div>
-                    <label for="college">College:</label>
-                    <select id="college" name="college" onchange="updateDepartments()" required>
-                        <option value="">Select College</option>
-                        <option value="College1">College1</option>
-                        <option value="College2">College2</option>
-                    </select>
+                    <label for="title">Title of Activity:</label>
+                    <textarea id="title" name="title" rows="4" placeholder="Enter title..." required></textarea>
                 </div>
-                <div>
-                    <label for="department">Department:</label>
-                    <select id="department" name="department" required>
-                        <option value="">Select Department</option>
-                    </select>
+            </div>
+
+            <!-- Implementing Unit -->
+            <div class="section">
+                <h3>Implementing Unit</h3>
+                <div class="form-grid">
+                    <div>
+                        <label for="college">College:</label>
+                        <select id="college" name="college" onchange="updateDepartments()" required>
+                            <option value="">Select College</option>
+                            <option value="College1">College1</option>
+                            <option value="College2">College2</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="department">Department:</label>
+                        <select id="department" name="department" required>
+                            <option value="">Select Department</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="others">If others, please specify:</label>
+                        <input type="text" id="others" name="others" placeholder="Specify if others">
+                    </div>
                 </div>
-                <div>
-                    <label for="others">If others, please specify:</label>
-                    <input type="text" id="others" name="others" placeholder="Specify if others">
+            </div>
+
+            <!-- Basic Information of the Activity -->
+            <div class="section">
+                <h3>Basic Information of the Activity</h3>
+                <div class="form-grid">
+                    <div>
+                        <label for="objectives">Objectives:</label>
+                        <textarea id="objectives" name="objectives" rows="4" placeholder="Enter objectives..." required></textarea>
+                    </div>
+                    <div>
+                        <label for="nature">Nature/Classification:</label>
+                        <select id="nature" name="nature" required>
+                            <option value="">Select Nature/Classification</option>
+                            <option value="Type1">Type1</option>
+                            <option value="Type2">Type2</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="locale">Locale:</label>
+                        <input type="text" id="locale" name="locale" placeholder="Enter locale" required>
+                    </div>
+                    <div>
+                        <label for="duration">Duration of Activity:</label>
+                        <input type="text" id="duration" name="duration" placeholder="Enter duration" required>
+                    </div>
                 </div>
-                <div>
-                    <label for="objectives">Objectives:</label>
-                    <textarea id="objectives" name="objectives" rows="4" placeholder="Enter objectives..." required></textarea>
+            </div>
+
+            <!-- Funding Requirement -->
+            <div class="section">
+                <h3>Funding Requirement</h3>
+                <div class="form-grid">
+                    <div>
+                        <label for="funding">Funding Source:</label>
+                        <input type="text" id="funding" name="funding" placeholder="Enter funding source" required>
+                    </div>
+                    <div>
+                        <label for="amount">Total Amount:</label>
+                        <input type="number" id="amount" name="amount" step="0.01" placeholder="Enter amount" required>
+                        <div id="amountError" class="error"></div>
+                    </div>
                 </div>
-                <div>
-                    <label for="nature">Nature/Classification:</label>
-                    <select id="nature" name="nature" required>
-                        <option value="">Select Nature/Classification</option>
-                        <option value="Type1">Type1</option>
-                        <option value="Type2">Type2</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="locale">Locale:</label>
-                    <input type="text" id="locale" name="locale" placeholder="Enter locale" required>
-                </div>
-                <div>
-                    <label for="duration">Duration of Activity:</label>
-                    <input type="text" id="duration" name="duration" placeholder="Enter duration" required>
-                </div>
-                <div>
-                    <label for="funding">Funding Source:</label>
-                    <input type="text" id="funding" name="funding" placeholder="Enter funding source" required>
-                </div>
-                <div>
-                    <label for="amount">Total Amount:</label>
-                    <input type="number" id="amount" name="amount" step="0.01" placeholder="Enter amount" required>
-                    <div id="amountError" class="error"></div>
-                </div>
+            </div>
+
+            <!-- Contact and Documents -->
+            <div class="form-grid">
                 <div>
                     <label for="contact">Number/Email of Contact Person:</label>
                     <input type="text" id="contact" name="contact" placeholder="Enter contact info" required>
                 </div>
                 <div>
-                    <label for="documents">Scanned Copy of Documents:</label>
-                    <input type="text" id="documents" name="documents" placeholder="URL or file reference" >
+                    <label for="documents">Scanned Copy of Documents (with signatories):</label>
+                    <input type="text" id="documents" name="documents" placeholder="URL or file reference">
                 </div>
-                <div>
-                    <label for="csac">Action of CSAC:</label>
-                    <input type="text" id="csac" name="csac" placeholder="Enter CSAC action" >
-                </div>
-                <div>
-                    <label for="remarks">Remarks:</label>
-                    <textarea id="remarks" name="remarks" rows="4" placeholder="Enter remarks"></textarea>
-                </div>
-                <div>
-                    <label for="docSeq">DOC. SEQ. No.:</label>
-                    <input type="text" id="docSeq" name="docSeq" placeholder="Enter sequence number" required>
-                    <div id="docSeqError" class="error"></div>
-                </div>
-                <div>
-                    <label for="copies">No of Copies:</label>
-                    <input type="number" id="copies" name="copies" min="1" placeholder="Enter number of copies" required>
-                    <div id="copiesError" class="error"></div>
-                </div>
-                <div>
-                    <label for="receiver">RECEIVER:</label>
-                    <input type="text" id="receiver" name="receiver" placeholder="Enter receiver" >
-                </div>
-                <div>
-                    <label for="usds">Action of USDS:</label>
-                    <input type="text" id="usds" name="usds" placeholder="Enter USDS action" >
-                </div>
-                <div>
-                    <label for="notations">Notations:</label>
-                    <textarea id="notations" name="notations" rows="4" placeholder="Enter notations"></textarea>
-                </div>
-                <div>
-                    <label for="status">Status:</label>
-                    <select id="status" name="status" >
-                        <option value="">Select Status</option>
-                        <option value="Pending">Pending</option>
-                        <option value="Returned">Returned</option>
-                        <option value="Forwarded">Forwarded</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="office">Office Destination:</label>
-                    <input type="text" id="office" name="office" placeholder="Enter office destination">
-                </div>
-                <button type="submit" class="submit-btn">Submit</button>
-                <button class="back-btn" onclick="goBack()">Go Back</button>
             </div>
+
+            <!-- 1st Evaluation & Review of Compliance -->
+            <div class="section">
+                <h3>1st Evaluation & Review of Compliance</h3>
+                <div class="form-grid">
+                    <div>
+                        <label for="csac">Action of CSAC:</label>
+                        <input type="text" id="csac" name="csac" placeholder="Enter CSAC action">
+                    </div>
+                    <div>
+                        <label for="remarks">Remarks:</label>
+                        <textarea id="remarks" name="remarks" rows="4" placeholder="Enter remarks"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Received by USDS -->
+            <div class="section">
+                <h3>Received by USDS</h3>
+                <div class="form-grid">
+                    <div>
+                        <label for="docSeq">DOC. SEQ. No.:</label>
+                        <input type="text" id="docSeq" name="docSeq" placeholder="Enter sequence number" required>
+                        <div id="docSeqError" class="error"></div>
+                    </div>
+                    <div>
+                        <label for="copies">No of Copies:</label>
+                        <input type="number" id="copies" name="copies" min="1" placeholder="Enter number of copies" required>
+                        <div id="copiesError" class="error"></div>
+                    </div>
+                    <div>
+                        <label for="receiver">RECEIVER:</label>
+                        <input type="text" id="receiver" name="receiver" placeholder="Enter receiver">
+                    </div>
+                    <div>
+                        <label for="dateTime">DATE & TIME:</label>
+                        <input type="datetime-local" id="dateTime" name="dateTime">
+                    </div>
+                    <div>
+                        <label for="processDuration">Duration of Process:</label>
+                        <input type="text" id="processDuration" name="processDuration" placeholder="Enter duration">
+                    </div>
+                    <div>
+                        <label for="releaseDateTime">Expected Date & Time of Release:</label>
+                        <input type="datetime-local" id="releaseDateTime" name="releaseDateTime">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2nd Evaluation & Review of Compliance -->
+            <div class="section">
+                <h3>2nd Evaluation & Review of Compliance</h3>
+                <div class="form-grid">
+                    <div>
+                        <label for="usds">Action of USDS:</label>
+                        <input type="text" id="usds" name="usds" placeholder="Enter USDS action">
+                    </div>
+                    <div>
+                        <label for="notations">Notations:</label>
+                        <textarea id="notations" name="notations" rows="4" placeholder="Enter notations"></textarea>
+                    </div>
+                    <div>
+                        <label for="status">Status:</label>
+                        <select id="status" name="status">
+                            <option value="">Select Status</option>
+                            <option value="Pending">Pending</option>
+                            <option value="Returned">Returned</option>
+                            <option value="Forwarded">Forwarded</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="evalDateTime">Date and Time:</label>
+                        <input type="datetime-local" id="evalDateTime" name="evalDateTime">
+                    </div>
+                    <div>
+                        <label for="office">Office Destination:</label>
+                        <input type="text" id="office" name="office" placeholder="Enter office destination">
+                    </div>
+                    <div>
+                        <label for="onTime">Accomplished on time?</label>
+                        <select id="onTime" name="onTime">
+                            <option value="">Select</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="returnDateTime">If Returned, Date & Time:</label>
+                        <input type="datetime-local" id="returnDateTime" name="returnDateTime">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Buttons -->
+            <button type="submit" class="submit-btn">Submit</button>
+            <button class="back-btn" onclick="goBack()">Go Back</button>
         </form>
     </div>
 
