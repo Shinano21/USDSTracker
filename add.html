@@ -247,7 +247,7 @@
         function goBack() {
             window.location.href = 'https://shinano21.github.io/OSASCommsTracker/dashboard.html';
         }
-
+    
         function updateDepartments() {
             const college = document.getElementById("college").value;
             const departmentSelect = document.getElementById("department");
@@ -267,10 +267,12 @@
                 });
             }
         }
-
+    
         document.getElementById('proposalForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission
+    
             let valid = true;
-
+    
             let amount = document.getElementById('amount');
             let amountError = document.getElementById('amountError');
             if (!amount.value || isNaN(amount.value) || amount.value <= 0) {
@@ -279,7 +281,7 @@
             } else {
                 amountError.textContent = '';
             }
-
+    
             let docSeq = document.getElementById('docSeq');
             let docSeqError = document.getElementById('docSeqError');
             if (!docSeq.value) {
@@ -288,7 +290,7 @@
             } else {
                 docSeqError.textContent = '';
             }
-
+    
             let copies = document.getElementById('copies');
             let copiesError = document.getElementById('copiesError');
             if (!copies.value || isNaN(copies.value) || copies.value < 1) {
@@ -297,10 +299,34 @@
             } else {
                 copiesError.textContent = '';
             }
-
-            if (!valid) {
-                event.preventDefault();
-            }
+    
+            if (!valid) return;
+    
+            // Construct JSON payload
+            const formData = new FormData(this);
+            const data = {};
+            formData.forEach((value, key) => {
+                data[key] = value;
+            });
+            data.action = "add"; // Add an action to match your server logic
+    
+            // Send JSON to Google Apps Script
+            fetch('https://script.google.com/macros/s/AKfycbyHKJ6-qlH4F3dLdUNuu2mcyiQHhv7kTd7cfWnqustB9nD3aquVk0xkmmp4t7Uj620/exec', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.text())
+            .then(result => {
+                alert('Proposal submitted successfully!');
+                console.log(result);
+            })
+            .catch(error => {
+                alert('Error submitting proposal.');
+                console.error(error);
+            });
         });
     </script>
 </body>
