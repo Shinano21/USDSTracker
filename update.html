@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Proposal</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f4; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .container { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); width: 90%; max-width: 1200px; text-align: center; }
+        h2 { margin-bottom: 20px; color: #333; }
+        .form-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        label { font-weight: bold; display: block; margin-top: 10px; text-align: left; }
+        input, select, textarea { width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; box-sizing: border-box; }
+        textarea { resize: vertical; min-height: 80px; }
+        button { grid-column: span 3; padding: 12px; font-size: 16px; border-radius: 4px; cursor: pointer; margin-top: 15px; border: none; transition: background-color 0.3s ease; }
+        .submit-btn { background-color: #28a745; color: white; }
+        .submit-btn:hover { background-color: #218838; }
+        .back-btn { background-color: #dc3545; color: white; }
+        .back-btn:hover { background-color: #c82333; }
+        .error { color: red; font-size: 0.9em; margin-top: 5px; text-align: left; }
+        @media (max-width: 768px) { .form-grid { grid-template-columns: 1fr; } button { grid-column: span 1; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Update Proposal</h2>
+        <form id="updateForm" method="POST">
+            <input type="hidden" id="proposalId" name="proposalId">
+            <div class="form-grid">
+                <div>
+                    <label for="particulars">Title of Activity:</label>
+                    <textarea id="particulars" name="particulars" rows="4" required></textarea>
+                </div>
+                <div>
+                    <label for="college">College:</label>
+                    <select id="college" name="college" onchange="updateDepartments()" required>
+                        <option value="">Select College</option>
+                        <option value="College1">College1</option>
+                        <option value="College2">College2</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="department">Department:</label>
+                    <select id="department" name="department" required>
+                        <option value="">Select Department</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="others">If others, please specify:</label>
+                    <input type="text" id="others" name="others">
+                </div>
+                <div>
+                    <label for="objectives">Objectives:</label>
+                    <textarea id="objectives" name="objectives" rows="4" required></textarea>
+                </div>
+                <div>
+                    <label for="nature">Nature/Classification:</label>
+                    <select id="nature" name="nature" required>
+                        <option value="">Select Nature/Classification</option>
+                        <option value="Type1">Type1</option>
+                        <option value="Type2">Type2</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="locale">Locale:</label>
+                    <input type="text" id="locale" name="locale" required>
+                </div>
+                <div>
+                    <label for="duration">Duration of Activity:</label>
+                    <input type="text" id="duration" name="duration" required>
+                </div>
+                <div>
+                    <label for="funding">Funding Source:</label>
+                    <input type="text" id="funding" name="funding" required>
+                </div>
+                <div>
+                    <label for="amount">Total Amount:</label>
+                    <input type="number" id="amount" name="amount" step="0.01" required>
+                    <div id="amountError" class="error"></div>
+                </div>
+                <div>
+                    <label for="contact">Number/Email of Contact Person:</label>
+                    <input type="text" id="contact" name="contact" required>
+                </div>
+                <div>
+                    <label for="documents">Scanned Copy of Documents:</label>
+                    <input type="text" id="documents" name="documents">
+                </div>
+                <div>
+                    <label for="csac">Action of CSAC:</label>
+                    <input type="text" id="csac" name="csac">
+                </div>
+                <div>
+                    <label for="remarks">Remarks:</label>
+                    <textarea id="remarks" name="remarks" rows="4"></textarea>
+                </div>
+                <div>
+                    <label for="docSeq">DOC. SEQ. No.:</label>
+                    <input type="text" id="docSeq" name="docSeq" required>
+                    <div id="docSeqError" class="error"></div>
+                </div>
+                <div>
+                    <label for="copies">No of Copies:</label>
+                    <input type="number" id="copies" name="copies" min="1" required>
+                    <div id="copiesError" class="error"></div>
+                </div>
+                <div>
+                    <label for="receiver">RECEIVER:</label>
+                    <input type="text" id="receiver" name="receiver">
+                </div>
+                <div>
+                    <label for="usds">Action of USDS:</label>
+                    <input type="text" id="usds" name="usds">
+                </div>
+                <div>
+                    <label for="notations">Notations:</label>
+                    <textarea id="notations" name="notations" rows="4"></textarea>
+                </div>
+                <div>
+                    <label for="status">Status:</label>
+                    <select id="status" name="status">
+                        <option value="">Select Status</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Returned">Returned</option>
+                        <option value="Forwarded">Forwarded</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="office">Office Destination:</label>
+                    <input type="text" id="office" name="office">
+                </div>
+                <button type="submit" class="submit-btn">Update</button>
+                <button class="back-btn" onclick="goBack()">Back to Dashboard</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        const API_URL = 'https://script.google.com/macros/s/AKfycbyHKJ6-qlH4F3dLdUNuu2mcyiQHhv7kTd7cfWnqustB9nD3aquVk0xkmmp4t7Uj620/exec';
+        const DASHBOARD_URL = 'https://shinano21.github.io/OSASCommsTracker/dashboard.html';
+
+        function goBack() {
+            window.location.href = DASHBOARD_URL;
+        }
+
+        function updateDepartments() {
+            const college = document.getElementById("college").value;
+            const departmentSelect = document.getElementById("department");
+            departmentSelect.innerHTML = '<option value="">Select Department</option>';
+            
+            const departments = {
+                "College1": ["Dept1A", "Dept1B"],
+                "College2": ["Dept2A", "Dept2B"]
+            };
+            
+            if (college && departments[college]) {
+                departments[college].forEach(dept => {
+                    const option = document.createElement("option");
+                    option.value = dept;
+                    option.text = dept;
+                    departmentSelect.appendChild(option);
+                });
+            }
+        }
+
+        async function loadProposalData() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const proposalId = urlParams.get('proposalId');
+            if (!proposalId) {
+                alert('No proposal ID provided.');
+                window.location.href = DASHBOARD_URL;
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}?action=getProposalById&proposalId=${encodeURIComponent(proposalId)}`, {
+                    method: 'GET',
+                    redirect: 'follow'
+                });
+                const data = await response.json();
+                
+                if (data.error) {
+                    alert('Proposal not found.');
+                    window.location.href = DASHBOARD_URL;
+                    return;
+                }
+
+                document.getElementById('proposalId').value = data.proposalId;
+                document.getElementById('particulars').value = data.particulars || '';
+                document.getElementById('college').value = data.college || '';
+                updateDepartments(); // Populate departments based on college
+                document.getElementById('department').value = data.department || '';
+                document.getElementById('others').value = data.others || '';
+                document.getElementById('objectives').value = data.objectives || '';
+                document.getElementById('nature').value = data.nature || '';
+                document.getElementById('locale').value = data.locale || '';
+                document.getElementById('duration').value = data.duration || '';
+                document.getElementById('funding').value = data.funding || '';
+                document.getElementById('amount').value = data.amount || '';
+                document.getElementById('contact').value = data.contact || '';
+                document.getElementById('documents').value = data.documents || '';
+                document.getElementById('csac').value = data.csac || '';
+                document.getElementById('remarks').value = data.remarks || '';
+                document.getElementById('docSeq').value = data.docSeq || '';
+                document.getElementById('copies').value = data.copies || '';
+                document.getElementById('receiver').value = data.receiver || '';
+                document.getElementById('usds').value = data.usds || '';
+                document.getElementById('notations').value = data.notations || '';
+                document.getElementById('status').value = data.status || '';
+                document.getElementById('office').value = data.office || '';
+            } catch (error) {
+                console.error('Error fetching proposal data:', error);
+                alert('Failed to load proposal data.');
+            }
+        }
+
+        document.getElementById('updateForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            let valid = true;
+            let amount = document.getElementById('amount');
+            let amountError = document.getElementById('amountError');
+            if (!amount.value || isNaN(amount.value) || amount.value <= 0) {
+                amountError.textContent = 'Total amount must be a positive number.';
+                valid = false;
+            } else {
+                amountError.textContent = '';
+            }
+
+            let docSeq = document.getElementById('docSeq');
+            let docSeqError = document.getElementById('docSeqError');
+            if (!docSeq.value) {
+                docSeqError.textContent = 'Please enter a document sequence number.';
+                valid = false;
+            } else {
+                docSeqError.textContent = '';
+            }
+
+            let copies = document.getElementById('copies');
+            let copiesError = document.getElementById('copiesError');
+            if (!copies.value || isNaN(copies.value) || copies.value < 1) {
+                copiesError.textContent = 'Number of copies must be at least 1.';
+                valid = false;
+            } else {
+                copiesError.textContent = '';
+            }
+
+            if (!valid) return;
+
+            const formData = new FormData(this);
+            const updates = Object.fromEntries(formData.entries());
+            
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        action: 'update',
+                        proposalId: updates.proposalId,
+                        updates: updates
+                    }),
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert('Proposal updated successfully!');
+                    window.location.href = DASHBOARD_URL;
+                } else {
+                    alert('Failed to update proposal: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Error updating proposal:', error);
+                alert('Failed to update proposal.');
+            }
+        });
+
+        window.onload = loadProposalData;
+    </script>
+</body>
+</html>
