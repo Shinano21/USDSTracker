@@ -25,14 +25,12 @@
 <body>
     <div class="container">
         <h2>Proposal Submission</h2>
-        <form id="proposalForm" action="https://script.google.com/macros/s/AKfycbyHKJ6-qlH4F3dLdUNuu2mcyiQHhv7kTd7cfWnqustB9nD3aquVk0xkmmp4t7Uj620/exec" method="POST">
-            <input type="hidden" name="type" value="proposal">
-
-            <!-- Title Only -->
+        <form id="proposalForm" method="POST">
+            <!-- Title -->
             <div class="form-grid">
                 <div>
-                    <label for="title">Title of Activity:</label>
-                    <textarea id="title" name="title" rows="4" placeholder="Enter title..." required></textarea>
+                    <label for="particulars">Title of Activity:</label>
+                    <textarea id="particulars" name="particulars" rows="4" placeholder="Enter title..." required></textarea>
                 </div>
             </div>
 
@@ -131,7 +129,7 @@
                 </div>
             </div>
 
-            <!-- Received by USDS (DATE & TIME and Expected Date & Time of Release removed) -->
+            <!-- Received by USDS -->
             <div class="section">
                 <h3>Received by USDS</h3>
                 <div class="form-grid">
@@ -149,14 +147,10 @@
                         <label for="receiver">RECEIVER:</label>
                         <input type="text" id="receiver" name="receiver" placeholder="Enter receiver">
                     </div>
-                    <div>
-                        <label for="processDuration">Duration of Process:</label>
-                        <input type="text" id="processDuration" name="processDuration" placeholder="Enter duration">
-                    </div>
                 </div>
             </div>
 
-            <!-- 2nd Evaluation & Review of Compliance (Date and Time, Accomplished on time?, If Returned Date & Time removed) -->
+            <!-- 2nd Evaluation & Review of Compliance -->
             <div class="section">
                 <h3>2nd Evaluation & Review of Compliance</h3>
                 <div class="form-grid">
@@ -168,19 +162,6 @@
                         <label for="notations">Notations:</label>
                         <textarea id="notations" name="notations" rows="4" placeholder="Enter notations"></textarea>
                     </div>
-                    <div>
-                        <label for="status">Status:</label>
-                        <select id="status" name="status">
-                            <option value="">Select Status</option>
-                            <option value="Pending">Pending</option>
-                            <option value="Returned">Returned</option>
-                            <option value="Forwarded">Forwarded</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="office">Office Destination:</label>
-                        <input type="text" id="office" name="office" placeholder="Enter office destination">
-                    </div>
                 </div>
             </div>
 
@@ -191,6 +172,8 @@
     </div>
 
     <script>
+        const API_URL = 'https://script.google.com/macros/s/AKfycbyHKJ6-qlH4F3dLdUNuu2mcyiQHhv7kTd7cfWnqustB9nD3aquVk0xkmmp4t7Uj620/exec';
+
         function goBack() {
             window.location.href = 'https://shinano21.github.io/OSASCommsTracker/dashboard.html';
         }
@@ -215,7 +198,9 @@
             }
         }
 
-        document.getElementById('proposalForm').addEventListener('submit', function(event) {
+        document.getElementById('proposalForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
             let valid = true;
 
             let amount = document.getElementById('amount');
@@ -245,8 +230,28 @@
                 copiesError.textContent = '';
             }
 
-            if (!valid) {
-                event.preventDefault();
+            if (!valid) return;
+
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData.entries());
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    body: JSON.stringify(data),
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                const result = await response.text();
+                
+                if (result === "Success") {
+                    alert('Proposal submitted successfully!');
+                    window.location.href = 'https://shinano21.github.io/OSASCommsTracker/dashboard.html';
+                } else {
+                    alert('Failed to submit proposal.');
+                }
+            } catch (error) {
+                console.error('Error submitting proposal:', error);
+                alert('Failed to submit proposal.');
             }
         });
     </script>

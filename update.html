@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Proposal Submission Form</title>
+    <title>Update Proposal</title>
     <style>
         body { font-family: Arial, sans-serif; background-color: #f4f4f4; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
         .container { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); width: 90%; max-width: 1200px; text-align: center; }
@@ -24,15 +24,13 @@
 </head>
 <body>
     <div class="container">
-        <h2>Proposal Submission</h2>
-        <form id="proposalForm" action="https://script.google.com/macros/s/AKfycbyHKJ6-qlH4F3dLdUNuu2mcyiQHhv7kTd7cfWnqustB9nD3aquVk0xkmmp4t7Uj620/exec" method="POST">
-            <input type="hidden" name="type" value="proposal">
-
-            <!-- Title Only -->
+        <h2>Update Proposal</h2>
+        <form id="updateForm" method="POST">
+            <!-- Title -->
             <div class="form-grid">
                 <div>
-                    <label for="title">Title of Activity:</label>
-                    <textarea id="title" name="title" rows="4" placeholder="Enter title..." required></textarea>
+                    <label for="particulars">Title of Activity:</label>
+                    <textarea id="particulars" name="particulars" rows="4" required></textarea>
                 </div>
             </div>
 
@@ -56,7 +54,7 @@
                     </div>
                     <div>
                         <label for="others">If others, please specify:</label>
-                        <input type="text" id="others" name="others" placeholder="Specify if others">
+                        <input type="text" id="others" name="others">
                     </div>
                 </div>
             </div>
@@ -67,7 +65,7 @@
                 <div class="form-grid">
                     <div>
                         <label for="objectives">Objectives:</label>
-                        <textarea id="objectives" name="objectives" rows="4" placeholder="Enter objectives..." required></textarea>
+                        <textarea id="objectives" name="objectives" rows="4" required></textarea>
                     </div>
                     <div>
                         <label for="nature">Nature/Classification:</label>
@@ -79,11 +77,11 @@
                     </div>
                     <div>
                         <label for="locale">Locale:</label>
-                        <input type="text" id="locale" name="locale" placeholder="Enter locale" required>
+                        <input type="text" id="locale" name="locale" required>
                     </div>
                     <div>
                         <label for="duration">Duration of Activity:</label>
-                        <input type="text" id="duration" name="duration" placeholder="Enter duration" required>
+                        <input type="text" id="duration" name="duration" required>
                     </div>
                 </div>
             </div>
@@ -94,11 +92,11 @@
                 <div class="form-grid">
                     <div>
                         <label for="funding">Funding Source:</label>
-                        <input type="text" id="funding" name="funding" placeholder="Enter funding source" required>
+                        <input type="text" id="funding" name="funding" required>
                     </div>
                     <div>
                         <label for="amount">Total Amount:</label>
-                        <input type="number" id="amount" name="amount" step="0.01" placeholder="Enter amount" required>
+                        <input type="number" id="amount" name="amount" step="0.01" required>
                         <div id="amountError" class="error"></div>
                     </div>
                 </div>
@@ -108,11 +106,11 @@
             <div class="form-grid">
                 <div>
                     <label for="contact">Number/Email of Contact Person:</label>
-                    <input type="text" id="contact" name="contact" placeholder="Enter contact info" required>
+                    <input type="text" id="contact" name="contact" required>
                 </div>
                 <div>
                     <label for="documents">Scanned Copy of Documents (with signatories):</label>
-                    <input type="text" id="documents" name="documents" placeholder="URL or file reference">
+                    <input type="text" id="documents" name="documents">
                 </div>
             </div>
 
@@ -122,77 +120,63 @@
                 <div class="form-grid">
                     <div>
                         <label for="csac">Action of CSAC:</label>
-                        <input type="text" id="csac" name="csac" placeholder="Enter CSAC action">
+                        <input type="text" id="csac" name="csac">
                     </div>
                     <div>
                         <label for="remarks">Remarks:</label>
-                        <textarea id="remarks" name="remarks" rows="4" placeholder="Enter remarks"></textarea>
+                        <textarea id="remarks" name="remarks" rows="4"></textarea>
                     </div>
                 </div>
             </div>
 
-            <!-- Received by USDS (DATE & TIME and Expected Date & Time of Release removed) -->
+            <!-- Received by USDS -->
             <div class="section">
                 <h3>Received by USDS</h3>
                 <div class="form-grid">
                     <div>
                         <label for="docSeq">DOC. SEQ. No.:</label>
-                        <input type="text" id="docSeq" name="docSeq" placeholder="Enter sequence number" required>
+                        <input type="text" id="docSeq" name="docSeq" required>
                         <div id="docSeqError" class="error"></div>
                     </div>
                     <div>
                         <label for="copies">No of Copies:</label>
-                        <input type="number" id="copies" name="copies" min="1" placeholder="Enter number of copies" required>
+                        <input type="number" id="copies" name="copies" min="1" required>
                         <div id="copiesError" class="error"></div>
                     </div>
                     <div>
                         <label for="receiver">RECEIVER:</label>
-                        <input type="text" id="receiver" name="receiver" placeholder="Enter receiver">
-                    </div>
-                    <div>
-                        <label for="processDuration">Duration of Process:</label>
-                        <input type="text" id="processDuration" name="processDuration" placeholder="Enter duration">
+                        <input type="text" id="receiver" name="receiver">
                     </div>
                 </div>
             </div>
 
-            <!-- 2nd Evaluation & Review of Compliance (Date and Time, Accomplished on time?, If Returned Date & Time removed) -->
+            <!-- 2nd Evaluation & Review of Compliance -->
             <div class="section">
                 <h3>2nd Evaluation & Review of Compliance</h3>
                 <div class="form-grid">
                     <div>
                         <label for="usds">Action of USDS:</label>
-                        <input type="text" id="usds" name="usds" placeholder="Enter USDS action">
+                        <input type="text" id="usds" name="usds">
                     </div>
                     <div>
                         <label for="notations">Notations:</label>
-                        <textarea id="notations" name="notations" rows="4" placeholder="Enter notations"></textarea>
-                    </div>
-                    <div>
-                        <label for="status">Status:</label>
-                        <select id="status" name="status">
-                            <option value="">Select Status</option>
-                            <option value="Pending">Pending</option>
-                            <option value="Returned">Returned</option>
-                            <option value="Forwarded">Forwarded</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="office">Office Destination:</label>
-                        <input type="text" id="office" name="office" placeholder="Enter office destination">
+                        <textarea id="notations" name="notations" rows="4"></textarea>
                     </div>
                 </div>
             </div>
 
             <!-- Buttons -->
-            <button type="submit" class="submit-btn">Submit</button>
-            <button class="back-btn" onclick="goBack()">Go Back</button>
+            <button type="submit" class="submit-btn">Update</button>
+            <button class="back-btn" onclick="goBack()">Back to Dashboard</button>
         </form>
     </div>
 
     <script>
+        const API_URL = 'https://script.google.com/macros/s/AKfycbyHKJ6-qlH4F3dLdUNuu2mcyiQHhv7kTd7cfWnqustB9nD3aquVk0xkmmp4t7Uj620/exec';
+        const DASHBOARD_URL = 'https://shinano21.github.io/USDSTracker/dashboard.html';
+
         function goBack() {
-            window.location.href = 'https://shinano21.github.io/OSASCommsTracker/dashboard.html';
+            window.location.href = DASHBOARD_URL;
         }
 
         function updateDepartments() {
@@ -215,9 +199,64 @@
             }
         }
 
-        document.getElementById('proposalForm').addEventListener('submit', function(event) {
-            let valid = true;
+        async function loadProposalData() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const proposalId = urlParams.get('proposalId');
+            if (!proposalId) {
+                alert('No proposal ID provided.');
+                window.location.href = DASHBOARD_URL;
+                return;
+            }
 
+            const fetchUrl = `${API_URL}?action=getProposalById&proposalId=${encodeURIComponent(proposalId)}`;
+            console.log('Fetching from:', fetchUrl);
+
+            try {
+                const response = await fetch(fetchUrl, { method: 'GET', redirect: 'follow' });
+                console.log('Response status:', response.status);
+
+                const text = await response.text();
+                console.log('Raw response:', text);
+
+                const data = JSON.parse(text);
+                console.log('Parsed data:', data);
+                
+                if (data.error) {
+                    alert('Proposal not found: ' + data.message);
+                    window.location.href = DASHBOARD_URL;
+                    return;
+                }
+
+                document.getElementById('particulars').value = data.particulars || '';
+                document.getElementById('college').value = data.college || '';
+                updateDepartments();
+                document.getElementById('department').value = data.department || '';
+                document.getElementById('others').value = data.others || '';
+                document.getElementById('objectives').value = data.objectives || '';
+                document.getElementById('nature').value = data.nature || '';
+                document.getElementById('locale').value = data.locale || '';
+                document.getElementById('duration').value = data.duration || '';
+                document.getElementById('funding').value = data.funding || '';
+                document.getElementById('amount').value = data.amount || '';
+                document.getElementById('contact').value = data.contact || '';
+                document.getElementById('documents').value = data.documents || '';
+                document.getElementById('csac').value = data.csac || '';
+                document.getElementById('remarks').value = data.remarks || '';
+                document.getElementById('docSeq').value = data.docSeq || '';
+                document.getElementById('copies').value = data.copies || '';
+                document.getElementById('receiver').value = data.receiver || '';
+                document.getElementById('usds').value = data.usds || '';
+                document.getElementById('notations').value = data.notations || '';
+            } catch (error) {
+                console.error('Error fetching proposal data:', error);
+                alert('Failed to load proposal data. Check the console for details.');
+            }
+        }
+
+        document.getElementById('updateForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            let valid = true;
             let amount = document.getElementById('amount');
             let amountError = document.getElementById('amountError');
             if (!amount.value || isNaN(amount.value) || amount.value <= 0) {
@@ -245,10 +284,38 @@
                 copiesError.textContent = '';
             }
 
-            if (!valid) {
-                event.preventDefault();
+            if (!valid) return;
+
+            const formData = new FormData(this);
+            const updates = Object.fromEntries(formData.entries());
+            const urlParams = new URLSearchParams(window.location.search);
+            const proposalId = urlParams.get('proposalId');
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        action: 'update',
+                        proposalId: proposalId,
+                        updates: updates
+                    }),
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert('Proposal updated successfully!');
+                    window.location.href = DASHBOARD_URL;
+                } else {
+                    alert('Failed to update proposal: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Error updating proposal:', error);
+                alert('Failed to update proposal.');
             }
         });
+
+        window.onload = loadProposalData;
     </script>
 </body>
 </html>
