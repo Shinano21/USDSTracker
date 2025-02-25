@@ -99,7 +99,7 @@
 <body>
     <div class="container">
         <h2>Proposal Submission</h2>
-        <form id="proposalForm" action="https://script.google.com/macros/s/AKfycbyHKJ6-qlH4F3dLdUNuu2mcyiQHhv7kTd7cfWnqustB9nD3aquVk0xkmmp4t7Uj620/exec" method="POST">
+        <form id="proposalForm">
             <input type="hidden" name="type" value="proposal">
             <div class="form-grid">
                 <div>
@@ -244,90 +244,92 @@
     </div>
 
     <script>
-        function goBack() {
-            window.location.href = 'https://shinano21.github.io/OSASCommsTracker/dashboard.html';
-        }
-    
-        function updateDepartments() {
-            const college = document.getElementById("college").value;
-            const departmentSelect = document.getElementById("department");
-            departmentSelect.innerHTML = '<option value="">Select Department</option>';
-            
-            const departments = {
-                "College1": ["Dept1A", "Dept1B"],
-                "College2": ["Dept2A", "Dept2B"]
-            };
-            
-            if (college && departments[college]) {
-                departments[college].forEach(dept => {
-                    const option = document.createElement("option");
-                    option.value = dept;
-                    option.text = dept;
-                    departmentSelect.appendChild(option);
-                });
-            }
-        }
-    
-        document.getElementById('proposalForm').addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevent default form submission
-    
-            let valid = true;
-    
-            let amount = document.getElementById('amount');
-            let amountError = document.getElementById('amountError');
-            if (!amount.value || isNaN(amount.value) || amount.value <= 0) {
-                amountError.textContent = 'Total amount must be a positive number.';
-                valid = false;
-            } else {
-                amountError.textContent = '';
-            }
-    
-            let docSeq = document.getElementById('docSeq');
-            let docSeqError = document.getElementById('docSeqError');
-            if (!docSeq.value) {
-                docSeqError.textContent = 'Please enter a document sequence number.';
-                valid = false;
-            } else {
-                docSeqError.textContent = '';
-            }
-    
-            let copies = document.getElementById('copies');
-            let copiesError = document.getElementById('copiesError');
-            if (!copies.value || isNaN(copies.value) || copies.value < 1) {
-                copiesError.textContent = 'Number of copies must be at least 1.';
-                valid = false;
-            } else {
-                copiesError.textContent = '';
-            }
-    
-            if (!valid) return;
-    
-            // Construct JSON payload
-            const formData = new FormData(this);
-            const data = {};
-            formData.forEach((value, key) => {
-                data[key] = value;
+    function goBack() {
+        window.location.href = 'https://shinano21.github.io/OSASCommsTracker/dashboard.html';
+    }
+
+    function updateDepartments() {
+        const college = document.getElementById("college").value;
+        const departmentSelect = document.getElementById("department");
+        departmentSelect.innerHTML = '<option value="">Select Department</option>';
+        
+        const departments = {
+            "College1": ["Dept1A", "Dept1B"],
+            "College2": ["Dept2A", "Dept2B"]
+        };
+        
+        if (college && departments[college]) {
+            departments[college].forEach(dept => {
+                const option = document.createElement("option");
+                option.value = dept;
+                option.text = dept;
+                departmentSelect.appendChild(option);
             });
-            data.action = "add"; // Add an action to match your server logic
-    
-            // Send JSON to Google Apps Script
-            fetch('https://script.google.com/macros/s/AKfycbyHKJ6-qlH4F3dLdUNuu2mcyiQHhv7kTd7cfWnqustB9nD3aquVk0xkmmp4t7Uj620/exec', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            })
-            .then(response => response.text())
-            .then(result => {
-                alert('Proposal submitted successfully!');
-                console.log(result);
-            })
-            .catch(error => {
-                alert('Error submitting proposal.');
-                console.error(error);
-            });
+        }
+    }
+
+    document.getElementById('proposalForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent default form submission
+
+        let valid = true;
+
+        let amount = document.getElementById('amount');
+        let amountError = document.getElementById('amountError');
+        if (!amount.value || isNaN(amount.value) || amount.value <= 0) {
+            amountError.textContent = 'Total amount must be a positive number.';
+            valid = false;
+        } else {
+            amountError.textContent = '';
+        }
+
+        let docSeq = document.getElementById('docSeq');
+        let docSeqError = document.getElementById('docSeqError');
+        if (!docSeq.value) {
+            docSeqError.textContent = 'Please enter a document sequence number.';
+            valid = false;
+        } else {
+            docSeqError.textContent = '';
+        }
+
+        let copies = document.getElementById('copies');
+        let copiesError = document.getElementById('copiesError');
+        if (!copies.value || isNaN(copies.value) || copies.value < 1) {
+            copiesError.textContent = 'Number of copies must be at least 1.';
+            valid = false;
+        } else {
+            copiesError.textContent = '';
+        }
+
+        if (!valid) return;
+
+        // Construct JSON payload
+        const formData = new FormData(this);
+        const data = {};
+        formData.forEach((value, key) => {
+            data[key] = value;
         });
+        data.action = "add"; // Add an action to match server logic
+
+        // Send JSON to Google Apps Script
+        fetch('https://script.google.com/macros/s/AKfycbyHKJ6-qlH4F3dLdUNuu2mcyiQHhv7kTd7cfWnqustB9nD3aquVk0xkmmp4t7Uj620/exec', {
+            method: 'POST',
+            mode: 'no-cors', // Avoid CORS issues with Google Apps Script
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(() => {
+            // Since mode is 'no-cors', we assume success if no error occurs
+            alert('Proposal submitted successfully!');
+            document.getElementById('proposalForm').reset(); // Reset form
+            updateDepartments(); // Reset department dropdown
+        })
+        .catch(error => {
+            alert('Error submitting proposal: ' + error.message);
+            console.error('Submission error:', error);
+        });
+    });
     </script>
 </body>
 </html>
