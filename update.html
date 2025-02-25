@@ -18,6 +18,7 @@
         .back-btn { background-color: #dc3545; color: white; }
         .back-btn:hover { background-color: #c82333; }
         .error { color: red; font-size: 0.9em; margin-top: 5px; text-align: left; }
+        .readonly { color: #666; margin-top: 5px; }
         @media (max-width: 768px) { .form-grid { grid-template-columns: 1fr; } button { grid-column: span 1; } }
     </style>
 </head>
@@ -25,8 +26,11 @@
     <div class="container">
         <h2>Update Proposal</h2>
         <form id="updateForm" method="POST">
-            <input type="hidden" id="proposalId" name="proposalId">
             <div class="form-grid">
+                <div>
+                    <label for="proposalId">Proposal Id:</label>
+                    <input type="text" id="proposalId" name="proposalId" required>
+                </div>
                 <div>
                     <label for="particulars">Title of Activity:</label>
                     <textarea id="particulars" name="particulars" rows="4" required></textarea>
@@ -109,6 +113,10 @@
                     <input type="text" id="receiver" name="receiver">
                 </div>
                 <div>
+                    <label>Duration of Process:</label>
+                    <p id="durationOfProcessDisplay" class="readonly"></p>
+                </div>
+                <div>
                     <label for="usds">Action of USDS:</label>
                     <input type="text" id="usds" name="usds">
                 </div>
@@ -118,7 +126,7 @@
                 </div>
                 <div>
                     <label for="status">Status:</label>
-                    <select id="status" name="status">
+                    <select id="status" name="status" required>
                         <option value="">Select Status</option>
                         <option value="Pending">Pending</option>
                         <option value="Returned">Returned</option>
@@ -197,7 +205,7 @@
                 document.getElementById('proposalId').value = data.proposalId || '';
                 document.getElementById('particulars').value = data.particulars || '';
                 document.getElementById('college').value = data.college || '';
-                updateDepartments(); // Populate departments based on college
+                updateDepartments();
                 document.getElementById('department').value = data.department || '';
                 document.getElementById('others').value = data.others || '';
                 document.getElementById('objectives').value = data.objectives || '';
@@ -213,6 +221,7 @@
                 document.getElementById('docSeq').value = data.docSeq || '';
                 document.getElementById('copies').value = data.copies || '';
                 document.getElementById('receiver').value = data.receiver || '';
+                document.getElementById('durationOfProcessDisplay').textContent = data.durationOfProcess || '';
                 document.getElementById('usds').value = data.usds || '';
                 document.getElementById('notations').value = data.notations || '';
                 document.getElementById('status').value = data.status || '';
