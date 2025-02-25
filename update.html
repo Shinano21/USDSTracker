@@ -172,20 +172,29 @@
                 return;
             }
 
+            const fetchUrl = `${API_URL}?action=getProposalById&proposalId=${encodeURIComponent(proposalId)}`;
+            console.log('Fetching from:', fetchUrl);
+
             try {
-                const response = await fetch(`${API_URL}?action=getProposalById&proposalId=${encodeURIComponent(proposalId)}`, {
+                const response = await fetch(fetchUrl, {
                     method: 'GET',
                     redirect: 'follow'
                 });
-                const data = await response.json();
+                console.log('Response status:', response.status);
+
+                const text = await response.text();
+                console.log('Raw response:', text);
+
+                const data = JSON.parse(text);
+                console.log('Parsed data:', data);
                 
                 if (data.error) {
-                    alert('Proposal not found.');
+                    alert('Proposal not found: ' + data.message);
                     window.location.href = DASHBOARD_URL;
                     return;
                 }
 
-                document.getElementById('proposalId').value = data.proposalId;
+                document.getElementById('proposalId').value = data.proposalId || '';
                 document.getElementById('particulars').value = data.particulars || '';
                 document.getElementById('college').value = data.college || '';
                 updateDepartments(); // Populate departments based on college
@@ -210,7 +219,7 @@
                 document.getElementById('office').value = data.office || '';
             } catch (error) {
                 console.error('Error fetching proposal data:', error);
-                alert('Failed to load proposal data.');
+                alert('Failed to load proposal data. Check the console for details.');
             }
         }
 
