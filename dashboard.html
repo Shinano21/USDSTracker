@@ -7,64 +7,74 @@
   <style>
     body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f5f5f5; }
     h1 { text-align: center; color: #333; }
-    table { width: 80%; margin: 20px auto; border-collapse: collapse; background-color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    .dashboard-container { display: flex; gap: 20px; max-width: 1200px; margin: 0 auto; }
+    .filter-container { width: 20%; min-width: 200px; margin-top: 20px; }
+    .filter-container label { display: block; margin-bottom: 5px; font-weight: bold; }
+    .filter-container select { width: 100%; padding: 8px; border-radius: 4px; cursor: pointer; margin-bottom: 10px; }
+    table { width: 80%; margin: 20px 0; border-collapse: collapse; background-color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); flex-grow: 1; }
     th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
     th { background-color: #4CAF50; color: white; }
     tr:nth-child(even) { background-color: #f9f9f9; }
     select { padding: 5px; border-radius: 4px; cursor: pointer; width: 100%; }
-    .button-container { width: 80%; margin: 0 auto 10px; text-align: right; }
+    .button-container { width: 100%; margin: 0 auto 10px; text-align: right; }
     .button-container button { padding: 8px 16px; margin-left: 10px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; }
     .button-container button:hover { background-color: #45a049; }
-    .filter-container { width: 80%; margin: 0 auto 10px; text-align: left; }
-    .filter-container select { padding: 5px; border-radius: 4px; cursor: pointer; }
     .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); }
     .modal-content { background: white; margin: 15% auto; padding: 20px; width: 80%; max-width: 800px; border-radius: 5px; }
     .close { float: right; font-size: 20px; cursor: pointer; }
+    @media (max-width: 768px) {
+      .dashboard-container { flex-direction: column; }
+      .filter-container, table { width: 100%; }
+    }
   </style>
 </head>
 <body>
   <h1>Proposal Dashboard</h1>
-  <div class="filter-container">
-    <label for="monthFilter">Month:</label>
-    <select id="monthFilter" onchange="filterProposals()">
-      <option value="">All</option>
-      <option value="01">January</option>
-      <option value="02">February</option>
-      <option value="03">March</option>
-      <option value="04">April</option>
-      <option value="05">May</option>
-      <option value="06">June</option>
-      <option value="07">July</option>
-      <option value="08">August</option>
-      <option value="09">September</option>
-      <option value="10">October</option>
-      <option value="11">November</option>
-      <option value="12">December</option>
-    </select>
-    <label for="yearFilter">Year:</label>
-    <select id="yearFilter" onchange="filterProposals()">
-      <option value="">All</option>
-      <script>
-        for (let year = 2020; year <= new Date().getFullYear(); year++) {
-          document.write(`<option value="${year}">${year}</option>`);
-        }
-      </script>
-    </select>
+  <div class="dashboard-container">
+    <div class="filter-container">
+      <label for="monthFilter">Month:</label>
+      <select id="monthFilter" onchange="filterProposals()">
+        <option value="">All</option>
+        <option value="01">January</option>
+        <option value="02">February</option>
+        <option value="03">March</option>
+        <option value="04">April</option>
+        <option value="05">May</option>
+        <option value="06">June</option>
+        <option value="07">July</option>
+        <option value="08">August</option>
+        <option value="09">September</option>
+        <option value="10">October</option>
+        <option value="11">November</option>
+        <option value="12">December</option>
+      </select>
+      <label for="yearFilter">Year:</label>
+      <select id="yearFilter" onchange="filterProposals()">
+        <option value="">All</option>
+        <script>
+          for (let year = 2020; year <= new Date().getFullYear(); year++) {
+            document.write(`<option value="${year}">${year}</option>`);
+          }
+        </script>
+      </select>
+    </div>
+    <div>
+      <div class="button-container">
+        <button onclick="window.location.href='add.html'">+ Record</button>
+        <button onclick="window.location.href='report_generation.html'">Print</button>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Proposal ID</th>
+            <th>Title of Activity</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="proposalTable"></tbody>
+      </table>
+    </div>
   </div>
-  <div class="button-container">
-    <button onclick="window.location.href='add.html'">+ Record</button>
-    <button onclick="window.location.href='report_generation.html'">Print</button>
-  </div>
-  <table>
-    <thead>
-      <tr>
-        <th>Proposal ID</th>
-        <th>Title of Activity</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody id="proposalTable"></tbody>
-  </table>
 
   <div id="viewModal" class="modal">
     <div class="modal-content">
@@ -139,6 +149,7 @@
       } catch (error) {
         console.error('Error fetching colleges:', error);
         colleges = [];
+        alert(`Failed to load colleges: ${error.message}`);
       }
     }
 
@@ -150,6 +161,7 @@
       } catch (error) {
         console.error('Error fetching departments:', error);
         departments[college] = [];
+        alert(`Failed to load departments for ${college}: ${error.message}`);
       }
     }
 
@@ -197,15 +209,26 @@
 
     async function handleAction(select, proposalId, proposal) {
       const action = select.value;
+      console.log(`Action selected: ${action}, Proposal ID: ${proposalId}`); // Debug log for action trigger
       if (action === 'view') {
-        await fetchColleges();
-        await fetchDepartments(proposal.college || '');
-        showModal(proposal);
+        try {
+          await fetchColleges();
+          await fetchDepartments(proposal.college || '');
+          showModal(proposal);
+        } catch (error) {
+          console.error('Error in view action:', error);
+          alert(`Failed to load proposal details: ${error.message}`);
+        }
       } else if (action === 'update') {
-        window.location.href = `${UPDATE_URL}?proposalId=${encodeURIComponent(proposalId)}`; // Ensure navigation to update.html
-        console.log(`Navigating to ${UPDATE_URL}?proposalId=${encodeURIComponent(proposalId)}`); // Debug log
+        try {
+          window.location.href = `${UPDATE_URL}?proposalId=${encodeURIComponent(proposalId)}`;
+          console.log(`Navigating to ${UPDATE_URL}?proposalId=${encodeURIComponent(proposalId)}`);
+        } catch (error) {
+          console.error('Error in update navigation:', error);
+          alert(`Failed to navigate to update page: ${error.message}`);
+        }
       }
-      select.value = '';
+      select.value = ''; // Reset dropdown after action
     }
 
     function showModal(proposal) {
