@@ -102,6 +102,9 @@
 </head>
 <body>
     <div class="container">
+        <div class="button-row" style="justify-content: flex-start;">
+            <button onclick="logout()">Logout</button>
+        </div>
         <h2>View Proposal</h2>
         <div class="section">
             <div class="section-title">Proposal Details</div>
@@ -273,13 +276,29 @@
         const DASHBOARD_URL = 'dashboard.html';
         const INDEX_URL = 'index.html';
 
-        // Security check: Redirect to index.html if not logged in
-        if (localStorage.getItem('authToken') !== 'loggedIn') {
-            window.location.href = INDEX_URL;
+        // Check authentication on load
+        function checkAuth() {
+          if (localStorage.getItem('authToken') !== 'loggedIn') {
+            window.location.replace(INDEX_URL); // Replace to prevent back navigation
+          }
         }
+
+        // Initial auth check
+        checkAuth();
+
+        // Prevent back navigation after logout
+        window.history.pushState(null, null, window.location.href);
+        window.addEventListener('popstate', function () {
+          checkAuth();
+        });
 
         function goBack() {
             window.location.href = DASHBOARD_URL;
+        }
+
+        function logout() {
+          localStorage.removeItem('authToken');
+          window.location.replace(INDEX_URL); // Replace to prevent back navigation
         }
 
         async function loadProposalData() {

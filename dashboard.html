@@ -91,9 +91,21 @@
     const LOGIN_URL = 'index.html';
     let allProposals = [];
 
-    if (localStorage.getItem('authToken') !== 'loggedIn') {
-      window.location.href = LOGIN_URL;
+    // Check authentication on load
+    function checkAuth() {
+      if (localStorage.getItem('authToken') !== 'loggedIn') {
+        window.location.replace(LOGIN_URL); // Replace to prevent back navigation
+      }
     }
+
+    // Initial auth check
+    checkAuth();
+
+    // Prevent back navigation after logout
+    window.history.pushState(null, null, window.location.href);
+    window.addEventListener('popstate', function () {
+      checkAuth();
+    });
 
     async function fetchProposals() {
       try {
@@ -176,7 +188,7 @@
 
     function logout() {
       localStorage.removeItem('authToken');
-      window.location.href = LOGIN_URL;
+      window.location.replace(LOGIN_URL); // Replace to prevent back navigation
     }
 
     window.onload = fetchProposals;
