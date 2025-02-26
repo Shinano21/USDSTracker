@@ -8,27 +8,16 @@
     body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f5f5f5; }
     h1 { text-align: center; color: #333; }
     .table-container { max-width: 1200px; margin: 0 auto; }
-    .header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-    .filter-container { display: flex; gap: 15px; align-items: center; }
-    .filter-container label { font-weight: bold; margin-right: 5px; }
-    .filter-container select { padding: 8px; border-radius: 4px; cursor: pointer; }
-    .button-container { margin-left: auto; } /* Push buttons to the right */
+    .button-container { width: 100%; margin: 10px 0; text-align: right; }
     .button-container button { padding: 8px 16px; margin-left: 10px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; }
     .button-container button:hover { background-color: #45a049; }
-    table { width: 100%; border-collapse: collapse; background-color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    table { width: 100%; margin: 0; border-collapse: collapse; background-color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
     th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
     th { background-color: #4CAF50; color: white; }
     tr:nth-child(even) { background-color: #f9f9f9; }
-    select { padding: 5px; border-radius: 4px; cursor: pointer; width: 100%; }
-    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); }
-    .modal-content { background: white; margin: 15% auto; padding: 20px; width: 80%; max-width: 800px; border-radius: 5px; }
-    .close { float: right; font-size: 20px; cursor: pointer; }
+    select { padding: 5px; width: 100px; border-radius: 4px; cursor: pointer; }
     @media (max-width: 768px) {
-      .header-row { flex-direction: column; gap: 10px; align-items: flex-start; }
-      .filter-container { flex-direction: column; align-items: flex-start; }
-      .filter-container label { margin-right: 0; margin-bottom: 5px; }
-      .filter-container select { width: 100%; margin-bottom: 10px; }
-      .button-container { margin-left: 0; text-align: center; width: 100%; }
+      .button-container { text-align: center; }
       .button-container button { margin: 5px 0; }
     }
   </style>
@@ -36,38 +25,9 @@
 <body>
   <h1>Proposal Dashboard</h1>
   <div class="table-container">
-    <div class="header-row">
-      <div class="filter-container">
-        <label for="monthFilter">Month:</label>
-        <select id="monthFilter" onchange="filterProposals()">
-          <option value="">All</option>
-          <option value="01">January</option>
-          <option value="02">February</option>
-          <option value="03">March</option>
-          <option value="04">April</option>
-          <option value="05">May</option>
-          <option value="06">June</option>
-          <option value="07">July</option>
-          <option value="08">August</option>
-          <option value="09">September</option>
-          <option value="10">October</option>
-          <option value="11">November</option>
-          <option value="12">December</option>
-        </select>
-        <label for="yearFilter">Year:</label>
-        <select id="yearFilter" onchange="filterProposals()">
-          <option value="">All</option>
-          <script>
-            for (let year = 2020; year <= new Date().getFullYear(); year++) {
-              document.write(`<option value="${year}">${year}</option>`);
-            }
-          </script>
-        </select>
-      </div>
-      <div class="button-container">
-        <button onclick="window.location.href='add.html'">+ Record</button>
-        <button onclick="window.location.href='report_generation.html'">Print</button>
-      </div>
+    <div class="button-container">
+      <button onclick="window.location.href='add.html'">+ Record</button>
+      <button onclick="window.location.href='report_generation.html'">Print</button>
     </div>
     <table>
       <thead>
@@ -81,49 +41,9 @@
     </table>
   </div>
 
-  <div id="viewModal" class="modal">
-    <div class="modal-content">
-      <span class="close" onclick="closeModal()">×</span>
-      <h2>Proposal Details</h2>
-      <table>
-        <tr><td>Proposal ID</td><td id="modalProposalId"></td></tr>
-        <tr><td>Title of Activity</td><td id="modalParticulars"></td></tr>
-        <tr><td>College</td><td><select id="modalCollege"></select></td></tr>
-        <tr><td>Department</td><td><select id="modalDepartment"></select></td></tr>
-        <tr><td>Others</td><td id="modalOthers"></td></tr>
-        <tr><td>Objectives</td><td id="modalObjectives"></td></tr>
-        <tr><td>Nature</td><td id="modalNature"></td></tr>
-        <tr><td>Locale</td><td id="modalLocale"></td></tr>
-        <tr><td>Duration</td><td id="modalDuration"></td></tr>
-        <tr><td>Funding Source</td><td id="modalFunding"></td></tr>
-        <tr><td>Total Amount</td><td id="modalAmount"></td></tr>
-        <tr><td>Contact</td><td id="modalContact"></td></tr>
-        <tr><td>Documents</td><td id="modalDocuments"></td></tr>
-        <tr><td>CSAC Action</td><td id="modalCsac"></td></tr>
-        <tr><td>Remarks</td><td id="modalRemarks"></td></tr>
-        <tr><td>Doc Seq No</td><td id="modalDocSeq"></td></tr>
-        <tr><td>Copies</td><td id="modalCopies"></td></tr>
-        <tr><td>Receiver</td><td id="modalReceiver"></td></tr>
-        <tr><td>Date & Time</td><td id="modalDateTime"></td></tr>
-        <tr><td>Duration</td><td id="modalDurationOfProcess"></td></tr>
-        <tr><td>Expected Release</td><td id="modalExpectedDate"></td></tr>
-        <tr><td>USDS Action</td><td id="modalUsds"></td></tr>
-        <tr><td>Notations</td><td id="modalNotations"></td></tr>
-        <tr><td>Status</td><td id="modalStatus"></td></tr>
-        <tr><td>Status Date</td><td id="modalStatusDate"></td></tr>
-        <tr><td>Office Dest</td><td id="modalOfficeDestination"></td></tr>
-        <tr><td>Accomplished</td><td id="modalAccomplished"></td></tr>
-        <tr><td>Returned Date</td><td id="modalReturnedDate"></td></tr>
-      </table>
-    </div>
-  </div>
-
   <script>
     const API_URL = 'https://script.google.com/macros/s/AKfycbyHKJ6-qlH4F3dLdUNuu2mcyiQHhv7kTd7cfWnqustB9nD3aquVk0xkmmp4t7Uj620/exec'; // Replace with your actual URL
     const UPDATE_URL = 'update.html'; // Use relative path for GitHub Pages
-    let colleges = [];
-    let departments = {};
-    let allProposals = [];
 
     async function fetchProposals() {
       try {
@@ -138,35 +58,10 @@
           document.getElementById('proposalTable').innerHTML = '<tr><td colspan="3">No proposals found</td></tr>';
           return;
         }
-        allProposals = data;
         populateTable(data);
       } catch (error) {
         console.error('Error fetching proposals:', error);
         alert(`Failed to load proposals: ${error.message}`);
-      }
-    }
-
-    async function fetchColleges() {
-      try {
-        const response = await fetch(`${API_URL}?action=getColleges`, { method: 'GET', redirect: 'follow' });
-        if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
-        colleges = await response.json();
-      } catch (error) {
-        console.error('Error fetching colleges:', error);
-        colleges = [];
-        alert(`Failed to load colleges: ${error.message}`);
-      }
-    }
-
-    async function fetchDepartments(college) {
-      try {
-        const response = await fetch(`${API_URL}?action=getDepartments&college=${encodeURIComponent(college)}`, { method: 'GET', redirect: 'follow' });
-        if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
-        departments[college] = await response.json();
-      } catch (error) {
-        console.error('Error fetching departments:', error);
-        departments[college] = [];
-        alert(`Failed to load departments for ${college}: ${error.message}`);
       }
     }
 
@@ -177,9 +72,9 @@
         const row = document.createElement('tr');
         row.innerHTML = `
           <td>${proposal.proposalId || ''}</td>
-          <td>${proposal.particulars || 'Untitled'}</td>
+          <td>${proposal.particulars || 'Untitled'}</td> <!-- Updated to use 'particulars' instead of 'title' -->
           <td>
-            <select onchange="handleAction(this, '${proposal.proposalId}', ${JSON.stringify(proposal)})">
+            <select onchange="handleAction(this, '${proposal.proposalId}')">
               <option value="">Select</option>
               <option value="view">View</option>
               <option value="update">Update</option>
@@ -190,48 +85,30 @@
       });
     }
 
-    function filterProposals() {
-      const month = document.getElementById('monthFilter').value;
-      const year = document.getElementById('yearFilter').value;
-      let filteredProposals = allProposals;
-
-      if (month) {
-        filteredProposals = filteredProposals.filter(proposal => {
-          const match = proposal.proposalId.match(/^(\d{2})-(\d{4})-\d{4}$/);
-          return match && match[1] === month;
-        });
-      }
-
-      if (year) {
-        filteredProposals = filteredProposals.filter(proposal => {
-          const match = proposal.proposalId.match(/^(\d{2})-(\d{4})-\d{4}$/);
-          return match && match[2] === year;
-        });
-      }
-
-      populateTable(filteredProposals);
-    }
-
-    async function handleAction(select, proposalId, proposal) {
+    async function handleAction(select, proposalId) {
       const action = select.value;
       console.log(`Action selected: ${action}, Proposal ID: ${proposalId}`); // Debug log
-      if (!proposalId || !proposal) {
-        console.error('Invalid proposal data:', { proposalId, proposal });
-        alert('Invalid proposal data. Please try again.');
+      if (!proposalId) {
+        console.error('Invalid proposal ID:', proposalId);
+        alert('Invalid proposal ID. Please try again.');
         return;
       }
       if (action === 'view') {
         try {
-          await fetchColleges();
-          await fetchDepartments(proposal.college || '');
-          showModal(proposal);
+          const response = await fetch(`${API_URL}?action=getProposalById&proposalId=${encodeURIComponent(proposalId)}`, { method: 'GET', redirect: 'follow' });
+          if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
+          const data = await response.json();
+          if (data.error) {
+            alert(`Proposal not found: ${data.message}`);
+            return;
+          }
+          alert(`Viewing Proposal ID: ${data.proposalId}\nTitle: ${data.particulars || 'Untitled'}`);
         } catch (error) {
           console.error('Error in view action:', error);
           alert(`Failed to load proposal details: ${error.message}`);
         }
       } else if (action === 'update') {
         try {
-          if (!proposalId) throw new Error('No proposal ID available');
           console.log(`Navigating to ${UPDATE_URL}?proposalId=${encodeURIComponent(proposalId)}`);
           window.location.href = `${UPDATE_URL}?proposalId=${encodeURIComponent(proposalId)}`;
         } catch (error) {
@@ -240,53 +117,6 @@
         }
       }
       select.value = ''; // Reset dropdown after action
-    }
-
-    function showModal(proposal) {
-      document.getElementById('modalProposalId').textContent = proposal.proposalId;
-      document.getElementById('modalParticulars').textContent = proposal.particulars || 'Untitled';
-      const collegeSelect = document.getElementById('modalCollege');
-      collegeSelect.innerHTML = '<option value="">Select College</option>' + colleges.map(c => `<option value="${c}" ${c === proposal.college ? 'selected' : ''}>${c}</option>`).join('');
-      collegeSelect.onchange = () => updateDepartments(proposal);
-      updateDepartments(proposal);
-      document.getElementById('modalOthers').textContent = proposal.others || '';
-      document.getElementById('modalObjectives').textContent = proposal.objectives || '';
-      document.getElementById('modalNature').textContent = proposal.nature || '';
-      document.getElementById('modalLocale').textContent = proposal.locale || '';
-      document.getElementById('modalDuration').textContent = proposal.duration || '';
-      document.getElementById('modalFunding').textContent = proposal.funding || '';
-      document.getElementById('modalAmount').textContent = proposal.amount || '';
-      document.getElementById('modalContact').textContent = proposal.contact || '';
-      document.getElementById('modalDocuments').textContent = proposal.documents || '';
-      document.getElementById('modalCsac').textContent = proposal.csac || '';
-      document.getElementById('modalRemarks').textContent = proposal.remarks || '';
-      document.getElementById('modalDocSeq').textContent = proposal.docSeq || '';
-      document.getElementById('modalCopies').textContent = proposal.copies || '';
-      document.getElementById('modalReceiver').textContent = proposal.receiver || '';
-      document.getElementById('modalDateTime').textContent = proposal.dateTime || '';
-      document.getElementById('modalDurationOfProcess').textContent = proposal.durationOfProcess || '';
-      document.getElementById('modalExpectedDate').textContent = proposal.expectedDate || '';
-      document.getElementById('modalUsds').textContent = proposal.usds || '';
-      document.getElementById('modalNotations').textContent = proposal.notations || '';
-      document.getElementById('modalStatus').textContent = proposal.status || '';
-      document.getElementById('modalStatusDate').textContent = proposal.statusDate || '';
-      document.getElementById('modalOfficeDestination').textContent = proposal.officeDestination || '';
-      document.getElementById('modalAccomplished').textContent = proposal.accomplished || 'No';
-      document.getElementById('modalReturnedDate').textContent = proposal.returnedDate || '';
-      document.getElementById('viewModal').style.display = 'block';
-    }
-
-    function updateDepartments(proposal) {
-      const college = document.getElementById('modalCollege').value;
-      const deptSelect = document.getElementById('modalDepartment');
-      fetchDepartments(college).then(() => {
-        deptSelect.innerHTML = '<option value="">Select Department</option>' + 
-          (departments[college] || []).map(d => `<option value="${d}" ${d === proposal.department ? 'selected' : ''}>${d}</option>`).join('');
-      });
-    }
-
-    function closeModal() {
-      document.getElementById('viewModal').style.display = 'none';
     }
 
     window.onload = fetchProposals;
