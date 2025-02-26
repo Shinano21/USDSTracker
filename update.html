@@ -140,9 +140,15 @@
     </div>
 
     <script>
-        const API_URL = 'https://script.google.com/macros/s/AKfycbyHKJ6-qlH4F3dLdUNuu2mcyiQHhv7kTd7cfWnqustB9nD3aquVk0xkmmp4t7Uj620/exec'; // Replace with your actual Apps Script URL if different
-        const DASHBOARD_URL = 'dashboard.html'; // Use relative path for GitHub Pages
-    
+        const API_URL = 'https://script.google.com/macros/s/AKfycbyHKJ6-qlH4F3dLdUNuu2mcyiQHhv7kTd7cfWnqustB9nD3aquVk0xkmmp4t7Uj620/exec';
+        const DASHBOARD_URL = 'dashboard.html';
+        const INDEX_URL = 'index.html';
+
+        // Security check: Redirect to index.html if not logged in
+        if (localStorage.getItem('authToken') !== 'loggedIn') {
+            window.location.href = INDEX_URL;
+        }
+
         // Static college and department data
         const collegeData = {
             "BU COLLEGE OF EDUCATION (BUCE)": [
@@ -268,7 +274,6 @@
             window.location.href = DASHBOARD_URL;
         }
     
-        // Populate colleges statically
         function populateColleges(selectedCollege = '') {
             const collegeSelect = document.getElementById('college');
             collegeSelect.innerHTML = '<option value="">Select College</option>';
@@ -281,7 +286,6 @@
             });
         }
     
-        // Update departments based on selected college
         function updateDepartments() {
             const college = document.getElementById('college').value;
             const departmentSelect = document.getElementById('department');
@@ -297,7 +301,6 @@
             }
         }
 
-        // Fetch and populate "Received By" options
         async function populateReceiver(selectedReceiver = '') {
             try {
                 const response = await fetch(`${API_URL}?action=getReceivers`, {
@@ -363,7 +366,7 @@
                 document.getElementById('remarks').value = data.remarks || '';
                 document.getElementById('docSeq').value = data.docSeq || '';
                 document.getElementById('copies').value = data.copies || '';
-                populateReceiver(data.receiver || ''); // Load and set the selected receiver
+                populateReceiver(data.receiver || '');
                 document.getElementById('usds').value = data.usds || '';
                 document.getElementById('notations').value = data.notations || '';
                 document.getElementById('status').value = data.status || '';

@@ -6,59 +6,92 @@
     <title>Proposal Submission Form</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
             background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start;
             min-height: 100vh;
-            margin: 0;
         }
         .container {
             background: white;
-            padding: 25px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             width: 90%;
-            max-width: 1200px;
+            max-width: 1400px;
+        }
+        h2 {
             text-align: center;
-        }
-        h2, h3 {
-            margin-bottom: 20px;
             color: #333;
+            margin-bottom: 30px;
+            font-size: 24px;
         }
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
+        .form-section {
+            margin-bottom: 30px;
+        }
+        .section-title {
+            font-size: 18px;
+            color: #555;
+            margin-bottom: 15px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #28a745;
+            display: inline-block;
+        }
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
             gap: 20px;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            flex: 1;
+            min-width: 250px;
         }
         label {
             font-weight: bold;
+            color: #444;
             display: block;
-            margin-top: 10px;
-            text-align: left;
+            margin-bottom: 5px;
+            font-size: 14px;
         }
         input, select, textarea {
             width: 100%;
-            padding: 8px;
-            margin-top: 5px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
             font-size: 14px;
             box-sizing: border-box;
+            background-color: #fafafa;
+            transition: border-color 0.3s;
+        }
+        input:focus, select:focus, textarea:focus {
+            border-color: #28a745;
+            outline: none;
         }
         textarea {
             resize: vertical;
-            min-height: 80px;
+            min-height: 100px;
+        }
+        .error {
+            color: #dc3545;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        .button-row {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 30px;
         }
         button {
-            grid-column: span 3;
-            padding: 12px;
+            padding: 12px 24px;
             font-size: 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-top: 15px;
             border: none;
+            border-radius: 6px;
+            cursor: pointer;
             transition: background-color 0.3s ease;
         }
         .submit-btn {
@@ -75,23 +108,19 @@
         .back-btn:hover {
             background-color: #c82333;
         }
-        .error {
-            color: red;
-            font-size: 0.9em;
-            margin-top: 5px;
-            text-align: left;
-        }
-        .section {
-            border-top: 1px solid #ccc;
-            padding-top: 20px;
-            margin-top: 20px;
-        }
         @media (max-width: 768px) {
-            .form-grid {
-                grid-template-columns: 1fr;
+            .form-row {
+                flex-direction: column;
+            }
+            .form-group {
+                min-width: 100%;
+            }
+            .button-row {
+                flex-direction: column;
+                gap: 10px;
             }
             button {
-                grid-column: span 1;
+                width: 100%;
             }
         }
     </style>
@@ -101,41 +130,47 @@
         <h2>Proposal Submission</h2>
         <form id="proposalForm">
             <input type="hidden" name="type" value="proposal">
-            <div class="form-grid">
-                <div>
-                    <label for="particulars">Title of Activity:</label>
-                    <textarea id="particulars" name="particulars" rows="4" placeholder="Enter title..." required></textarea>
-                </div>
 
-                <!-- Implementing Unit -->
-                <div class="section">
-                    <h3>Implementing Unit</h3>
-                    <div>
+            <div class="form-section">
+                <div class="section-title">Activity Details</div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="particulars">Title of Activity:</label>
+                        <textarea id="particulars" name="particulars" placeholder="Enter title..." required></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <div class="section-title">Implementing Unit</div>
+                <div class="form-row">
+                    <div class="form-group">
                         <label for="college">College:</label>
                         <select id="college" name="college" onchange="updateDepartments()" required>
                             <option value="">Select College</option>
                         </select>
                     </div>
-                    <div>
+                    <div class="form-group">
                         <label for="department">Department:</label>
                         <select id="department" name="department" required>
                             <option value="">Select Department</option>
                         </select>
                     </div>
-                    <div>
+                    <div class="form-group">
                         <label for="others">If others, please specify:</label>
                         <input type="text" id="others" name="others" placeholder="Specify if others">
                     </div>
                 </div>
+            </div>
 
-                <!-- Basic Information of the Activity -->
-                <div class="section">
-                    <h3>Basic Information of the Activity</h3>
-                    <div>
+            <div class="form-section">
+                <div class="section-title">Basic Information of the Activity</div>
+                <div class="form-row">
+                    <div class="form-group">
                         <label for="objectives">Objectives:</label>
-                        <textarea id="objectives" name="objectives" rows="4" placeholder="Enter objectives..." required></textarea>
+                        <textarea id="objectives" name="objectives" placeholder="Enter objectives..." required></textarea>
                     </div>
-                    <div>
+                    <div class="form-group">
                         <label for="nature">Nature/Classification:</label>
                         <select id="nature" name="nature" required>
                             <option value="" disabled selected>Select Nature/Classification</option>
@@ -147,90 +182,94 @@
                             <option value="UBO">UBO</option>
                         </select>
                     </div>
-                    <div>
+                    <div class="form-group">
                         <label for="locale">Locale:</label>
                         <input type="text" id="locale" name="locale" placeholder="Enter locale" required>
                     </div>
-                    <div>
+                    <div class="form-group">
                         <label for="duration">Duration of Activity:</label>
                         <input type="text" id="duration" name="duration" placeholder="Enter duration" required>
                     </div>
                 </div>
+            </div>
 
-                <!-- Funding Requirement -->
-                <div class="section">
-                    <h3>Funding Requirement</h3>
-                    <div>
+            <div class="form-section">
+                <div class="section-title">Funding Requirement</div>
+                <div class="form-row">
+                    <div class="form-group">
                         <label for="funding">Funding Source:</label>
                         <input type="text" id="funding" name="funding" placeholder="Enter funding source" required>
                     </div>
-                    <div>
+                    <div class="form-group">
                         <label for="amount">Total Amount:</label>
                         <input type="number" id="amount" name="amount" step="0.01" placeholder="Enter amount" required>
                         <div id="amountError" class="error"></div>
                     </div>
                 </div>
+            </div>
 
-                <!-- Contact and Documents -->
-                <div>
-                    <label for="contact">Number/Email of Contact Person:</label>
-                    <input type="text" id="contact" name="contact" placeholder="Enter contact info" required>
+            <div class="form-section">
+                <div class="section-title">Contact and Documents</div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="contact">Number/Email of Contact Person:</label>
+                        <input type="text" id="contact" name="contact" placeholder="Enter contact info" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="documents">Scanned Copy of Documents:</label>
+                        <input type="text" id="documents" name="documents" placeholder="URL or file reference">
+                    </div>
                 </div>
-                <div>
-                    <label for="documents">Scanned Copy of Documents:</label>
-                    <input type="text" id="documents" name="documents" placeholder="URL or file reference">
-                </div>
+            </div>
 
-                <!-- 1st Evaluation & Review of Compliance -->
-                <div class="section">
-                    <h3>1st Evaluation & Review of Compliance</h3>
-                    <div>
+            <div class="form-section">
+                <div class="section-title">1st Evaluation & Review of Compliance</div>
+                <div class="form-row">
+                    <div class="form-group">
                         <label for="csac">Action of CSAC:</label>
                         <input type="text" id="csac" name="csac" placeholder="Enter CSAC action">
                     </div>
-                    <div>
+                    <div class="form-group">
                         <label for="remarks">Remarks:</label>
-                        <textarea id="remarks" name="remarks" rows="4" placeholder="Enter remarks"></textarea>
+                        <textarea id="remarks" name="remarks" placeholder="Enter remarks"></textarea>
                     </div>
                 </div>
+            </div>
 
-                <!-- Received by USDS -->
-                <div class="section">
-                    <h3>Received by USDS</h3>
-                    <div>
+            <div class="form-section">
+                <div class="section-title">Received by USDS</div>
+                <div class="form-row">
+                    <div class="form-group">
                         <label for="docSeq">DOC. SEQ. No.:</label>
                         <input type="text" id="docSeq" name="docSeq" placeholder="Enter sequence number" required>
                         <div id="docSeqError" class="error"></div>
                     </div>
-                    <div>
+                    <div class="form-group">
                         <label for="copies">No of Copies:</label>
                         <input type="number" id="copies" name="copies" min="1" placeholder="Enter number of copies" required>
                         <div id="copiesError" class="error"></div>
                     </div>
-                    <div>
-                        <label for="receiver">RECEIVER:</label>
+                    <div class="form-group">
+                        <label for="receiver">Receiver:</label>
                         <select id="receiver" name="receiver">
                             <option value="" disabled selected>Select receiver</option>
-                            <option value="Ma'am Ann">Ma'am Ann</option>
-                            <option value="Sir Ronald">Sir Ronald</option>
-                            <option value="Sir Mike">Sir Mike</option>
-                            <option value="Sir Christian">Sir Christian</option>
                         </select>
                     </div>
                 </div>
+            </div>
 
-                <!-- 2nd Evaluation & Review of Compliance -->
-                <div class="section">
-                    <h3>2nd Evaluation & Review of Compliance</h3>
-                    <div>
+            <div class="form-section">
+                <div class="section-title">2nd Evaluation & Review of Compliance</div>
+                <div class="form-row">
+                    <div class="form-group">
                         <label for="usds">Action of USDS:</label>
                         <input type="text" id="usds" name="usds" placeholder="Enter USDS action">
                     </div>
-                    <div>
+                    <div class="form-group">
                         <label for="notations">Notations:</label>
-                        <textarea id="notations" name="notations" rows="4" placeholder="Enter notations"></textarea>
+                        <textarea id="notations" name="notations" placeholder="Enter notations"></textarea>
                     </div>
-                    <div>
+                    <div class="form-group">
                         <label for="status">Status:</label>
                         <select id="status" name="status">
                             <option value="">Select Status</option>
@@ -239,12 +278,14 @@
                             <option value="Forwarded">Forwarded</option>
                         </select>
                     </div>
-                    <div>
+                    <div class="form-group">
                         <label for="office">Office Destination:</label>
                         <input type="text" id="office" name="office" placeholder="Enter office destination">
                     </div>
                 </div>
+            </div>
 
+            <div class="button-row">
                 <button type="submit" class="submit-btn">Submit</button>
                 <button class="back-btn" onclick="goBack()">Go Back</button>
             </div>
@@ -252,225 +293,262 @@
     </div>
 
     <script>
-    const collegeData = {
-        "BU COLLEGE OF EDUCATION (BUCE)": [
-            "Bachelor of Culture and Arts Education (BCAEd)",
-            "Bachelor of Early Childhood Education (BECEd)",
-            "Bachelor of Elementary Education (BEED)",
-            "Bachelor of Secondary Education, major in English (BSED-Eng)",
-            "Bachelor of Secondary Education, major in Filipino (BSED-Fil)",
-            "Bachelor of Secondary Education, major in Mathematics (BSED-Math)",
-            "Bachelor of Secondary Education, major in Science (BSED-Sci)",
-            "Bachelor of Secondary Education, major in Social Studies (BSED-SS)",
-            "Bachelor of Secondary Education, major in Values Education (BSED-VE)",
-            "Certificate in College Teaching (CCT)",
-            "Integrated Laboratory High School Department"
-        ],
-        "BU COLLEGE OF SCIENCE (BUCS)": [
-            "Bachelor of Science in Biology (BSBio)",
-            "Bachelor of Science in Chemistry (BSChem)",
-            "Bachelor of Science in Computer Science (BSCS)",
-            "Bachelor of Science in Information Technology (BSIT)",
-            "Bachelor of Science in Meteorology (BSMet)"
-        ],
-        "BU COLLEGE OF MEDICINE (BUCM)": ["Doctor of Medicine (MD)"],
-        "BU COLLEGE OF ARTS AND LETTERS (BUCAL)": [
-            "Bachelor of Arts in Broadcasting (ABBroad)",
-            "Bachelor of Arts in Communication (ABComm)",
-            "Bachelor of Arts in English Language (ABEngLang)",
-            "Bachelor of Arts in Journalism (ABJourn)",
-            "Bachelor of Arts in Literature (ABLit)",
-            "Bachelor of Performing Arts, major in Theater (BPeA)"
-        ],
-        "BU JESSIE M. ROBREDO INSTITUTE OF GOVERNANCE AND DEVELOPMENT (BUJMRIGD)": ["Bachelor of Public Administration (BPA)"],
-        "BU COLLEGE OF NURSING (BUCN)": ["Bachelor of Science in Nursing (BSN)"],
-        "BU COLLEGE OF ENGINEERING (BUCENG)": [
-            "Bachelor of Science in Chemical Engineering (BSCheE)",
-            "Bachelor of Science in Civil Engineering (BSCE)",
-            "Bachelor of Science in Electrical Engineering (BSEE)",
-            "Bachelor of Science in Geodetic Engineering (BSGE)",
-            "Bachelor of Science in Mechanical Engineering (BSME)",
-            "Bachelor of Science in Mining Engineering (BSEM)",
-            "Bachelor of Science in Computer Engineering (BSCoE)",
-            "Bachelor of Science in Electronics Engineering (BSECE)"
-        ],
-        "BU INSTITUTE OF DESIGN AND ARCHITECTURE (BUIDeA)": [
-            "Bachelor of Science in Architecture (BSArch)",
-            "Bachelor in Industrial Design (BID)"
-        ],
-        "BU INSTITUTE OF P.E., SPORTS AND RECREATION (BUIPESR)": [
-            "Bachelor of Physical Education (BPED)",
-            "Bachelor of Science in Exercise & Sports Sciences, major in Fitness and Sport Coaching (BSESS-FSC)",
-            "Bachelor of Science in Exercise & Sports Sciences, major in Fitness and Sport Management (BSESS-FSM)"
-        ],
-        "BU COLLEGE OF INDUSTRIAL TECHNOLOGY (BUCIT)": [
-            "Bachelor of Science in Accountancy (BSAcct)",
-            "Bachelor of Science in Economics (ABEcon)",
-            "Bachelor of Science in Entrepreneurship (BSEntrep)",
-            "Bachelor of Science in Business Administration (BSBA), major in:",
-            "Financial Management (BSBA-FM)",
-            "Human Resource Management (BSBA-HRM)",
-            "Management (BSBA-Mgt)",
-            "Marketing Management (BSBA-MM)",
-            "Microfinance (BSBA-MF)",
-            "Operations Management (BSBA-OM)"
-        ],
-        "BU COLLEGE OF BUSINESS, ECONOMICS, AND MANAGEMENT (BUCBEM)": [
-            "Bachelor of Science in Accountancy (BSAcct)",
-            "Bachelor of Science in Economics (ABEcon)",
-            "Bachelor of Science in Entrepreneurship (BSEntrep)",
-            "Bachelor of Science in Business Administration (BSBA), major in:",
-            "Financial Management (BSBA-FM)",
-            "Human Resource Management (BSBA-HRM)",
-            "Management (BSBA-Mgt)",
-            "Marketing Management (BSBA-MM)",
-            "Microfinance (BSBA-MF)",
-            "Operations Management (BSBA-OM)"
-        ],
-        "BU COLLEGE OF SOCIAL SCIENCES AND PHILOSOPHY (BUCSSP)": [
-            "Bachelor of Arts in Peace Studies (BAPS)",
-            "Bachelor of Arts in Philosophy (ABPhilo)",
-            "Bachelor of Arts in Political Science (ABPolSci)",
-            "Bachelor of Arts in Sociology (ABSocio)",
-            "Bachelor of Science in Psychology (ABPsyc)",
-            "Bachelor of Science in Social Work (BSSW)"
-        ],
-        "BU COLLEGE OF DENTAL MEDICINE (BUDMD)": ["Doctor of Dental Medicine (DMD)"],
-        "BU COLLEGE OF LAW": ["Bachelor of Laws (LLB)"],
-        "BU GRADUATE SCHOOL": [],
-        "BU GUINOBATAN CAMPUS": [
-            "Bachelor of Science in Agricultural Engineering (BSABE)",
-            "Bachelor of Science in Agriculture, major in:",
-            "Animal Science (BSAAS)",
-            "Crop Science (BSACS)",
-            "Agricultural Extension (BSAAEx)",
-            "Agribusiness (BSAgrib)",
-            "Agriculture and Biosystems (BSAgrib)",
-            "Bachelor of Science in Forestry (BSF)",
-            "Bachelor of Science in Fisheries (BSFish)"
-        ],
-        "BU POLANGUI CAMPUS": [
-            "Bachelor of Science in Information System (BSIS)",
-            "Bachelor of Science in Information Technology (BSIT)",
-            "Bachelor of Science in Information Technology, major in Animation (BSIT-Anim)"
-        ],
-        "BU TABACO CAMPUS": ["Bachelor of Science in Fisheries (ETEEAP)"],
-        "BU GUBAT CAMPUS": ["Bachelor of Science in Nursing (BSN)"],
-        "BU TECHNICAL-VOCATIONAL TEACHER EDUCATION (BTVTeD)": [
-            "Bachelor in Technical - Vocational Teacher Education (BTVTeD), major in:",
-            "Drafting Technology (BTVTeD-DT)",
-            "Electrical Technology (BTVTeD-ELT)",
-            "Food and Service Management (BTVTeD-FSM)",
-            "Garments, Fashion, and Design (BTVTeD-GFD)",
-            "Animal Production (BTVTeD-AP)",
-            "Agriculture Crop Production (BTVTeD-ACP)"
-        ],
-        "OTHER PROGRAMS": [
-            "Bachelor in Agricultural Technology (BAT)",
-            "Bachelor of Technology and Livelihood Education (BTLED)",
-            "Bachelor of Technology and Livelihood Education, major in ICT (BTLED-ICT)"
-        ]
-    };
+        const API_URL = 'https://script.google.com/macros/s/AKfycbyHKJ6-qlH4F3dLdUNuu2mcyiQHhv7kTd7cfWnqustB9nD3aquVk0xkmmp4t7Uj620/exec';
+        const DASHBOARD_URL = 'dashboard.html';
+        const INDEX_URL = 'index.html';
 
-    function goBack() {
-        window.location.href = 'https://shinano21.github.io/USDSTracker/dashboard.html';
-    }
+        // Security check: Redirect to index.html if not logged in
+        if (localStorage.getItem('authToken') !== 'loggedIn') {
+            window.location.href = INDEX_URL;
+        }
 
-    // Populate colleges on page load
-    function populateColleges() {
-        const collegeSelect = document.getElementById('college');
-        collegeSelect.innerHTML = '<option value="">Select College</option>';
-        Object.keys(collegeData).forEach(college => {
-            const option = document.createElement('option');
-            option.value = college;
-            option.text = college;
-            collegeSelect.appendChild(option);
-        });
-    }
+        const collegeData = {
+            "BU COLLEGE OF EDUCATION (BUCE)": [
+                "Bachelor of Culture and Arts Education (BCAEd)",
+                "Bachelor of Early Childhood Education (BECEd)",
+                "Bachelor of Elementary Education (BEED)",
+                "Bachelor of Secondary Education, major in English (BSED-Eng)",
+                "Bachelor of Secondary Education, major in Filipino (BSED-Fil)",
+                "Bachelor of Secondary Education, major in Mathematics (BSED-Math)",
+                "Bachelor of Secondary Education, major in Science (BSED-Sci)",
+                "Bachelor of Secondary Education, major in Social Studies (BSED-SS)",
+                "Bachelor of Secondary Education, major in Values Education (BSED-VE)",
+                "Certificate in College Teaching (CCT)",
+                "Integrated Laboratory High School Department"
+            ],
+            "BU COLLEGE OF SCIENCE (BUCS)": [
+                "Bachelor of Science in Biology (BSBio)",
+                "Bachelor of Science in Chemistry (BSChem)",
+                "Bachelor of Science in Computer Science (BSCS)",
+                "Bachelor of Science in Information Technology (BSIT)",
+                "Bachelor of Science in Meteorology (BSMet)"
+            ],
+            "BU COLLEGE OF MEDICINE (BUCM)": ["Doctor of Medicine (MD)"],
+            "BU COLLEGE OF ARTS AND LETTERS (BUCAL)": [
+                "Bachelor of Arts in Broadcasting (ABBroad)",
+                "Bachelor of Arts in Communication (ABComm)",
+                "Bachelor of Arts in English Language (ABEngLang)",
+                "Bachelor of Arts in Journalism (ABJourn)",
+                "Bachelor of Arts in Literature (ABLit)",
+                "Bachelor of Performing Arts, major in Theater (BPeA)"
+            ],
+            "BU JESSIE M. ROBREDO INSTITUTE OF GOVERNANCE AND DEVELOPMENT (BUJMRIGD)": ["Bachelor of Public Administration (BPA)"],
+            "BU COLLEGE OF NURSING (BUCN)": ["Bachelor of Science in Nursing (BSN)"],
+            "BU COLLEGE OF ENGINEERING (BUCENG)": [
+                "Bachelor of Science in Chemical Engineering (BSCheE)",
+                "Bachelor of Science in Civil Engineering (BSCE)",
+                "Bachelor of Science in Electrical Engineering (BSEE)",
+                "Bachelor of Science in Geodetic Engineering (BSGE)",
+                "Bachelor of Science in Mechanical Engineering (BSME)",
+                "Bachelor of Science in Mining Engineering (BSEM)",
+                "Bachelor of Science in Computer Engineering (BSCoE)",
+                "Bachelor of Science in Electronics Engineering (BSECE)"
+            ],
+            "BU INSTITUTE OF DESIGN AND ARCHITECTURE (BUIDeA)": [
+                "Bachelor of Science in Architecture (BSArch)",
+                "Bachelor in Industrial Design (BID)"
+            ],
+            "BU INSTITUTE OF P.E., SPORTS AND RECREATION (BUIPESR)": [
+                "Bachelor of Physical Education (BPED)",
+                "Bachelor of Science in Exercise & Sports Sciences, major in Fitness and Sport Coaching (BSESS-FSC)",
+                "Bachelor of Science in Exercise & Sports Sciences, major in Fitness and Sport Management (BSESS-FSM)"
+            ],
+            "BU COLLEGE OF INDUSTRIAL TECHNOLOGY (BUCIT)": [
+                "Bachelor of Science in Accountancy (BSAcct)",
+                "Bachelor of Science in Economics (ABEcon)",
+                "Bachelor of Science in Entrepreneurship (BSEntrep)",
+                "Bachelor of Science in Business Administration (BSBA), major in:",
+                "Financial Management (BSBA-FM)",
+                "Human Resource Management (BSBA-HRM)",
+                "Management (BSBA-Mgt)",
+                "Marketing Management (BSBA-MM)",
+                "Microfinance (BSBA-MF)",
+                "Operations Management (BSBA-OM)"
+            ],
+            "BU COLLEGE OF BUSINESS, ECONOMICS, AND MANAGEMENT (BUCBEM)": [
+                "Bachelor of Science in Accountancy (BSAcct)",
+                "Bachelor of Science in Economics (ABEcon)",
+                "Bachelor of Science in Entrepreneurship (BSEntrep)",
+                "Bachelor of Science in Business Administration (BSBA), major in:",
+                "Financial Management (BSBA-FM)",
+                "Human Resource Management (BSBA-HRM)",
+                "Management (BSBA-Mgt)",
+                "Marketing Management (BSBA-MM)",
+                "Microfinance (BSBA-MF)",
+                "Operations Management (BSBA-OM)"
+            ],
+            "BU COLLEGE OF SOCIAL SCIENCES AND PHILOSOPHY (BUCSSP)": [
+                "Bachelor of Arts in Peace Studies (BAPS)",
+                "Bachelor of Arts in Philosophy (ABPhilo)",
+                "Bachelor of Arts in Political Science (ABPolSci)",
+                "Bachelor of Arts in Sociology (ABSocio)",
+                "Bachelor of Science in Psychology (ABPsyc)",
+                "Bachelor of Science in Social Work (BSSW)"
+            ],
+            "BU COLLEGE OF DENTAL MEDICINE (BUDMD)": ["Doctor of Dental Medicine (DMD)"],
+            "BU COLLEGE OF LAW": ["Bachelor of Laws (LLB)"],
+            "BU GRADUATE SCHOOL": [],
+            "BU GUINOBATAN CAMPUS": [
+                "Bachelor of Science in Agricultural Engineering (BSABE)",
+                "Bachelor of Science in Agriculture, major in:",
+                "Animal Science (BSAAS)",
+                "Crop Science (BSACS)",
+                "Agricultural Extension (BSAAEx)",
+                "Agribusiness (BSAgrib)",
+                "Agriculture and Biosystems (BSAgrib)",
+                "Bachelor of Science in Forestry (BSF)",
+                "Bachelor of Science in Fisheries (BSFish)"
+            ],
+            "BU POLANGUI CAMPUS": [
+                "Bachelor of Science in Information System (BSIS)",
+                "Bachelor of Science in Information Technology (BSIT)",
+                "Bachelor of Science in Information Technology, major in Animation (BSIT-Anim)"
+            ],
+            "BU TABACO CAMPUS": ["Bachelor of Science in Fisheries (ETEEAP)"],
+            "BU GUBAT CAMPUS": ["Bachelor of Science in Nursing (BSN)"],
+            "BU TECHNICAL-VOCATIONAL TEACHER EDUCATION (BTVTeD)": [
+                "Bachelor in Technical - Vocational Teacher Education (BTVTeD), major in:",
+                "Drafting Technology (BTVTeD-DT)",
+                "Electrical Technology (BTVTeD-ELT)",
+                "Food and Service Management (BTVTeD-FSM)",
+                "Garments, Fashion, and Design (BTVTeD-GFD)",
+                "Animal Production (BTVTeD-AP)",
+                "Agriculture Crop Production (BTVTeD-ACP)"
+            ],
+            "OTHER PROGRAMS": [
+                "Bachelor in Agricultural Technology (BAT)",
+                "Bachelor of Technology and Livelihood Education (BTLED)",
+                "Bachelor of Technology and Livelihood Education, major in ICT (BTLED-ICT)"
+            ]
+        };
 
-    function updateDepartments() {
-        const college = document.getElementById("college").value;
-        const departmentSelect = document.getElementById("department");
-        departmentSelect.innerHTML = '<option value="">Select Department</option>';
-        
-        if (college && collegeData[college]) {
-            collegeData[college].forEach(dept => {
-                const option = document.createElement("option");
-                option.value = dept;
-                option.text = dept;
-                departmentSelect.appendChild(option);
+        function goBack() {
+            window.location.href = DASHBOARD_URL;
+        }
+
+        function populateColleges() {
+            const collegeSelect = document.getElementById('college');
+            collegeSelect.innerHTML = '<option value="">Select College</option>';
+            Object.keys(collegeData).forEach(college => {
+                const option = document.createElement('option');
+                option.value = college;
+                option.text = college;
+                collegeSelect.appendChild(option);
             });
         }
-    }
 
-    document.getElementById('proposalForm').addEventListener('submit', function(event) {
-        event.preventDefault(); // Prevent default form submission
-
-        let valid = true;
-
-        let amount = document.getElementById('amount');
-        let amountError = document.getElementById('amountError');
-        if (!amount.value || isNaN(amount.value) || amount.value <= 0) {
-            amountError.textContent = 'Total amount must be a positive number.';
-            valid = false;
-        } else {
-            amountError.textContent = '';
+        function updateDepartments() {
+            const college = document.getElementById("college").value;
+            const departmentSelect = document.getElementById("department");
+            departmentSelect.innerHTML = '<option value="">Select Department</option>';
+            
+            if (college && collegeData[college]) {
+                collegeData[college].forEach(dept => {
+                    const option = document.createElement("option");
+                    option.value = dept;
+                    option.text = dept;
+                    departmentSelect.appendChild(option);
+                });
+            }
         }
 
-        let docSeq = document.getElementById('docSeq');
-        let docSeqError = document.getElementById('docSeqError');
-        if (!docSeq.value) {
-            docSeqError.textContent = 'Please enter a document sequence number.';
-            valid = false;
-        } else {
-            docSeqError.textContent = '';
+        async function populateReceiver() {
+            try {
+                const response = await fetch(`${API_URL}?action=getReceivers`, {
+                    method: 'GET',
+                    redirect: 'follow'
+                });
+                if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
+                const receivers = await response.json();
+                
+                const receiverSelect = document.getElementById('receiver');
+                receiverSelect.innerHTML = '<option value="" disabled selected>Select receiver</option>';
+                receivers.forEach(receiver => {
+                    const option = document.createElement('option');
+                    option.value = receiver;
+                    option.text = receiver;
+                    receiverSelect.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error fetching receivers:', error);
+                alert(`Failed to load receivers: ${error.message}`);
+            }
         }
 
-        let copies = document.getElementById('copies');
-        let copiesError = document.getElementById('copiesError');
-        if (!copies.value || isNaN(copies.value) || copies.value < 1) {
-            copiesError.textContent = 'Number of copies must be at least 1.';
-            valid = false;
-        } else {
-            copiesError.textContent = '';
-        }
+        document.getElementById('proposalForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
 
-        if (!valid) return;
+            let valid = true;
 
-        // Construct JSON payload
-        const formData = new FormData(this);
-        const data = {};
-        formData.forEach((value, key) => {
-            data[key] = value;
+            let amount = document.getElementById('amount');
+            let amountError = document.getElementById('amountError');
+            if (!amount.value || isNaN(amount.value) || amount.value <= 0) {
+                amountError.textContent = 'Total amount must be a positive number.';
+                valid = false;
+            } else {
+                amountError.textContent = '';
+            }
+
+            let docSeq = document.getElementById('docSeq');
+            let docSeqError = document.getElementById('docSeqError');
+            if (!docSeq.value) {
+                docSeqError.textContent = 'Please enter a document sequence number.';
+                valid = false;
+            } else {
+                docSeqError.textContent = '';
+            }
+
+            let copies = document.getElementById('copies');
+            let copiesError = document.getElementById('copiesError');
+            if (!copies.value || isNaN(copies.value) || copies.value < 1) {
+                copiesError.textContent = 'Number of copies must be at least 1.';
+                valid = false;
+            } else {
+                copiesError.textContent = '';
+            }
+
+            if (!valid) return;
+
+            const formData = new FormData(this);
+            const data = {};
+            formData.forEach((value, key) => {
+                data[key] = value;
+            });
+            data.action = "add";
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify(data)
+                });
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`HTTP error: ${response.status} - ${errorText}`);
+                }
+                const result = await response.json();
+                console.log('Server response:', result);
+
+                if (result.success) {
+                    alert('Proposal submitted successfully!');
+                    document.getElementById('proposalForm').reset();
+                    populateColleges();
+                    updateDepartments();
+                    populateReceiver();
+                    window.location.href = DASHBOARD_URL;
+                } else {
+                    alert('Failed to submit proposal: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Submission error:', error);
+                alert('Error submitting proposal: ' + error.message);
+            }
         });
-        data.action = "add"; // Add an action to match server logic
 
-        // Send JSON to Google Apps Script
-        fetch('https://script.google.com/macros/s/AKfycbyHKJ6-qlH4F3dLdUNuu2mcyiQHhv7kTd7cfWnqustB9nD3aquVk0xkmmp4t7Uj620/exec', {
-            method: 'POST',
-            mode: 'no-cors', // Avoid CORS issues with Google Apps Script
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        })
-        .then(() => {
-            // Since mode is 'no-cors', we assume success if no error occurs
-            alert('Proposal submitted successfully!');
-            document.getElementById('proposalForm').reset(); // Reset form
-            populateColleges(); // Reset college dropdown
-            updateDepartments(); // Reset department dropdown
-        })
-        .catch(error => {
-            alert('Error submitting proposal: ' + error.message);
-            console.error('Submission error:', error);
-        });
-    });
-
-    // Initialize colleges when the page loads
-    window.onload = function() {
-        populateColleges();
-    };
+        window.onload = function() {
+            populateColleges();
+            populateReceiver();
+        };
     </script>
 </body>
 </html>

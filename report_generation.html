@@ -54,7 +54,7 @@
             </tr>
             <tr>
                 <th></th>
-                <th>Ma’am Anna</th>
+                <th>Ma’am Ann</th>
                 <th>Sir Mike</th>
                 <th>Sir Christian</th>
                 <th>Sir Ronald</th>
@@ -76,11 +76,17 @@
     <button class="submit-btn" onclick="submitForm()">Submit Data</button>
 
     <script>
-        const API_URL = 'https://script.google.com/macros/s/AKfycbyHKJ6-qlH4F3dLdUNuu2mcyiQHhv7kTd7cfWnqustB9nD3aquVk0xkmmp4t7Uj620/exec'; // Replace with your actual URL
+        const API_URL = 'https://script.google.com/macros/s/AKfycbyHKJ6-qlH4F3dLdUNuu2mcyiQHhv7kTd7cfWnqustB9nD3aquVk0xkmmp4t7Uj620/exec';
+        const INDEX_URL = 'index.html'; // Relative path for login page
         const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
         const monthShorts = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
-        const categories = ['maam_anna', 'sir_mike', 'sir_christian', 'sir_ronald', 'off_campus', 'in_campus', 'ojt'];
+        const categories = ['maam_ann', 'sir_mike', 'sir_christian', 'sir_ronald', 'off_campus', 'in_campus', 'ojt'];
         const proposalTypes = ['off_campus', 'in_campus', 'unibe', 'ubo', 'usc'];
+
+        // Security check: Redirect to index.html if not logged in
+        if (localStorage.getItem('authToken') !== 'loggedIn') {
+            window.location.href = INDEX_URL;
+        }
 
         function createMonthRows(proposalData) {
             const tbody = document.getElementById('monthData');
@@ -101,13 +107,13 @@
                             proposalTypes.forEach(type => monthData[monthShort][type] = 0);
                             accomplishedData[monthShort] = { yes: 0, total: 0 };
                         }
-                        // Use receiver for "Received By" (Ma’am Anna, Sir Mike, Sir Christian, Sir Ronald)
-                        const receiverLower = proposal.receiver.toLowerCase();
+                        // Use receiver for "Received By" (Ma’am Ann, Sir Mike, Sir Christian, Sir Ronald)
+                        const receiverLower = proposal.receiver.toLowerCase().replace(/\s/g, '_');
                         if (categories.includes(receiverLower)) {
                             monthData[monthShort][receiverLower] += 1;
                         }
                         // Use nature for "Record of Transactions" (Off Campus, In Campus, OJT) and "Total Proposals Received" (Off Campus, In Campus, UNIBE, UBO, USC)
-                        const natureLower = (proposal.nature || '').toLowerCase().trim();
+                        const natureLower = (proposal.nature || '').toLowerCase().trim().replace(/\s/g, '_');
                         if (categories.slice(4).includes(natureLower)) { // Off Campus, In Campus, OJT
                             monthData[monthShort][natureLower] += 1;
                         }
@@ -131,15 +137,15 @@
                     row.innerHTML = `<td>${month}</td>`;
                     let hasData = false;
 
-                    // Received By (Ma’am Anna, Sir Mike, Sir Christian, Sir Ronald)
-                    categories.slice(0, 4).forEach(cat => { // Only the first 4 are "Received By"
+                    // Received By (Ma’am Ann, Sir Mike, Sir Christian, Sir Ronald)
+                    categories.slice(0, 4).forEach(cat => {
                         const value = monthData[monthShort][cat] || 0;
                         if (value > 0) hasData = true;
                         row.innerHTML += `<td><input type="number" name="${monthShort}_${cat}" value="${value}" min="0"></td>`;
                     });
 
                     // Record of Transactions (Off Campus, In Campus, OJT)
-                    categories.slice(4).forEach(cat => { // Last 3 are Off Campus, In Campus, OJT
+                    categories.slice(4).forEach(cat => {
                         const value = monthData[monthShort][cat] || 0;
                         if (value > 0) hasData = true;
                         row.innerHTML += `<td><input type="number" name="${monthShort}_${cat}" value="${value}" min="0"></td>`;
@@ -186,9 +192,6 @@
                 rows.forEach(row => total += parseInt(row.querySelector(`input[name$="_${type}"]`).value) || 0);
                 document.querySelector(`input[name="total_${type}"]`).value = total;
             });
-
-            const grandTotal = proposalTypes.reduce((sum, type) => sum + (parseInt(document.querySelector(`input[name="total_${type}"]`).value) || 0), 0);
-            document.querySelectorAll(`input[name^="total_"][name$="_total"]`).forEach(input => input.value = grandTotal);
 
             rows.forEach(row => {
                 const [yes, total] = row.querySelector(`input[name$="_acted_upon"]`).value.split('/').map(Number);
@@ -240,19 +243,23 @@
             try {
                 const response = await fetch(API_URL, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 'Content-Type': 'text/plain' }, // Changed to text/plain to avoid CORS preflight
                     body: JSON.stringify(data)
                 });
-                if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`HTTP error: ${response.status} - ${errorText}`);
+                }
                 const result = await response.json();
                 if (result.success) {
                     alert(`Data submitted successfully! Row: ${result.row}`);
-                    createMonthRows([]);
+                    createMonthRows([]); // Reset table
                     document.getElementById('reportName').value = '';
                 } else {
                     alert(`Error submitting data: ${result.message}`);
                 }
             } catch (error) {
+                console.error('Error submitting data:', error);
                 alert(`Error submitting data: ${error.message}`);
             }
         }

@@ -72,6 +72,10 @@
     </div>
 
     <script>
+        const API_URL = 'https://script.google.com/macros/s/AKfycbyHKJ6-qlH4F3dLdUNuu2mcyiQHhv7kTd7cfWnqustB9nD3aquVk0xkmmp4t7Uj620/exec';
+        const DASHBOARD_URL = 'dashboard.html';
+        const INDEX_URL = 'index.html';
+
         document.getElementById('loginForm').addEventListener('submit', async function(event) {
             event.preventDefault();
 
@@ -79,48 +83,43 @@
             const password = document.getElementById('password').value;
             const messageDiv = document.getElementById('message');
 
-            // Debugging: Log the request data
             console.log('Sending:', { action: "login", username, password });
 
             try {
-                const response = await fetch('https://script.google.com/macros/s/AKfycbyHKJ6-qlH4F3dLdUNuu2mcyiQHhv7kTd7cfWnqustB9nD3aquVk0xkmmp4t7Uj620/exec', {
+                const response = await fetch(API_URL, {
                     method: 'POST',
-                    mode: 'no-cors', // Temporarily use no-cors to bypass CORS issues for testing
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 'Content-Type': 'text/plain' }, // Avoids CORS preflight
                     body: JSON.stringify({ action: "login", username, password })
                 });
 
-                // With 'no-cors', response.json() isn't available, so we need to adjust logic
-                // Remove 'no-cors' once CORS is fixed on the server side
-                messageDiv.style.color = 'green';
-                messageDiv.textContent = 'Login request sent! Check server response.';
-                console.log('Response:', response);
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`HTTP error: ${response.status} - ${errorText}`);
+                }
 
-                // Since 'no-cors' prevents reading the response, simulate success for now
-                setTimeout(() => {
-                    window.location.href = 'dashboard.html';
-                }, 1000);
-
-                // Uncomment this when CORS is fixed and remove 'no-cors':
-                /*
                 const result = await response.json();
                 console.log('Server response:', result);
 
                 if (result.success) {
+                    localStorage.setItem('authToken', 'loggedIn'); // Set auth token
                     messageDiv.style.color = 'green';
                     messageDiv.textContent = 'Login successful! Redirecting...';
                     setTimeout(() => {
-                        window.location.href = 'dashboard.html';
+                        window.location.href = DASHBOARD_URL;
                     }, 1000);
                 } else {
                     messageDiv.textContent = 'Invalid username or password.';
                 }
-                */
             } catch (error) {
                 messageDiv.textContent = 'An error occurred. Please try again.';
                 console.error('Fetch error:', error);
             }
         });
+
+        // Redirect to dashboard if already logged in
+        if (localStorage.getItem('authToken') === 'loggedIn') {
+            window.location.href = DASHBOARD_URL;
+        }
     </script>
 </body>
 </html>
