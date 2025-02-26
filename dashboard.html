@@ -9,13 +9,13 @@
     h1 { text-align: center; color: #333; }
     .table-container { max-width: 1200px; margin: 0 auto; }
     .header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-    .logout-container { margin-right: auto; } /* Push logout to the left */
+    .logout-container { margin-right: auto; }
     .logout-container button { padding: 8px 16px; background-color: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer; }
     .logout-container button:hover { background-color: #c82333; }
     .filter-container { display: flex; gap: 15px; align-items: center; }
     .filter-container label { font-weight: bold; margin-right: 5px; }
     .filter-container select { padding: 8px; border-radius: 4px; cursor: pointer; }
-    .button-container { margin-left: auto; } /* Push buttons to the right */
+    .button-container { margin-left: auto; }
     .button-container button { padding: 8px 16px; margin-left: 10px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; }
     .button-container button:hover { background-color: #45a049; }
     table { width: 100%; border-collapse: collapse; background-color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
@@ -87,10 +87,10 @@
   <script>
     const API_URL = 'https://script.google.com/macros/s/AKfycbyHKJ6-qlH4F3dLdUNuu2mcyiQHhv7kTd7cfWnqustB9nD3aquVk0xkmmp4t7Uj620/exec';
     const UPDATE_URL = 'update.html';
+    const VIEW_URL = 'view.html';
     const LOGIN_URL = 'index.html';
     let allProposals = [];
 
-    // Security check: Redirect to index.html if not logged in
     if (localStorage.getItem('authToken') !== 'loggedIn') {
       window.location.href = LOGIN_URL;
     }
@@ -139,7 +139,7 @@
     function filterProposals() {
       const month = document.getElementById('monthFilter').value;
       const year = document.getElementById('yearFilter').value;
-      let filteredProposals = allProposals;
+      let filteredProposals = [...allProposals];
 
       if (month) {
         filteredProposals = filteredProposals.filter(proposal => {
@@ -158,44 +158,25 @@
       populateTable(filteredProposals);
     }
 
-    async function handleAction(select, proposalId) {
+    function handleAction(select, proposalId) {
       const action = select.value;
-      console.log(`Action selected: ${action}, Proposal ID: ${proposalId}`);
       if (!proposalId) {
-        console.error('Invalid proposal ID:', proposalId);
         alert('Invalid proposal ID. Please try again.');
         return;
       }
+
       if (action === 'view') {
-        try {
-          const response = await fetch(`${API_URL}?action=getProposalById&proposalId=${encodeURIComponent(proposalId)}`, { method: 'GET', redirect: 'follow' });
-          if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
-          const data = await response.json();
-          if (data.error) {
-            alert(`Proposal not found: ${data.message}`);
-            return;
-          }
-          alert(`Viewing Proposal ID: ${data.proposalId}\nTitle: ${data.particulars || 'Untitled'}`);
-        } catch (error) {
-          console.error('Error in view action:', error);
-          alert(`Failed to load proposal details: ${error.message}`);
-        }
+        window.location.href = `${VIEW_URL}?proposalId=${encodeURIComponent(proposalId)}`;
       } else if (action === 'update') {
-        try {
-          console.log(`Navigating to ${UPDATE_URL}?proposalId=${encodeURIComponent(proposalId)}`);
-          window.location.href = `${UPDATE_URL}?proposalId=${encodeURIComponent(proposalId)}`;
-        } catch (error) {
-          console.error('Error in update navigation:', error);
-          alert(`Failed to navigate to update page: ${error.message}`);
-        }
+        window.location.href = `${UPDATE_URL}?proposalId=${encodeURIComponent(proposalId)}`;
       }
-      select.value = ''; // Reset dropdown after action
+
+      select.value = '';
     }
 
     function logout() {
-      localStorage.removeItem('authToken'); // Clear auth token
-      console.log(`Navigating to ${LOGIN_URL}`);
-      window.location.href = LOGIN_URL; // Redirect to login
+      localStorage.removeItem('authToken');
+      window.location.href = LOGIN_URL;
     }
 
     window.onload = fetchProposals;

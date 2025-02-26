@@ -5,87 +5,282 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reports Generation Form</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-        th { background-color: #f2f2f2; }
-        tr:nth-child(even) { background-color: #f9f9f9; }
-        .header { background-color: #e6f3e6; text-align: center; padding: 10px; font-size: 18px; font-weight: bold; }
-        .report-name { margin-top: 10px; padding: 10px; background-color: #f0f0f0; border: 1px solid #ddd; }
-        input { width: 100%; padding: 5px; box-sizing: border-box; }
-        .submit-btn { margin-top: 10px; padding: 10px 20px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
-        .submit-btn:hover { background-color: #45a049; }
-        .no-data { color: #888; font-style: italic; }
-        .filter-container { margin-bottom: 10px; }
-        .filter-container select { padding: 5px; border-radius: 4px; cursor: pointer; }
+        :root {
+            --primary-color: #4CAF50;
+            --secondary-color: #f5f5f5;
+            --text-color: #333;
+            --error-color: #d32f2f;
+            --border-radius: 8px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            padding: 20px;
+            background-color: #fafafa;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), #45a049);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .form-container {
+            padding: 20px;
+        }
+
+        .report-name {
+            margin-bottom: 20px;
+        }
+
+        .report-name label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .report-name input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .report-name input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #eee;
+        }
+
+        th {
+            background-color: var(--secondary-color);
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover:not(:last-child) {
+            background-color: #f0f0f0;
+            transition: background-color 0.2s;
+        }
+
+        input[type="number"],
+        input[type="text"] {
+            width: 100%;
+            padding: 6px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        input[readonly] {
+            background-color: #f5f5f5;
+            border-color: #eee;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            padding: 20px 0;
+        }
+
+        button {
+            padding: 12px 24px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: background-color 0.3s, transform 0.1s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .error-message {
+            color: var(--error-color);
+            text-align: center;
+            margin: 10px 0;
+            display: none;
+            padding: 10px;
+            background-color: #ffebee;
+            border-radius: var(--border-radius);
+        }
+
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                font-size: 1.2rem;
+                padding: 1rem;
+            }
+
+            th, td {
+                padding: 8px;
+                font-size: 0.8rem;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+
         @media print {
-            body { margin: 0; }
-            .header, .report-name, th, tr:nth-child(even) { background-color: #fff !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-            input { border: 1px solid #000; background-color: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-            .report-name label, .submit-btn, .no-data, .filter-container { display: none; }
-            table { page-break-inside: auto; }
-            tr { page-break-inside: avoid; page-break-after: auto; }
+            .container {
+                box-shadow: none;
+                border: none;
+            }
+            .header {
+                background: none;
+                color: black;
+            }
+            th {
+                background-color: white !important;
+            }
+            .button-group, .report-name label, .error-message {
+                display: none;
+            }
+            input {
+                border: 1px solid #000;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="header">REPORTS GENERATION FORM</div>
-    <div class="report-name">
-        <label for="reportName">Report Name:</label>
-        <input type="text" id="reportName" name="reportName" placeholder="Enter Report Name Here">
+    <div class="container">
+        <div class="header">REPORTS GENERATION FORM</div>
+        <div class="form-container">
+            <div class="report-name">
+                <label for="reportName">Report Name:</label>
+                <input type="text" id="reportName" placeholder="Enter Report Name Here">
+            </div>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>MONTH</th>
+                            <th>RECEIVED BY</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th>RECORD OF TRANSACTIONS</th>
+                            <th></th>
+                            <th></th>
+                            <th>TOTAL PROPOSALS RECEIVED</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th>ACCOMPLISHED ON TIME</th>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <th>Ma’am Ann</th>
+                            <th>Sir Mike</th>
+                            <th>Sir Christian</th>
+                            <th>Sir Ronald</th>
+                            <th>Off Campus</th>
+                            <th>In Campus</th>
+                            <th>OJT</th>
+                            <th>Off Campus</th>
+                            <th>In Campus</th>
+                            <th>UNIBE</th>
+                            <th>UBO</th>
+                            <th>USC</th>
+                            <th>Yes/No</th>
+                        </tr>
+                    </thead>
+                    <tbody id="monthData"></tbody>
+                </table>
+            </div>
+            <div id="errorMessage" class="error-message">Failed to load data. Please try again or enter manually.</div>
+            <div class="button-group">
+                <button onclick="fetchAndDisplayData()">Load Data</button>
+                <button onclick="submitForm()">Submit Data</button>
+            </div>
+        </div>
     </div>
-    <table>
-        <thead>
-            <tr>
-                <th>MONTH</th>
-                <th>RECEIVED BY</th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th>RECORD OF TRANSACTIONS</th>
-                <th></th>
-                <th></th>
-                <th>TOTAL PROPOSALS RECEIVED (BY NATURE/CLASSIFICATION)</th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th>TOTAL ACTED UPON SCHEDULE (ACCOMPLISHED ON TIME)</th>
-            </tr>
-            <tr>
-                <th></th>
-                <th>Ma’am Ann</th>
-                <th>Sir Mike</th>
-                <th>Sir Christian</th>
-                <th>Sir Ronald</th>
-                <th>Off Campus</th>
-                <th>In Campus</th>
-                <th>OJT</th>
-                <th>Off Campus</th>
-                <th>In Campus</th>
-                <th>UNIBE</th>
-                <th>UBO</th>
-                <th>USC</th>
-                <th>Yes/No (e.g., 23/34)</th>
-            </tr>
-        </thead>
-        <tbody id="monthData"></tbody>
-    </table>
-    <div id="errorMessage" style="color: red; display: none;">Failed to load data. Please enter data manually or check the script URL.</div>
-    <button class="submit-btn" onclick="fetchAndDisplayData()">Load Data</button>
-    <button class="submit-btn" onclick="submitForm()">Submit Data</button>
 
     <script>
         const API_URL = 'https://script.google.com/macros/s/AKfycbyHKJ6-qlH4F3dLdUNuu2mcyiQHhv7kTd7cfWnqustB9nD3aquVk0xkmmp4t7Uj620/exec';
-        const INDEX_URL = 'index.html'; // Relative path for login page
+        const INDEX_URL = 'index.html';
         const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
         const monthShorts = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
         const categories = ['maam_ann', 'sir_mike', 'sir_christian', 'sir_ronald', 'off_campus', 'in_campus', 'ojt'];
         const proposalTypes = ['off_campus', 'in_campus', 'unibe', 'ubo', 'usc'];
 
-        // Security check: Redirect to index.html if not logged in
         if (localStorage.getItem('authToken') !== 'loggedIn') {
             window.location.href = INDEX_URL;
+        }
+
+        function toggleLoading(state) {
+            document.body.classList.toggle('loading', state);
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            setTimeout(() => errorDiv.style.display = 'none', 5000);
         }
 
         function createMonthRows(proposalData) {
@@ -94,7 +289,6 @@
             const monthData = {};
             const accomplishedData = {};
 
-            // Aggregate data by month and nature/classification
             proposalData.forEach(proposal => {
                 const monthMatch = proposal.proposalId.match(/^(\d{2})-\d{4}-\d{4}$/);
                 if (monthMatch) {
@@ -107,63 +301,33 @@
                             proposalTypes.forEach(type => monthData[monthShort][type] = 0);
                             accomplishedData[monthShort] = { yes: 0, total: 0 };
                         }
-                        // Use receiver for "Received By" (Ma’am Ann, Sir Mike, Sir Christian, Sir Ronald)
                         const receiverLower = proposal.receiver.toLowerCase().replace(/\s/g, '_');
-                        if (categories.includes(receiverLower)) {
-                            monthData[monthShort][receiverLower] += 1;
-                        }
-                        // Use nature for "Record of Transactions" (Off Campus, In Campus, OJT) and "Total Proposals Received" (Off Campus, In Campus, UNIBE, UBO, USC)
+                        if (categories.includes(receiverLower)) monthData[monthShort][receiverLower]++;
                         const natureLower = (proposal.nature || '').toLowerCase().trim().replace(/\s/g, '_');
-                        if (categories.slice(4).includes(natureLower)) { // Off Campus, In Campus, OJT
-                            monthData[monthShort][natureLower] += 1;
-                        }
-                        if (proposalTypes.includes(natureLower)) { // Off Campus, In Campus, UNIBE, UBO, USC
-                            monthData[monthShort][natureLower] += 1;
-                        }
-                        // Track accomplished on time
-                        if (proposal.accomplished.toLowerCase() === 'yes') {
-                            accomplishedData[monthShort].yes += 1;
-                        }
-                        accomplishedData[monthShort].total += 1;
+                        if (categories.slice(4).includes(natureLower)) monthData[monthShort][natureLower]++;
+                        if (proposalTypes.includes(natureLower)) monthData[monthShort][natureLower]++;
+                        if (proposal.accomplished.toLowerCase() === 'yes') accomplishedData[monthShort].yes++;
+                        accomplishedData[monthShort].total++;
                     }
                 }
             });
 
-            // Create rows for months with data
             months.forEach((month, index) => {
                 const monthShort = monthShorts[index];
                 if (monthData[monthShort]) {
                     const row = document.createElement('tr');
-                    row.innerHTML = `<td>${month}</td>`;
-                    let hasData = false;
-
-                    // Received By (Ma’am Ann, Sir Mike, Sir Christian, Sir Ronald)
-                    categories.slice(0, 4).forEach(cat => {
-                        const value = monthData[monthShort][cat] || 0;
-                        if (value > 0) hasData = true;
-                        row.innerHTML += `<td><input type="number" name="${monthShort}_${cat}" value="${value}" min="0"></td>`;
-                    });
-
-                    // Record of Transactions (Off Campus, In Campus, OJT)
-                    categories.slice(4).forEach(cat => {
-                        const value = monthData[monthShort][cat] || 0;
-                        if (value > 0) hasData = true;
-                        row.innerHTML += `<td><input type="number" name="${monthShort}_${cat}" value="${value}" min="0"></td>`;
-                    });
-
-                    // Total Proposals Received (By Nature/Classification) (Off Campus, In Campus, UNIBE, UBO, USC)
-                    proposalTypes.forEach(type => {
-                        const value = monthData[monthShort][type] || 0;
-                        if (value > 0) hasData = true;
-                        row.innerHTML += `<td><input type="number" name="${monthShort}_${type}" value="${value}" min="0"></td>`;
-                    });
-
-                    // Total Acted Upon Schedule (Accomplished On Time)
-                    const yesCount = accomplishedData[monthShort]?.yes || 0;
-                    const totalCount = accomplishedData[monthShort]?.total || 0;
-                    row.innerHTML += `<td><input type="text" name="${monthShort}_acted_upon" value="${totalCount > 0 ? `${yesCount}/${totalCount}` : '0/0'}" readonly></td>`;
-
-                    if (hasData) tbody.appendChild(row);
+                    row.innerHTML = `<td>${month}</td>` + 
+                        categories.slice(0, 4).map(cat => 
+                            `<td><input type="number" name="${monthShort}_${cat}" value="${monthData[monthShort][cat] || 0}" min="0"></td>`
+                        ).join('') +
+                        categories.slice(4).map(cat => 
+                            `<td><input type="number" name="${monthShort}_${cat}" value="${monthData[monthShort][cat] || 0}" min="0"></td>`
+                        ).join('') +
+                        proposalTypes.map(type => 
+                            `<td><input type="number" name="${monthShort}_${type}" value="${monthData[monthShort][type] || 0}" min="0"></td>`
+                        ).join('') +
+                        `<td><input type="text" name="${monthShort}_acted_upon" value="${accomplishedData[monthShort].total > 0 ? `${accomplishedData[monthShort].yes}/${accomplishedData[monthShort].total}` : '0/0'}" readonly></td>`;
+                    tbody.appendChild(row);
                 }
             });
 
@@ -182,14 +346,14 @@
             let totalYes = 0, totalProposals = 0;
 
             categories.forEach(cat => {
-                let total = 0;
-                rows.forEach(row => total += parseInt(row.querySelector(`input[name$="_${cat}"]`).value) || 0);
+                const total = Array.from(rows).reduce((sum, row) => 
+                    sum + (parseInt(row.querySelector(`input[name$="_${cat}"]`).value) || 0), 0);
                 document.querySelector(`input[name="total_${cat}"]`).value = total;
             });
 
             proposalTypes.forEach(type => {
-                let total = 0;
-                rows.forEach(row => total += parseInt(row.querySelector(`input[name$="_${type}"]`).value) || 0);
+                const total = Array.from(rows).reduce((sum, row) => 
+                    sum + (parseInt(row.querySelector(`input[name$="_${type}"]`).value) || 0), 0);
                 document.querySelector(`input[name="total_${type}"]`).value = total;
             });
 
@@ -202,6 +366,7 @@
         }
 
         async function fetchAndDisplayData() {
+            toggleLoading(true);
             try {
                 const response = await fetch(`${API_URL}?action=getData`, { method: 'GET', redirect: 'follow' });
                 if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
@@ -210,20 +375,22 @@
                 createMonthRows(data.length > 0 ? data : []);
                 alert(data.length > 0 ? 'Data loaded successfully!' : 'No data found.');
             } catch (error) {
-                console.error('Error fetching data:', error);
-                document.getElementById('errorMessage').style.display = 'block';
+                console.error('Error:', error);
+                showError(`Failed to load data: ${error.message}`);
                 createMonthRows([]);
-                alert(`Failed to load data: ${error.message}`);
+            } finally {
+                toggleLoading(false);
             }
         }
 
         async function submitForm() {
-            const reportName = document.getElementById('reportName').value;
+            const reportName = document.getElementById('reportName').value.trim();
             if (!reportName) {
                 alert('Please enter a Report Name.');
                 return;
             }
 
+            toggleLoading(true);
             const data = { action: "add", particulars: reportName };
             const rows = document.querySelectorAll('#monthData tr:not(:last-child)');
             rows.forEach(row => {
@@ -243,24 +410,23 @@
             try {
                 const response = await fetch(API_URL, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'text/plain' }, // Changed to text/plain to avoid CORS preflight
+                    headers: { 'Content-Type': 'text/plain' },
                     body: JSON.stringify(data)
                 });
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    throw new Error(`HTTP error: ${response.status} - ${errorText}`);
-                }
+                if (!response.ok) throw new Error(`HTTP error: ${response.status} - ${await response.text()}`);
                 const result = await response.json();
                 if (result.success) {
                     alert(`Data submitted successfully! Row: ${result.row}`);
-                    createMonthRows([]); // Reset table
+                    createMonthRows([]);
                     document.getElementById('reportName').value = '';
                 } else {
-                    alert(`Error submitting data: ${result.message}`);
+                    throw new Error(result.message);
                 }
             } catch (error) {
-                console.error('Error submitting data:', error);
-                alert(`Error submitting data: ${error.message}`);
+                console.error('Error:', error);
+                showError(`Error submitting data: ${error.message}`);
+            } finally {
+                toggleLoading(false);
             }
         }
 

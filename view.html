@@ -1,199 +1,346 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Proposal Dashboard</title>
-  <style>
-    body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f5f5f5; }
-    h1 { text-align: center; color: #333; }
-    .table-container { max-width: 1200px; margin: 0 auto; }
-    .header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-    .logout-container { margin-right: auto; }
-    .logout-container button { padding: 8px 16px; background-color: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer; }
-    .logout-container button:hover { background-color: #c82333; }
-    .filter-container { display: flex; gap: 15px; align-items: center; }
-    .filter-container label { font-weight: bold; margin-right: 5px; }
-    .filter-container select { padding: 8px; border-radius: 4px; cursor: pointer; }
-    .button-container { margin-left: auto; }
-    .button-container button { padding: 8px 16px; margin-left: 10px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; }
-    .button-container button:hover { background-color: #45a049; }
-    table { width: 100%; border-collapse: collapse; background-color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-    th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
-    th { background-color: #4CAF50; color: white; }
-    tr:nth-child(even) { background-color: #f9f9f9; }
-    select { padding: 5px; border-radius: 4px; cursor: pointer; width: 100%; }
-    @media (max-width: 768px) {
-      .header-row { flex-direction: column; gap: 10px; align-items: flex-start; }
-      .logout-container, .filter-container, .button-container { margin-left: 0; text-align: center; width: 100%; }
-      .logout-container button, .button-container button { margin: 5px 0; }
-      .filter-container { flex-direction: column; align-items: flex-start; }
-      .filter-container label { margin-right: 0; margin-bottom: 5px; }
-      .filter-container select { width: 100%; margin-bottom: 10px; }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Proposal</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 1000px;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+        .section {
+            margin-bottom: 30px;
+        }
+        .section-title {
+            font-size: 18px;
+            color: #555;
+            margin-bottom: 15px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #28a745;
+            display: inline-block;
+        }
+        .detail-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 10px;
+        }
+        .detail-group {
+            flex: 1;
+            min-width: 300px;
+        }
+        .label {
+            font-weight: bold;
+            color: #444;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        .value {
+            padding: 10px;
+            background-color: #fafafa;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            word-wrap: break-word;
+        }
+        .button-row {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        button {
+            padding: 12px 24px;
+            font-size: 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            background-color: #dc3545;
+            color: white;
+        }
+        button:hover {
+            background-color: #c82333;
+        }
+        @media (max-width: 768px) {
+            .detail-row {
+                flex-direction: column;
+            }
+            .detail-group {
+                min-width: 100%;
+            }
+            .button-row {
+                flex-direction: column;
+                gap: 10px;
+            }
+            button {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 <body>
-  <h1>Proposal Dashboard</h1>
-  <div class="table-container">
-    <div class="header-row">
-      <div class="logout-container">
-        <button onclick="logout()">Logout</button>
-      </div>
-      <div class="filter-container">
-        <label for="monthFilter">Month:</label>
-        <select id="monthFilter" onchange="filterProposals()">
-          <option value="">All</option>
-          <option value="01">January</option>
-          <option value="02">February</option>
-          <option value="03">March</option>
-          <option value="04">April</option>
-          <option value="05">May</option>
-          <option value="06">June</option>
-          <option value="07">July</option>
-          <option value="08">August</option>
-          <option value="09">September</option>
-          <option value="10">October</option>
-          <option value="11">November</option>
-          <option value="12">December</option>
-        </select>
-        <label for="yearFilter">Year:</label>
-        <select id="yearFilter" onchange="filterProposals()">
-          <option value="">All</option>
-          <script>
-            for (let year = 2020; year <= new Date().getFullYear(); year++) {
-              document.write(`<option value="${year}">${year}</option>`);
-            }
-          </script>
-        </select>
-      </div>
-      <div class="button-container">
-        <button onclick="window.location.href='add.html'">+ Record</button>
-        <button onclick="window.location.href='report_generation.html'">Print</button>
-      </div>
+    <div class="container">
+        <h2>View Proposal</h2>
+        <div class="section">
+            <div class="section-title">Proposal Details</div>
+            <div class="detail-row">
+                <div class="detail-group">
+                    <div class="label">Proposal ID</div>
+                    <div class="value" id="proposalId"></div>
+                </div>
+                <div class="detail-group">
+                    <div class="label">Title of Activity</div>
+                    <div class="value" id="particulars"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Implementing Unit</div>
+            <div class="detail-row">
+                <div class="detail-group">
+                    <div class="label">College</div>
+                    <div class="value" id="college"></div>
+                </div>
+                <div class="detail-group">
+                    <div class="label">Department</div>
+                    <div class="value" id="department"></div>
+                </div>
+                <div class="detail-group">
+                    <div class="label">If others, please specify</div>
+                    <div class="value" id="others"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Basic Information of the Activity</div>
+            <div class="detail-row">
+                <div class="detail-group">
+                    <div class="label">Objectives</div>
+                    <div class="value" id="objectives"></div>
+                </div>
+                <div class="detail-group">
+                    <div class="label">Nature/Classification</div>
+                    <div class="value" id="nature"></div>
+                </div>
+                <div class="detail-group">
+                    <div class="label">Locale</div>
+                    <div class="value" id="locale"></div>
+                </div>
+                <div class="detail-group">
+                    <div class="label">Duration of Activity</div>
+                    <div class="value" id="duration"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Funding Requirement</div>
+            <div class="detail-row">
+                <div class="detail-group">
+                    <div class="label">Funding Source</div>
+                    <div class="value" id="funding"></div>
+                </div>
+                <div class="detail-group">
+                    <div class="label">Total Amount</div>
+                    <div class="value" id="amount"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Contact and Documents</div>
+            <div class="detail-row">
+                <div class="detail-group">
+                    <div class="label">Number/Email of Contact Person</div>
+                    <div class="value" id="contact"></div>
+                </div>
+                <div class="detail-group">
+                    <div class="label">Scanned Copy of Documents (with signatories)</div>
+                    <div class="value" id="documents"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">1st Evaluation & Review of Compliance</div>
+            <div class="detail-row">
+                <div class="detail-group">
+                    <div class="label">Action of CSAC</div>
+                    <div class="value" id="csac"></div>
+                </div>
+                <div class="detail-group">
+                    <div class="label">Remarks</div>
+                    <div class="value" id="remarks"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Received by USDS</div>
+            <div class="detail-row">
+                <div class="detail-group">
+                    <div class="label">DOC. SEQ. No.</div>
+                    <div class="value" id="docSeq"></div>
+                </div>
+                <div class="detail-group">
+                    <div class="label">No of Copies</div>
+                    <div class="value" id="copies"></div>
+                </div>
+                <div class="detail-group">
+                    <div class="label">Receiver</div>
+                    <div class="value" id="receiver"></div>
+                </div>
+                <div class="detail-group">
+                    <div class="label">Date & Time</div>
+                    <div class="value" id="dateTime"></div>
+                </div>
+                <div class="detail-group">
+                    <div class="label">Duration of Process</div>
+                    <div class="value" id="durationOfProcess"></div>
+                </div>
+                <div class="detail-group">
+                    <div class="label">Expected Date & Time of Release</div>
+                    <div class="value" id="expectedDate"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">2nd Evaluation & Review of Compliance</div>
+            <div class="detail-row">
+                <div class="detail-group">
+                    <div class="label">Action of USDS</div>
+                    <div class="value" id="usds"></div>
+                </div>
+                <div class="detail-group">
+                    <div class="label">Notations</div>
+                    <div class="value" id="notations"></div>
+                </div>
+                <div class="detail-group">
+                    <div class="label">Status</div>
+                    <div class="value" id="status"></div>
+                </div>
+                <div class="detail-group">
+                    <div class="label">Date and Time</div>
+                    <div class="value" id="statusDate"></div>
+                </div>
+                <div class="detail-group">
+                    <div class="label">Office Destination</div>
+                    <div class="value" id="officeDestination"></div>
+                </div>
+                <div class="detail-group">
+                    <div class="label">Accomplished on Time?</div>
+                    <div class="value" id="accomplished"></div>
+                </div>
+                <div class="detail-group">
+                    <div class="label">If Returned, Date & Time</div>
+                    <div class="value" id="returnedDate"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="button-row">
+            <button onclick="goBack()">Go Back</button>
+        </div>
     </div>
-    <table>
-      <thead>
-        <tr>
-          <th>Proposal ID</th>
-          <th>Title of Activity</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody id="proposalTable"></tbody>
-    </table>
-  </div>
 
-  <script>
-    const API_URL = 'https://script.google.com/macros/s/AKfycbyHKJ6-qlH4F3dLdUNuu2mcyiQHhv7kTd7cfWnqustB9nD3aquVk0xkmmp4t7Uj620/exec';
-    const UPDATE_URL = 'update.html';
-    const VIEW_URL = 'view.html'; // New URL for view page
-    const LOGIN_URL = 'index.html';
-    let allProposals = [];
+    <script>
+        const API_URL = 'https://script.google.com/macros/s/AKfycbyHKJ6-qlH4F3dLdUNuu2mcyiQHhv7kTd7cfWnqustB9nD3aquVk0xkmmp4t7Uj620/exec';
+        const DASHBOARD_URL = 'dashboard.html';
+        const INDEX_URL = 'index.html';
 
-    // Security check: Redirect to index.html if not logged in
-    if (localStorage.getItem('authToken') !== 'loggedIn') {
-      window.location.href = LOGIN_URL;
-    }
-
-    async function fetchProposals() {
-      try {
-        const response = await fetch(`${API_URL}?action=getData`, { method: 'GET', redirect: 'follow' });
-        if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
-        const data = await response.json();
-        if (data.error) {
-          alert(`Error from server: ${data.message}`);
-          return;
+        // Security check: Redirect to index.html if not logged in
+        if (localStorage.getItem('authToken') !== 'loggedIn') {
+            window.location.href = INDEX_URL;
         }
-        if (!Array.isArray(data) || data.length === 0) {
-          document.getElementById('proposalTable').innerHTML = '<tr><td colspan="3">No proposals found</td></tr>';
-          return;
+
+        function goBack() {
+            window.location.href = DASHBOARD_URL;
         }
-        allProposals = data;
-        populateTable(data);
-      } catch (error) {
-        console.error('Error fetching proposals:', error);
-        alert(`Failed to load proposals: ${error.message}`);
-      }
-    }
 
-    function populateTable(proposals) {
-      const tbody = document.getElementById('proposalTable');
-      tbody.innerHTML = '';
-      proposals.forEach(proposal => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>${proposal.proposalId || ''}</td>
-          <td>${proposal.particulars || 'Untitled'}</td>
-          <td>
-            <select onchange="handleAction(this, '${proposal.proposalId}')">
-              <option value="">Select</option>
-              <option value="view">View</option>
-              <option value="update">Update</option>
-            </select>
-          </td>
-        `;
-        tbody.appendChild(row);
-      });
-    }
+        async function loadProposalData() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const proposalId = urlParams.get('proposalId');
+            if (!proposalId) {
+                alert('No proposal ID provided.');
+                window.location.href = DASHBOARD_URL;
+                return;
+            }
 
-    function filterProposals() {
-      const month = document.getElementById('monthFilter').value;
-      const year = document.getElementById('yearFilter').value;
-      let filteredProposals = allProposals;
+            try {
+                const response = await fetch(`${API_URL}?action=getProposalById&proposalId=${encodeURIComponent(proposalId)}`, {
+                    method: 'GET',
+                    redirect: 'follow'
+                });
+                if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
+                const data = await response.json();
+                
+                if (data.error) {
+                    alert('Proposal not found: ' + data.message);
+                    window.location.href = DASHBOARD_URL;
+                    return;
+                }
 
-      if (month) {
-        filteredProposals = filteredProposals.filter(proposal => {
-          const match = proposal.proposalId.match(/^(\d{2})-(\d{4})-\d{4}$/);
-          return match && match[1] === month;
-        });
-      }
-
-      if (year) {
-        filteredProposals = filteredProposals.filter(proposal => {
-          const match = proposal.proposalId.match(/^(\d{2})-(\d{4})-\d{4}$/);
-          return match && match[2] === year;
-        });
-      }
-
-      populateTable(filteredProposals);
-    }
-
-    function handleAction(select, proposalId) {
-      const action = select.value;
-      console.log(`Action selected: ${action}, Proposal ID: ${proposalId}`);
-      if (!proposalId) {
-        console.error('Invalid proposal ID:', proposalId);
-        alert('Invalid proposal ID. Please try again.');
-        return;
-      }
-      if (action === 'view') {
-        try {
-          console.log(`Navigating to ${VIEW_URL}?proposalId=${encodeURIComponent(proposalId)}`);
-          window.location.href = `${VIEW_URL}?proposalId=${encodeURIComponent(proposalId)}`;
-        } catch (error) {
-          console.error('Error in view navigation:', error);
-          alert(`Failed to navigate to view page: ${error.message}`);
+                document.getElementById('proposalId').textContent = data.proposalId || '';
+                document.getElementById('particulars').textContent = data.particulars || '';
+                document.getElementById('college').textContent = data.college || '';
+                document.getElementById('department').textContent = data.department || '';
+                document.getElementById('others').textContent = data.others || '';
+                document.getElementById('objectives').textContent = data.objectives || '';
+                document.getElementById('nature').textContent = data.nature || '';
+                document.getElementById('locale').textContent = data.locale || '';
+                document.getElementById('duration').textContent = data.duration || '';
+                document.getElementById('funding').textContent = data.funding || '';
+                document.getElementById('amount').textContent = data.amount || '';
+                document.getElementById('contact').textContent = data.contact || '';
+                document.getElementById('documents').textContent = data.documents || '';
+                document.getElementById('csac').textContent = data.csac || '';
+                document.getElementById('remarks').textContent = data.remarks || '';
+                document.getElementById('docSeq').textContent = data.docSeq || '';
+                document.getElementById('copies').textContent = data.copies || '';
+                document.getElementById('receiver').textContent = data.receiver || '';
+                document.getElementById('dateTime').textContent = data.dateTime || '';
+                document.getElementById('durationOfProcess').textContent = data.durationOfProcess || '';
+                document.getElementById('expectedDate').textContent = data.expectedDate || '';
+                document.getElementById('usds').textContent = data.usds || '';
+                document.getElementById('notations').textContent = data.notations || '';
+                document.getElementById('status').textContent = data.status || '';
+                document.getElementById('statusDate').textContent = data.statusDate || '';
+                document.getElementById('officeDestination').textContent = data.officeDestination || '';
+                document.getElementById('accomplished').textContent = data.accomplished || '';
+                document.getElementById('returnedDate').textContent = data.returnedDate || '';
+            } catch (error) {
+                console.error('Error fetching proposal data:', error);
+                alert(`Failed to load proposal data: ${error.message}`);
+                window.location.href = DASHBOARD_URL;
+            }
         }
-      } else if (action === 'update') {
-        try {
-          console.log(`Navigating to ${UPDATE_URL}?proposalId=${encodeURIComponent(proposalId)}`);
-          window.location.href = `${UPDATE_URL}?proposalId=${encodeURIComponent(proposalId)}`;
-        } catch (error) {
-          console.error('Error in update navigation:', error);
-          alert(`Failed to navigate to update page: ${error.message}`);
-        }
-      }
-      select.value = '';
-    }
 
-    function logout() {
-      localStorage.removeItem('authToken');
-      console.log(`Navigating to ${LOGIN_URL}`);
-      window.location.href = LOGIN_URL;
-    }
-
-    window.onload = fetchProposals;
-  </script>
+        window.onload = loadProposalData;
+    </script>
 </body>
 </html>
