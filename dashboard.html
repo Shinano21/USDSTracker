@@ -177,7 +177,7 @@
         const row = document.createElement('tr');
         row.innerHTML = `
           <td>${proposal.proposalId || ''}</td>
-          <td>${proposal.particulars || 'Untitled'}</td> <!-- Updated to use 'particulars' -->
+          <td>${proposal.particulars || 'Untitled'}</td>
           <td>
             <select onchange="handleAction(this, '${proposal.proposalId}', ${JSON.stringify(proposal)})">
               <option value="">Select</option>
