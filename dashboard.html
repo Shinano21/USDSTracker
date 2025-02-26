@@ -8,25 +8,27 @@
     body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f5f5f5; }
     h1 { text-align: center; color: #333; }
     .table-container { max-width: 1200px; margin: 0 auto; }
-    .filter-row { background-color: #f9f9f9; border: 1px solid #ddd; border-bottom: none; padding: 10px; }
-    .filter-row label { display: inline-block; margin-right: 15px; font-weight: bold; }
-    .filter-row select { padding: 8px; border-radius: 4px; cursor: pointer; margin-right: 15px; }
+    .header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .filter-container { display: flex; gap: 15px; align-items: center; }
+    .filter-container label { font-weight: bold; margin-right: 5px; }
+    .filter-container select { padding: 8px; border-radius: 4px; cursor: pointer; }
+    .button-container { margin-left: auto; } /* Push buttons to the right */
+    .button-container button { padding: 8px 16px; margin-left: 10px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; }
+    .button-container button:hover { background-color: #45a049; }
     table { width: 100%; border-collapse: collapse; background-color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
     th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
     th { background-color: #4CAF50; color: white; }
     tr:nth-child(even) { background-color: #f9f9f9; }
     select { padding: 5px; border-radius: 4px; cursor: pointer; width: 100%; }
-    .button-container { width: 100%; margin: 10px 0; text-align: right; }
-    .button-container button { padding: 8px 16px; margin-left: 10px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; }
-    .button-container button:hover { background-color: #45a049; }
     .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); }
     .modal-content { background: white; margin: 15% auto; padding: 20px; width: 80%; max-width: 800px; border-radius: 5px; }
     .close { float: right; font-size: 20px; cursor: pointer; }
     @media (max-width: 768px) {
-      .filter-row { padding: 8px; }
-      .filter-row label { display: block; margin-right: 0; margin-bottom: 5px; }
-      .filter-row select { width: 100%; margin-right: 0; margin-bottom: 10px; }
-      .button-container { text-align: center; }
+      .header-row { flex-direction: column; gap: 10px; align-items: flex-start; }
+      .filter-container { flex-direction: column; align-items: flex-start; }
+      .filter-container label { margin-right: 0; margin-bottom: 5px; }
+      .filter-container select { width: 100%; margin-bottom: 10px; }
+      .button-container { margin-left: 0; text-align: center; width: 100%; }
       .button-container button { margin: 5px 0; }
     }
   </style>
@@ -34,36 +36,38 @@
 <body>
   <h1>Proposal Dashboard</h1>
   <div class="table-container">
-    <div class="button-container">
-      <button onclick="window.location.href='add.html'">+ Record</button>
-      <button onclick="window.location.href='report_generation.html'">Print</button>
-    </div>
-    <div class="filter-row">
-      <label for="monthFilter">Month:</label>
-      <select id="monthFilter" onchange="filterProposals()">
-        <option value="">All</option>
-        <option value="01">January</option>
-        <option value="02">February</option>
-        <option value="03">March</option>
-        <option value="04">April</option>
-        <option value="05">May</option>
-        <option value="06">June</option>
-        <option value="07">July</option>
-        <option value="08">August</option>
-        <option value="09">September</option>
-        <option value="10">October</option>
-        <option value="11">November</option>
-        <option value="12">December</option>
-      </select>
-      <label for="yearFilter">Year:</label>
-      <select id="yearFilter" onchange="filterProposals()">
-        <option value="">All</option>
-        <script>
-          for (let year = 2020; year <= new Date().getFullYear(); year++) {
-            document.write(`<option value="${year}">${year}</option>`);
-          }
-        </script>
-      </select>
+    <div class="header-row">
+      <div class="filter-container">
+        <label for="monthFilter">Month:</label>
+        <select id="monthFilter" onchange="filterProposals()">
+          <option value="">All</option>
+          <option value="01">January</option>
+          <option value="02">February</option>
+          <option value="03">March</option>
+          <option value="04">April</option>
+          <option value="05">May</option>
+          <option value="06">June</option>
+          <option value="07">July</option>
+          <option value="08">August</option>
+          <option value="09">September</option>
+          <option value="10">October</option>
+          <option value="11">November</option>
+          <option value="12">December</option>
+        </select>
+        <label for="yearFilter">Year:</label>
+        <select id="yearFilter" onchange="filterProposals()">
+          <option value="">All</option>
+          <script>
+            for (let year = 2020; year <= new Date().getFullYear(); year++) {
+              document.write(`<option value="${year}">${year}</option>`);
+            }
+          </script>
+        </select>
+      </div>
+      <div class="button-container">
+        <button onclick="window.location.href='add.html'">+ Record</button>
+        <button onclick="window.location.href='report_generation.html'">Print</button>
+      </div>
     </div>
     <table>
       <thead>
@@ -211,6 +215,11 @@
     async function handleAction(select, proposalId, proposal) {
       const action = select.value;
       console.log(`Action selected: ${action}, Proposal ID: ${proposalId}`); // Debug log for action trigger
+      if (!proposalId || !proposal) {
+        console.error('Invalid proposal data:', { proposalId, proposal });
+        alert('Invalid proposal data. Please try again.');
+        return;
+      }
       if (action === 'view') {
         try {
           await fetchColleges();
@@ -222,8 +231,9 @@
         }
       } else if (action === 'update') {
         try {
-          window.location.href = `${UPDATE_URL}?proposalId=${encodeURIComponent(proposalId)}`;
+          if (!proposalId) throw new Error('No proposal ID available');
           console.log(`Navigating to ${UPDATE_URL}?proposalId=${encodeURIComponent(proposalId)}`);
+          window.location.href = `${UPDATE_URL}?proposalId=${encodeURIComponent(proposalId)}`;
         } catch (error) {
           console.error('Error in update navigation:', error);
           alert(`Failed to navigate to update page: ${error.message}`);
