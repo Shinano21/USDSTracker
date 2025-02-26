@@ -120,7 +120,7 @@
 
   <script>
     const API_URL = 'https://script.google.com/macros/s/AKfycbyHKJ6-qlH4F3dLdUNuu2mcyiQHhv7kTd7cfWnqustB9nD3aquVk0xkmmp4t7Uj620/exec'; // Replace with your actual URL
-    const UPDATE_URL = 'update.html'; // Ensure this matches your file structure on GitHub Pages
+    const UPDATE_URL = 'update.html'; // Use relative path for GitHub Pages
     let colleges = [];
     let departments = {};
     let allProposals = [];
@@ -177,7 +177,7 @@
         const row = document.createElement('tr');
         row.innerHTML = `
           <td>${proposal.proposalId || ''}</td>
-          <td>${proposal.particulars || 'Untitled'}</td>
+          <td>${proposal.particulars || 'Untitled'}</td> <!-- Updated to use 'particulars' -->
           <td>
             <select onchange="handleAction(this, '${proposal.proposalId}', ${JSON.stringify(proposal)})">
               <option value="">Select</option>
@@ -214,7 +214,7 @@
 
     async function handleAction(select, proposalId, proposal) {
       const action = select.value;
-      console.log(`Action selected: ${action}, Proposal ID: ${proposalId}`); // Debug log for action trigger
+      console.log(`Action selected: ${action}, Proposal ID: ${proposalId}`); // Debug log
       if (!proposalId || !proposal) {
         console.error('Invalid proposal data:', { proposalId, proposal });
         alert('Invalid proposal data. Please try again.');
