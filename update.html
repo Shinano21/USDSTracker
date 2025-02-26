@@ -107,13 +107,9 @@
                     <div id="copiesError" class="error"></div>
                 </div>
                 <div>
-                    <label for="receiver">RECEIVER:</label>
+                    <label for="receiver">Received By:</label>
                     <select id="receiver" name="receiver">
-                        <option value="" disabled selected>Select receiver</option>
-                        <option value="Ma'am Anna">Ma'am Anna</option>
-                        <option value="Sir Ronald">Sir Ronald</option>
-                        <option value="Sir Mike">Sir Mike</option>
-                        <option value="Sir Christian">Sir Christian</option>
+                        <option value="" disabled selected>Select Received By</option>
                     </select>
                 </div>
                 <div>
@@ -300,6 +296,31 @@
                 });
             }
         }
+
+        // Fetch and populate "Received By" options
+        async function populateReceiver(selectedReceiver = '') {
+            try {
+                const response = await fetch(`${API_URL}?action=getReceivers`, {
+                    method: 'GET',
+                    redirect: 'follow'
+                });
+                if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
+                const receivers = await response.json();
+                
+                const receiverSelect = document.getElementById('receiver');
+                receiverSelect.innerHTML = '<option value="" disabled selected>Select Received By</option>';
+                receivers.forEach(receiver => {
+                    const option = document.createElement('option');
+                    option.value = receiver;
+                    option.text = receiver;
+                    if (receiver === selectedReceiver) option.selected = true;
+                    receiverSelect.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error fetching receivers:', error);
+                alert(`Failed to load receivers: ${error.message}`);
+            }
+        }
     
         async function loadProposalData() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -342,7 +363,7 @@
                 document.getElementById('remarks').value = data.remarks || '';
                 document.getElementById('docSeq').value = data.docSeq || '';
                 document.getElementById('copies').value = data.copies || '';
-                document.getElementById('receiver').value = data.receiver || '';
+                populateReceiver(data.receiver || ''); // Load and set the selected receiver
                 document.getElementById('usds').value = data.usds || '';
                 document.getElementById('notations').value = data.notations || '';
                 document.getElementById('status').value = data.status || '';
@@ -398,7 +419,7 @@
                         proposalId: updates.proposalId,
                         updates: updates
                     }),
-                    headers: { 'Content-Type': 'text/plain' } // Changed to text/plain to avoid CORS preflight
+                    headers: { 'Content-Type': 'text/plain' }
                 });
                 if (!response.ok) {
                     const errorText = await response.text();
