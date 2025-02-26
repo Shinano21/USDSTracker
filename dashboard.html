@@ -70,6 +70,7 @@
       <div class="button-container">
         <button onclick="window.location.href='add.html'">+ Record</button>
         <button onclick="window.location.href='report_generation.html'">Print</button>
+        <button onclick="window.location.href='https://docs.google.com/spreadsheets/d/1T5qHMQAFBd1c6ZJOF91v3moXKI5rhpvKL68u3mrjplc/edit?usp=sharing'">Sheets</button>
       </div>
     </div>
     <table>
@@ -91,10 +92,18 @@
     const LOGIN_URL = 'index.html';
     let allProposals = [];
 
+    // Set current month as default
+    window.onload = function() {
+      const currentMonth = new Date().getMonth() + 1; // getMonth() is 0-based
+      const formattedMonth = currentMonth < 10 ? `0${currentMonth}` : `${currentMonth}`;
+      document.getElementById('monthFilter').value = formattedMonth;
+      fetchProposals();
+    };
+
     // Check authentication on load
     function checkAuth() {
       if (localStorage.getItem('authToken') !== 'loggedIn') {
-        window.location.replace(LOGIN_URL); // Replace to prevent back navigation
+        window.location.replace(LOGIN_URL);
       }
     }
 
@@ -121,7 +130,7 @@
           return;
         }
         allProposals = data;
-        populateTable(data);
+        filterProposals(); // Apply filter immediately after fetching
       } catch (error) {
         console.error('Error fetching proposals:', error);
         alert(`Failed to load proposals: ${error.message}`);
@@ -188,10 +197,8 @@
 
     function logout() {
       localStorage.removeItem('authToken');
-      window.location.replace(LOGIN_URL); // Replace to prevent back navigation
+      window.location.replace(LOGIN_URL);
     }
-
-    window.onload = fetchProposals;
   </script>
 </body>
 </html>
