@@ -143,53 +143,164 @@
         </form>
     </div>
 
-    <script>
+    <<script>
         const API_URL = 'https://script.google.com/macros/s/AKfycbyHKJ6-qlH4F3dLdUNuu2mcyiQHhv7kTd7cfWnqustB9nD3aquVk0xkmmp4t7Uj620/exec'; // Replace with your actual URL
         const DASHBOARD_URL = 'dashboard.html'; // Use relative path for GitHub Pages
-
+    
+        // Static college and department data
+        const collegeData = {
+            "BU COLLEGE OF EDUCATION (BUCE)": [
+                "Bachelor of Culture and Arts Education (BCAEd)",
+                "Bachelor of Early Childhood Education (BECEd)",
+                "Bachelor of Elementary Education (BEED)",
+                "Bachelor of Secondary Education, major in English (BSED-Eng)",
+                "Bachelor of Secondary Education, major in Filipino (BSED-Fil)",
+                "Bachelor of Secondary Education, major in Mathematics (BSED-Math)",
+                "Bachelor of Secondary Education, major in Science (BSED-Sci)",
+                "Bachelor of Secondary Education, major in Social Studies (BSED-SS)",
+                "Bachelor of Secondary Education, major in Values Education (BSED-VE)",
+                "Certificate in College Teaching (CCT)",
+                "Integrated Laboratory High School Department"
+            ],
+            "BU COLLEGE OF SCIENCE (BUCS)": [
+                "Bachelor of Science in Biology (BSBio)",
+                "Bachelor of Science in Chemistry (BSChem)",
+                "Bachelor of Science in Computer Science (BSCS)",
+                "Bachelor of Science in Information Technology (BSIT)",
+                "Bachelor of Science in Meteorology (BSMet)"
+            ],
+            "BU COLLEGE OF MEDICINE (BUCM)": ["Doctor of Medicine (MD)"],
+            "BU COLLEGE OF ARTS AND LETTERS (BUCAL)": [
+                "Bachelor of Arts in Broadcasting (ABBroad)",
+                "Bachelor of Arts in Communication (ABComm)",
+                "Bachelor of Arts in English Language (ABEngLang)",
+                "Bachelor of Arts in Journalism (ABJourn)",
+                "Bachelor of Arts in Literature (ABLit)",
+                "Bachelor of Performing Arts, major in Theater (BPeA)"
+            ],
+            "BU JESSIE M. ROBREDO INSTITUTE OF GOVERNANCE AND DEVELOPMENT (BUJMRIGD)": ["Bachelor of Public Administration (BPA)"],
+            "BU COLLEGE OF NURSING (BUCN)": ["Bachelor of Science in Nursing (BSN)"],
+            "BU COLLEGE OF ENGINEERING (BUCENG)": [
+                "Bachelor of Science in Chemical Engineering (BSCheE)",
+                "Bachelor of Science in Civil Engineering (BSCE)",
+                "Bachelor of Science in Electrical Engineering (BSEE)",
+                "Bachelor of Science in Geodetic Engineering (BSGE)",
+                "Bachelor of Science in Mechanical Engineering (BSME)",
+                "Bachelor of Science in Mining Engineering (BSEM)",
+                "Bachelor of Science in Computer Engineering (BSCoE)",
+                "Bachelor of Science in Electronics Engineering (BSECE)"
+            ],
+            "BU INSTITUTE OF DESIGN AND ARCHITECTURE (BUIDeA)": [
+                "Bachelor of Science in Architecture (BSArch)",
+                "Bachelor in Industrial Design (BID)"
+            ],
+            "BU INSTITUTE OF P.E., SPORTS AND RECREATION (BUIPESR)": [
+                "Bachelor of Physical Education (BPED)",
+                "Bachelor of Science in Exercise & Sports Sciences, major in Fitness and Sport Coaching (BSESS-FSC)",
+                "Bachelor of Science in Exercise & Sports Sciences, major in Fitness and Sport Management (BSESS-FSM)"
+            ],
+            "BU COLLEGE OF INDUSTRIAL TECHNOLOGY (BUCIT)": [
+                "Bachelor of Science in Accountancy (BSAcct)",
+                "Bachelor of Science in Economics (ABEcon)",
+                "Bachelor of Science in Entrepreneurship (BSEntrep)",
+                "Bachelor of Science in Business Administration (BSBA), major in:",
+                "Financial Management (BSBA-FM)",
+                "Human Resource Management (BSBA-HRM)",
+                "Management (BSBA-Mgt)",
+                "Marketing Management (BSBA-MM)",
+                "Microfinance (BSBA-MF)",
+                "Operations Management (BSBA-OM)"
+            ],
+            "BU COLLEGE OF BUSINESS, ECONOMICS, AND MANAGEMENT (BUCBEM)": [
+                "Bachelor of Science in Accountancy (BSAcct)",
+                "Bachelor of Science in Economics (ABEcon)",
+                "Bachelor of Science in Entrepreneurship (BSEntrep)",
+                "Bachelor of Science in Business Administration (BSBA), major in:",
+                "Financial Management (BSBA-FM)",
+                "Human Resource Management (BSBA-HRM)",
+                "Management (BSBA-Mgt)",
+                "Marketing Management (BSBA-MM)",
+                "Microfinance (BSBA-MF)",
+                "Operations Management (BSBA-OM)"
+            ],
+            "BU COLLEGE OF SOCIAL SCIENCES AND PHILOSOPHY (BUCSSP)": [
+                "Bachelor of Arts in Peace Studies (BAPS)",
+                "Bachelor of Arts in Philosophy (ABPhilo)",
+                "Bachelor of Arts in Political Science (ABPolSci)",
+                "Bachelor of Arts in Sociology (ABSocio)",
+                "Bachelor of Science in Psychology (ABPsyc)",
+                "Bachelor of Science in Social Work (BSSW)"
+            ],
+            "BU COLLEGE OF DENTAL MEDICINE (BUDMD)": ["Doctor of Dental Medicine (DMD)"],
+            "BU COLLEGE OF LAW": ["Bachelor of Laws (LLB)"],
+            "BU GRADUATE SCHOOL": [],
+            "BU GUINOBATAN CAMPUS": [
+                "Bachelor of Science in Agricultural Engineering (BSABE)",
+                "Bachelor of Science in Agriculture, major in:",
+                "Animal Science (BSAAS)",
+                "Crop Science (BSACS)",
+                "Agricultural Extension (BSAAEx)",
+                "Agribusiness (BSAgrib)",
+                "Agriculture and Biosystems (BSAgrib)",
+                "Bachelor of Science in Forestry (BSF)",
+                "Bachelor of Science in Fisheries (BSFish)"
+            ],
+            "BU POLANGUI CAMPUS": [
+                "Bachelor of Science in Information System (BSIS)",
+                "Bachelor of Science in Information Technology (BSIT)",
+                "Bachelor of Science in Information Technology, major in Animation (BSIT-Anim)"
+            ],
+            "BU TABACO CAMPUS": ["Bachelor of Science in Fisheries (ETEEAP)"],
+            "BU GUBAT CAMPUS": ["Bachelor of Science in Nursing (BSN)"],
+            "BU TECHNICAL-VOCATIONAL TEACHER EDUCATION (BTVTeD)": [
+                "Bachelor in Technical - Vocational Teacher Education (BTVTeD), major in:",
+                "Drafting Technology (BTVTeD-DT)",
+                "Electrical Technology (BTVTeD-ELT)",
+                "Food and Service Management (BTVTeD-FSM)",
+                "Garments, Fashion, and Design (BTVTeD-GFD)",
+                "Animal Production (BTVTeD-AP)",
+                "Agriculture Crop Production (BTVTeD-ACP)"
+            ],
+            "OTHER PROGRAMS": [
+                "Bachelor in Agricultural Technology (BAT)",
+                "Bachelor of Technology and Livelihood Education (BTLED)",
+                "Bachelor of Technology and Livelihood Education, major in ICT (BTLED-ICT)"
+            ]
+        };
+    
         function goBack() {
             window.location.href = DASHBOARD_URL;
         }
-
-        async function fetchColleges() {
-            try {
-                const response = await fetch(`${API_URL}?action=getColleges`, { method: 'GET', redirect: 'follow' });
-                if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
-                return await response.json();
-            } catch (error) {
-                console.error('Error fetching colleges:', error);
-                alert(`Failed to load colleges: ${error.message}`);
-                return [];
-            }
+    
+        // Populate colleges statically
+        function populateColleges(selectedCollege = '') {
+            const collegeSelect = document.getElementById('college');
+            collegeSelect.innerHTML = '<option value="">Select College</option>';
+            Object.keys(collegeData).forEach(college => {
+                const option = document.createElement('option');
+                option.value = college;
+                option.text = college;
+                if (college === selectedCollege) option.selected = true;
+                collegeSelect.appendChild(option);
+            });
         }
-
-        async function fetchDepartments(college) {
-            try {
-                const response = await fetch(`${API_URL}?action=getDepartments&college=${encodeURIComponent(college)}`, { method: 'GET', redirect: 'follow' });
-                if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
-                return await response.json();
-            } catch (error) {
-                console.error('Error fetching departments:', error);
-                alert(`Failed to load departments for ${college}: ${error.message}`);
-                return [];
-            }
-        }
-
+    
+        // Update departments based on selected college
         function updateDepartments() {
-            const college = document.getElementById("college").value;
-            const departmentSelect = document.getElementById("department");
+            const college = document.getElementById('college').value;
+            const departmentSelect = document.getElementById('department');
             departmentSelect.innerHTML = '<option value="">Select Department</option>';
-            
-            fetchDepartments(college).then(depts => {
-                depts.forEach(dept => {
-                    const option = document.createElement("option");
+    
+            if (college && collegeData[college]) {
+                collegeData[college].forEach(dept => {
+                    const option = document.createElement('option');
                     option.value = dept;
                     option.text = dept;
                     departmentSelect.appendChild(option);
                 });
-            });
+            }
         }
-
+    
         async function loadProposalData() {
             const urlParams = new URLSearchParams(window.location.search);
             const proposalId = urlParams.get('proposalId');
@@ -198,7 +309,7 @@
                 window.location.href = DASHBOARD_URL;
                 return;
             }
-
+    
             try {
                 const response = await fetch(`${API_URL}?action=getProposalById&proposalId=${encodeURIComponent(proposalId)}`, {
                     method: 'GET',
@@ -212,12 +323,10 @@
                     window.location.href = DASHBOARD_URL;
                     return;
                 }
-
+    
                 document.getElementById('proposalId').value = data.proposalId;
                 document.getElementById('particulars').value = data.particulars || '';
-                const colleges = await fetchColleges();
-                const collegeSelect = document.getElementById('college');
-                collegeSelect.innerHTML = '<option value="">Select College</option>' + colleges.map(c => `<option value="${c}" ${c === data.college ? 'selected' : ''}>${c}</option>`).join('');
+                populateColleges(data.college || ''); // Populate colleges with selected value
                 updateDepartments(); // Populate departments based on college
                 document.getElementById('department').value = data.department || '';
                 document.getElementById('others').value = data.others || '';
@@ -243,10 +352,10 @@
                 alert(`Failed to load proposal data: ${error.message}`);
             }
         }
-
+    
         document.getElementById('updateForm').addEventListener('submit', async function(event) {
             event.preventDefault();
-
+    
             let valid = true;
             let amount = document.getElementById('amount');
             let amountError = document.getElementById('amountError');
@@ -256,7 +365,7 @@
             } else {
                 amountError.textContent = '';
             }
-
+    
             let docSeq = document.getElementById('docSeq');
             let docSeqError = document.getElementById('docSeqError');
             if (!docSeq.value) {
@@ -265,7 +374,7 @@
             } else {
                 docSeqError.textContent = '';
             }
-
+    
             let copies = document.getElementById('copies');
             let copiesError = document.getElementById('copiesError');
             if (!copies.value || isNaN(copies.value) || copies.value < 1) {
@@ -274,9 +383,9 @@
             } else {
                 copiesError.textContent = '';
             }
-
+    
             if (!valid) return;
-
+    
             const formData = new FormData(this);
             const updates = Object.fromEntries(formData.entries());
             
@@ -304,7 +413,7 @@
                 alert(`Failed to update proposal: ${error.message}`);
             }
         });
-
+    
         window.onload = loadProposalData;
     </script>
 </body>
