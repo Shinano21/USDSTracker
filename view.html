@@ -66,9 +66,9 @@
         }
         .button-row {
             display: flex;
-            justify-content: flex-end;
+            justify-content: flex-start;
             gap: 15px;
-            margin-top: 30px;
+            margin-bottom: 30px; /* Added spacing below the button */
         }
         button {
             padding: 12px 24px;
@@ -102,8 +102,8 @@
 </head>
 <body>
     <div class="container">
-        <div class="button-row" style="justify-content: flex-start;">
-            <button onclick="logout()">Logout</button>
+        <div class="button-row">
+            <button onclick="goBack()">Go Back</button>
         </div>
         <h2>View Proposal</h2>
         <div class="section">
@@ -265,10 +265,6 @@
                 </div>
             </div>
         </div>
-
-        <div class="button-row">
-            <button onclick="goBack()">Go Back</button>
-        </div>
     </div>
 
     <script>
@@ -294,11 +290,6 @@
 
         function goBack() {
             window.location.href = DASHBOARD_URL;
-        }
-
-        function logout() {
-          localStorage.removeItem('authToken');
-          window.location.replace(INDEX_URL); // Replace to prevent back navigation
         }
 
         async function loadProposalData() {
