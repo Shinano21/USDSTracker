@@ -5,20 +5,124 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Update Proposal</title>
     <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f4f4; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        .container { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); width: 90%; max-width: 1200px; text-align: center; }
-        h2 { margin-bottom: 20px; color: #333; }
-        .form-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-        label { font-weight: bold; display: block; margin-top: 10px; text-align: left; }
-        input, select, textarea { width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; box-sizing: border-box; }
-        textarea { resize: vertical; min-height: 80px; }
-        button { grid-column: span 3; padding: 12px; font-size: 16px; border-radius: 4px; cursor: pointer; margin-top: 15px; border: none; transition: background-color 0.3s ease; }
-        .submit-btn { background-color: #28a745; color: white; }
-        .submit-btn:hover { background-color: #218838; }
-        .back-btn { background-color: #dc3545; color: white; }
-        .back-btn:hover { background-color: #c82333; }
-        .error { color: red; font-size: 0.9em; margin-top: 5px; text-align: left; }
-        @media (max-width: 768px) { .form-grid { grid-template-columns: 1fr; } button { grid-column: span 1; } }
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 1400px;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+        .form-section {
+            margin-bottom: 30px;
+        }
+        .section-title {
+            font-size: 18px;
+            color: #555;
+            margin-bottom: 15px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #28a745;
+            display: inline-block;
+        }
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            flex: 1;
+            min-width: 250px;
+        }
+        label {
+            font-weight: bold;
+            color: #444;
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            box-sizing: border-box;
+            background-color: #fafafa;
+            transition: border-color 0.3s;
+        }
+        input:focus, select:focus, textarea:focus {
+            border-color: #28a745;
+            outline: none;
+        }
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        .error {
+            color: #dc3545;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        .button-row {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        button {
+            padding: 12px 24px;
+            font-size: 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .submit-btn {
+            background-color: #28a745;
+            color: white;
+        }
+        .submit-btn:hover {
+            background-color: #218838;
+        }
+        .back-btn {
+            background-color: #dc3545;
+            color: white;
+        }
+        .back-btn:hover {
+            background-color: #c82333;
+        }
+        @media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+            }
+            .form-group {
+                min-width: 100%;
+            }
+            .button-row {
+                flex-direction: column;
+                gap: 10px;
+            }
+            button {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
@@ -26,113 +130,162 @@
         <h2>Update Proposal</h2>
         <form id="updateForm" method="POST">
             <input type="hidden" id="proposalId" name="proposalId">
-            <div class="form-grid">
-                <div>
-                    <label for="particulars">Title of Activity:</label>
-                    <textarea id="particulars" name="particulars" rows="4" required></textarea>
+
+            <div class="form-section">
+                <div class="section-title">Activity Details</div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="particulars">Title of Activity:</label>
+                        <textarea id="particulars" name="particulars" placeholder="Enter title..." required></textarea>
+                    </div>
                 </div>
-                <div>
-                    <label for="college">College:</label>
-                    <select id="college" name="college" onchange="updateDepartments()" required>
-                        <option value="">Select College</option>
-                    </select>
+            </div>
+
+            <div class="form-section">
+                <div class="section-title">Implementing Unit</div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="college">College:</label>
+                        <select id="college" name="college" onchange="updateDepartments()" required>
+                            <option value="">Select College</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="department">Department:</label>
+                        <select id="department" name="department" required>
+                            <option value="">Select Department</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="others">If others, please specify:</label>
+                        <input type="text" id="others" name="others" placeholder="Specify if others">
+                    </div>
                 </div>
-                <div>
-                    <label for="department">Department:</label>
-                    <select id="department" name="department" required>
-                        <option value="">Select Department</option>
-                    </select>
+            </div>
+
+            <div class="form-section">
+                <div class="section-title">Basic Information of the Activity</div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="objectives">Objectives:</label>
+                        <textarea id="objectives" name="objectives" placeholder="Enter objectives..." required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="nature">Nature/Classification:</label>
+                        <select id="nature" name="nature" required>
+                            <option value="" disabled selected>Select Nature/Classification</option>
+                            <option value="Off Campus">Off Campus</option>
+                            <option value="In Campus">In Campus</option>
+                            <option value="OJT">OJT</option>
+                            <option value="USC">USC</option>
+                            <option value="UNIBE">UNIBE</option>
+                            <option value="UBO">UBO</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="locale">Locale:</label>
+                        <input type="text" id="locale" name="locale" placeholder="Enter locale" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="duration">Duration of Activity:</label>
+                        <input type="text" id="duration" name="duration" placeholder="Enter duration" required>
+                    </div>
                 </div>
-                <div>
-                    <label for="others">If others, please specify:</label>
-                    <input type="text" id="others" name="others">
+            </div>
+
+            <div class="form-section">
+                <div class="section-title">Funding Requirement</div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="funding">Funding Source:</label>
+                        <input type="text" id="funding" name="funding" placeholder="Enter funding source" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="amount">Total Amount:</label>
+                        <input type="number" id="amount" name="amount" step="0.01" placeholder="Enter amount" required>
+                        <div id="amountError" class="error"></div>
+                    </div>
                 </div>
-                <div>
-                    <label for="objectives">Objectives:</label>
-                    <textarea id="objectives" name="objectives" rows="4" required></textarea>
+            </div>
+
+            <div class="form-section">
+                <div class="section-title">Contact and Documents</div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="contact">Number/Email of Contact Person:</label>
+                        <input type="text" id="contact" name="contact" placeholder="Enter contact info" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="documents">Scanned Copy of Documents:</label>
+                        <input type="text" id="documents" name="documents" placeholder="URL or file reference">
+                    </div>
                 </div>
-                <div>
-                    <label for="nature">Nature/Classification:</label>
-                    <select id="nature" name="nature" required>
-                        <option value="" disabled selected>Select Nature/Classification</option>
-                        <option value="Off Campus">Off Campus</option>
-                        <option value="In Campus">In Campus</option>
-                        <option value="OJT">OJT</option>
-                        <option value="USC">USC</option>
-                        <option value="UNIBE">UNIBE</option>
-                        <option value="UBO">UBO</option>
-                    </select>
+            </div>
+
+            <div class="form-section">
+                <div class="section-title">1st Evaluation & Review of Compliance</div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="csac">Action of CSAC:</label>
+                        <input type="text" id="csac" name="csac" placeholder="Enter CSAC action">
+                    </div>
+                    <div class="form-group">
+                        <label for="remarks">Remarks:</label>
+                        <textarea id="remarks" name="remarks" placeholder="Enter remarks"></textarea>
+                    </div>
                 </div>
-                <div>
-                    <label for="locale">Locale:</label>
-                    <input type="text" id="locale" name="locale" required>
+            </div>
+
+            <div class="form-section">
+                <div class="section-title">Received by USDS</div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="docSeq">DOC. SEQ. No.:</label>
+                        <input type="text" id="docSeq" name="docSeq" placeholder="Enter sequence number" required>
+                        <div id="docSeqError" class="error"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="copies">No of Copies:</label>
+                        <input type="number" id="copies" name="copies" min="1" placeholder="Enter number of copies" required>
+                        <div id="copiesError" class="error"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="receiver">Received By:</label>
+                        <select id="receiver" name="receiver">
+                            <option value="" disabled selected>Select Received By</option>
+                        </select>
+                    </div>
                 </div>
-                <div>
-                    <label for="duration">Duration of Activity:</label>
-                    <input type="text" id="duration" name="duration" required>
+            </div>
+
+            <div class="form-section">
+                <div class="section-title">2nd Evaluation & Review of Compliance</div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="usds">Action of USDS:</label>
+                        <input type="text" id="usds" name="usds" placeholder="Enter USDS action">
+                    </div>
+                    <div class="form-group">
+                        <label for="notations">Notations:</label>
+                        <textarea id="notations" name="notations" placeholder="Enter notations"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="status">Status:</label>
+                        <select id="status" name="status">
+                            <option value="">Select Status</option>
+                            <option value="Pending">Pending</option>
+                            <option value="Returned">Returned</option>
+                            <option value="Forwarded">Forwarded</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="officeDestination">Office Destination:</label>
+                        <input type="text" id="officeDestination" name="officeDestination" placeholder="Enter office destination">
+                    </div>
                 </div>
-                <div>
-                    <label for="funding">Funding Source:</label>
-                    <input type="text" id="funding" name="funding" required>
-                </div>
-                <div>
-                    <label for="amount">Total Amount:</label>
-                    <input type="number" id="amount" name="amount" step="0.01" required>
-                    <div id="amountError" class="error"></div>
-                </div>
-                <div>
-                    <label for="contact">Number/Email of Contact Person:</label>
-                    <input type="text" id="contact" name="contact" required>
-                </div>
-                <div>
-                    <label for="documents">Scanned Copy of Documents:</label>
-                    <input type="text" id="documents" name="documents">
-                </div>
-                <div>
-                    <label for="csac">Action of CSAC:</label>
-                    <input type="text" id="csac" name="csac">
-                </div>
-                <div>
-                    <label for="remarks">Remarks:</label>
-                    <textarea id="remarks" name="remarks" rows="4"></textarea>
-                </div>
-                <div>
-                    <label for="docSeq">DOC. SEQ. No.:</label>
-                    <input type="text" id="docSeq" name="docSeq" required>
-                    <div id="docSeqError" class="error"></div>
-                </div>
-                <div>
-                    <label for="copies">No of Copies:</label>
-                    <input type="number" id="copies" name="copies" min="1" required>
-                    <div id="copiesError" class="error"></div>
-                </div>
-                <div>
-                    <label for="receiver">Received By:</label>
-                    <select id="receiver" name="receiver">
-                        <option value="" disabled selected>Select Received By</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="usds">Action of USDS:</label>
-                    <input type="text" id="usds" name="usds">
-                </div>
-                <div>
-                    <label for="notations">Notations:</label>
-                    <textarea id="notations" name="notations" rows="4"></textarea>
-                </div>
-                <div>
-                    <label for="status">Status:</label>
-                    <select id="status" name="status">
-                        <option value="">Select Status</option>
-                        <option value="Pending">Pending</option>
-                        <option value="Returned">Returned</option>
-                        <option value="Forwarded">Forwarded</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="officeDestination">Office Destination:</label>
-                    <input type="text" id="officeDestination" name="officeDestination">
-                </div>
+            </div>
+
+            <div class="button-row">
                 <button type="submit" class="submit-btn">Update</button>
                 <button class="back-btn" onclick="goBack()">Back to Dashboard</button>
             </div>
@@ -149,7 +302,6 @@
             window.location.href = INDEX_URL;
         }
 
-        // Static college and department data
         const collegeData = {
             "BU COLLEGE OF EDUCATION (BUCE)": [
                 "Bachelor of Culture and Arts Education (BCAEd)",
@@ -269,11 +421,11 @@
                 "Bachelor of Technology and Livelihood Education, major in ICT (BTLED-ICT)"
             ]
         };
-    
+
         function goBack() {
             window.location.href = DASHBOARD_URL;
         }
-    
+
         function populateColleges(selectedCollege = '') {
             const collegeSelect = document.getElementById('college');
             collegeSelect.innerHTML = '<option value="">Select College</option>';
@@ -285,17 +437,18 @@
                 collegeSelect.appendChild(option);
             });
         }
-    
-        function updateDepartments() {
+
+        function updateDepartments(selectedDepartment = '') {
             const college = document.getElementById('college').value;
             const departmentSelect = document.getElementById('department');
             departmentSelect.innerHTML = '<option value="">Select Department</option>';
-    
+
             if (college && collegeData[college]) {
                 collegeData[college].forEach(dept => {
                     const option = document.createElement('option');
                     option.value = dept;
                     option.text = dept;
+                    if (dept === selectedDepartment) option.selected = true;
                     departmentSelect.appendChild(option);
                 });
             }
@@ -311,7 +464,7 @@
                 const receivers = await response.json();
                 
                 const receiverSelect = document.getElementById('receiver');
-                receiverSelect.innerHTML = '<option value="" disabled selected>Select Received By</option>';
+                receiverSelect.innerHTML = '<option value="" disabled>Select Received By</option>';
                 receivers.forEach(receiver => {
                     const option = document.createElement('option');
                     option.value = receiver;
@@ -324,7 +477,7 @@
                 alert(`Failed to load receivers: ${error.message}`);
             }
         }
-    
+
         async function loadProposalData() {
             const urlParams = new URLSearchParams(window.location.search);
             const proposalId = urlParams.get('proposalId');
@@ -333,7 +486,7 @@
                 window.location.href = DASHBOARD_URL;
                 return;
             }
-    
+
             try {
                 const response = await fetch(`${API_URL}?action=getProposalById&proposalId=${encodeURIComponent(proposalId)}`, {
                     method: 'GET',
@@ -347,12 +500,11 @@
                     window.location.href = DASHBOARD_URL;
                     return;
                 }
-    
-                document.getElementById('proposalId').value = data.proposalId;
+
+                document.getElementById('proposalId').value = data.proposalId || '';
                 document.getElementById('particulars').value = data.particulars || '';
                 populateColleges(data.college || '');
-                updateDepartments();
-                document.getElementById('department').value = data.department || '';
+                updateDepartments(data.department || '');
                 document.getElementById('others').value = data.others || '';
                 document.getElementById('objectives').value = data.objectives || '';
                 document.getElementById('nature').value = data.nature || '';
@@ -376,10 +528,10 @@
                 alert(`Failed to load proposal data: ${error.message}`);
             }
         }
-    
+
         document.getElementById('updateForm').addEventListener('submit', async function(event) {
             event.preventDefault();
-    
+
             let valid = true;
             let amount = document.getElementById('amount');
             let amountError = document.getElementById('amountError');
@@ -389,7 +541,7 @@
             } else {
                 amountError.textContent = '';
             }
-    
+
             let docSeq = document.getElementById('docSeq');
             let docSeqError = document.getElementById('docSeqError');
             if (!docSeq.value) {
@@ -398,7 +550,7 @@
             } else {
                 docSeqError.textContent = '';
             }
-    
+
             let copies = document.getElementById('copies');
             let copiesError = document.getElementById('copiesError');
             if (!copies.value || isNaN(copies.value) || copies.value < 1) {
@@ -407,12 +559,12 @@
             } else {
                 copiesError.textContent = '';
             }
-    
+
             if (!valid) return;
-    
+
             const formData = new FormData(this);
             const updates = Object.fromEntries(formData.entries());
-            
+
             try {
                 console.log('Sending request:', { action: 'update', proposalId: updates.proposalId, updates });
                 const response = await fetch(API_URL, {
@@ -441,7 +593,7 @@
                 alert(`Failed to update proposal: ${error.message}`);
             }
         });
-    
+
         window.onload = loadProposalData;
     </script>
 </body>
