@@ -35,8 +35,6 @@
                     <label for="college">College:</label>
                     <select id="college" name="college" onchange="updateDepartments()" required>
                         <option value="">Select College</option>
-                        <option value="College1">College1</option>
-                        <option value="College2">College2</option>
                     </select>
                 </div>
                 <div>
@@ -112,7 +110,7 @@
                     <label for="receiver">RECEIVER:</label>
                     <select id="receiver" name="receiver">
                         <option value="" disabled selected>Select receiver</option>
-                        <option value="Ma'am Ann">Ma'am Ann</option>
+                        <option value="Ma'am Anna">Ma'am Anna</option>
                         <option value="Sir Ronald">Sir Ronald</option>
                         <option value="Sir Mike">Sir Mike</option>
                         <option value="Sir Christian">Sir Christian</option>
@@ -136,8 +134,8 @@
                     </select>
                 </div>
                 <div>
-                    <label for="office">Office Destination:</label>
-                    <input type="text" id="office" name="office">
+                    <label for="officeDestination">Office Destination:</label>
+                    <input type="text" id="officeDestination" name="officeDestination">
                 </div>
                 <button type="submit" class="submit-btn">Update</button>
                 <button class="back-btn" onclick="goBack()">Back to Dashboard</button>
@@ -146,11 +144,33 @@
     </div>
 
     <script>
-        const API_URL = 'https://script.google.com/macros/s/AKfycbyHKJ6-qlH4F3dLdUNuu2mcyiQHhv7kTd7cfWnqustB9nD3aquVk0xkmmp4t7Uj620/exec';
-        const DASHBOARD_URL = 'https://shinano21.github.io/USDSTracker/dashboard.html';
+        const API_URL = 'https://script.google.com/macros/s/AKfycbyHKJ6-qlH4F3dLdUNuu2mcyiQHhv7kTd7cfWnqustB9nD3aquVk0xkmmp4t7Uj620/exec'; // Replace with your actual URL
+        const DASHBOARD_URL = 'dashboard.html'; // Updated to point to dashboard.html relative to this file
 
         function goBack() {
             window.location.href = DASHBOARD_URL;
+        }
+
+        async function fetchColleges() {
+            try {
+                const response = await fetch(`${API_URL}?action=getColleges`, { method: 'GET', redirect: 'follow' });
+                if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
+                return await response.json();
+            } catch (error) {
+                console.error('Error fetching colleges:', error);
+                return [];
+            }
+        }
+
+        async function fetchDepartments(college) {
+            try {
+                const response = await fetch(`${API_URL}?action=getDepartments&college=${encodeURIComponent(college)}`, { method: 'GET', redirect: 'follow' });
+                if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
+                return await response.json();
+            } catch (error) {
+                console.error('Error fetching departments:', error);
+                return [];
+            }
         }
 
         function updateDepartments() {
@@ -158,19 +178,14 @@
             const departmentSelect = document.getElementById("department");
             departmentSelect.innerHTML = '<option value="">Select Department</option>';
             
-            const departments = {
-                "College1": ["Dept1A", "Dept1B"],
-                "College2": ["Dept2A", "Dept2B"]
-            };
-            
-            if (college && departments[college]) {
-                departments[college].forEach(dept => {
+            fetchDepartments(college).then(depts => {
+                depts.forEach(dept => {
                     const option = document.createElement("option");
                     option.value = dept;
                     option.text = dept;
                     departmentSelect.appendChild(option);
                 });
-            }
+            });
         }
 
         async function loadProposalData() {
@@ -197,7 +212,9 @@
 
                 document.getElementById('proposalId').value = data.proposalId;
                 document.getElementById('particulars').value = data.particulars || '';
-                document.getElementById('college').value = data.college || '';
+                const colleges = await fetchColleges();
+                const collegeSelect = document.getElementById('college');
+                collegeSelect.innerHTML = '<option value="">Select College</option>' + colleges.map(c => `<option value="${c}" ${c === data.college ? 'selected' : ''}>${c}</option>`).join('');
                 updateDepartments(); // Populate departments based on college
                 document.getElementById('department').value = data.department || '';
                 document.getElementById('others').value = data.others || '';
@@ -217,7 +234,7 @@
                 document.getElementById('usds').value = data.usds || '';
                 document.getElementById('notations').value = data.notations || '';
                 document.getElementById('status').value = data.status || '';
-                document.getElementById('office').value = data.office || '';
+                document.getElementById('officeDestination').value = data.officeDestination || '';
             } catch (error) {
                 console.error('Error fetching proposal data:', error);
                 alert('Failed to load proposal data.');
