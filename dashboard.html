@@ -9,6 +9,9 @@
     h1 { text-align: center; color: #333; }
     .table-container { max-width: 1200px; margin: 0 auto; }
     .header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .logout-container { margin-right: auto; } /* Push logout to the left */
+    .logout-container button { padding: 8px 16px; background-color: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer; }
+    .logout-container button:hover { background-color: #c82333; }
     .filter-container { display: flex; gap: 15px; align-items: center; }
     .filter-container label { font-weight: bold; margin-right: 5px; }
     .filter-container select { padding: 8px; border-radius: 4px; cursor: pointer; }
@@ -22,11 +25,11 @@
     select { padding: 5px; border-radius: 4px; cursor: pointer; width: 100%; }
     @media (max-width: 768px) {
       .header-row { flex-direction: column; gap: 10px; align-items: flex-start; }
+      .logout-container, .filter-container, .button-container { margin-left: 0; text-align: center; width: 100%; }
+      .logout-container button, .button-container button { margin: 5px 0; }
       .filter-container { flex-direction: column; align-items: flex-start; }
       .filter-container label { margin-right: 0; margin-bottom: 5px; }
       .filter-container select { width: 100%; margin-bottom: 10px; }
-      .button-container { margin-left: 0; text-align: center; width: 100%; }
-      .button-container button { margin: 5px 0; }
     }
   </style>
 </head>
@@ -34,6 +37,9 @@
   <h1>Proposal Dashboard</h1>
   <div class="table-container">
     <div class="header-row">
+      <div class="logout-container">
+        <button onclick="logout()">Logout</button>
+      </div>
       <div class="filter-container">
         <label for="monthFilter">Month:</label>
         <select id="monthFilter" onchange="filterProposals()">
@@ -81,6 +87,7 @@
   <script>
     const API_URL = 'https://script.google.com/macros/s/AKfycbyHKJ6-qlH4F3dLdUNuu2mcyiQHhv7kTd7cfWnqustB9nD3aquVk0xkmmp4t7Uj620/exec'; // Replace with your actual URL
     const UPDATE_URL = 'update.html'; // Use relative path for GitHub Pages
+    const LOGIN_URL = 'index.html'; // Use relative path for login page
     let allProposals = [];
 
     async function fetchProposals() {
@@ -178,6 +185,11 @@
         }
       }
       select.value = ''; // Reset dropdown after action
+    }
+
+    function logout() {
+      console.log(`Navigating to ${LOGIN_URL}`);
+      window.location.href = LOGIN_URL;
     }
 
     window.onload = fetchProposals;
