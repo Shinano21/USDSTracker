@@ -140,9 +140,13 @@
                     <div>
                         <label for="nature">Nature/Classification:</label>
                         <select id="nature" name="nature" required>
-                            <option value="">Select Nature/Classification</option>
-                            <option value="Type1">Type1</option>
-                            <option value="Type2">Type2</option>
+                            <option value="" disabled selected>Select Nature/Classification</option>
+                            <option value="Off Campus">Off Campus</option>
+                            <option value="In Campus">In Campus</option>
+                            <option value="OJT">OJT</option>
+                            <option value="USC">USC</option>
+                            <option value="UNIBE">UNIBE</option>
+                            <option value="UBO">UBO</option>
                         </select>
                     </div>
                     <div>
@@ -207,7 +211,13 @@
                     </div>
                     <div>
                         <label for="receiver">RECEIVER:</label>
-                        <input type="text" id="receiver" name="receiver" placeholder="Enter receiver">
+                        <select id="receiver" name="receiver">
+                            <option value="" disabled selected>Select receiver</option>
+                            <option value="Ma'am Ann">Ma'am Ann</option>
+                            <option value="Sir Ronald">Sir Ronald</option>
+                            <option value="Sir Mike">Sir Mike</option>
+                            <option value="Sir Christian">Sir Christian</option>
+                        </select>
                     </div>
                 </div>
 
