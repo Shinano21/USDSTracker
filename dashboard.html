@@ -105,7 +105,7 @@
 
   <script>
     const API_URL = 'https://script.google.com/macros/s/AKfycbyHKJ6-qlH4F3dLdUNuu2mcyiQHhv7kTd7cfWnqustB9nD3aquVk0xkmmp4t7Uj620/exec'; // Replace with your actual URL
-    const UPDATE_URL = 'update.html'; // Points to update.html
+    const UPDATE_URL = 'update.html'; // Ensure this matches your file structure on GitHub Pages
     let colleges = [];
     let departments = {};
     let allProposals = [];
@@ -202,7 +202,8 @@
         await fetchDepartments(proposal.college || '');
         showModal(proposal);
       } else if (action === 'update') {
-        window.location.href = `${UPDATE_URL}?proposalId=${encodeURIComponent(proposalId)}`; // Directs to update.html with proposalId
+        window.location.href = `${UPDATE_URL}?proposalId=${encodeURIComponent(proposalId)}`; // Ensure navigation to update.html
+        console.log(`Navigating to ${UPDATE_URL}?proposalId=${encodeURIComponent(proposalId)}`); // Debug log
       }
       select.value = '';
     }
