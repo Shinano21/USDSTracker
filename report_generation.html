@@ -110,7 +110,8 @@
             padding: 12px;
             text-align: center;
             border: 1px solid #eee;
-            white-space: nowrap;
+            min-width: 80px; /* Ensure columns have enough width */
+            white-space: nowrap; /* Keep nowrap but with min-width */
         }
 
         th {
@@ -132,11 +133,12 @@
 
         input[type="number"],
         input[type="text"] {
-            width: 100%;
+            width: 100%; /* Full width within cell */
             padding: 6px;
             border: 1px solid #ddd;
             border-radius: 4px;
             text-align: center;
+            min-width: 0; /* Prevent input from forcing column too wide */
         }
 
         input[readonly] {
@@ -196,6 +198,7 @@
             th, td {
                 padding: 8px;
                 font-size: 0.8rem;
+                min-width: 60px; /* Slightly smaller on mobile */
             }
 
             .button-group {
@@ -377,7 +380,7 @@
                     const monthNum = parseInt(monthMatch[1], 10) - 1;
                     if (monthNum >= 0 && monthNum < 12) {
                         const monthShort = monthShorts[monthNum];
-                        // Try different possible field names for receiver
+                        // Handle receiver
                         const receiver = (proposal.receiver || proposal.Receiver || proposal['Received By'] || '').trim();
                         const receiverLower = receiver.toLowerCase();
                         const receiverIndex = receivedByNames.findIndex(name => name.toLowerCase() === receiverLower);
@@ -388,10 +391,19 @@
                             console.warn(`Unrecognized receiver: "${receiver}" in proposal ${proposal.proposalId}`);
                         }
 
-                        // Handle proposal types
-                        const natureLower = (proposal.nature || '').toLowerCase().trim().replace(/\s/g, '_');
-                        if (proposalTypes.includes(natureLower)) {
-                            monthData[monthShort][natureLower]++;
+                        // Handle proposal types with flexible matching
+                        const nature = (proposal.nature || '').toLowerCase().trim();
+                        let natureKey = '';
+                        if (nature.includes('off') && nature.includes('campus')) natureKey = 'off_campus';
+                        else if (nature.includes('in') && nature.includes('campus')) natureKey = 'in_campus';
+                        else if (nature.includes('ojt') || nature.includes('on-the-job') || nature.includes('training')) natureKey = 'ojt';
+                        else if (nature.includes('unibe')) natureKey = 'unibe';
+                        else if (nature.includes('ubo')) natureKey = 'ubo';
+
+                        if (proposalTypes.includes(natureKey)) {
+                            monthData[monthShort][natureKey]++;
+                        } else if (nature) {
+                            console.warn(`Unrecognized nature: "${nature}" in proposal ${proposal.proposalId}`);
                         }
 
                         // Handle accomplished
