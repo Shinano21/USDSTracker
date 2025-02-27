@@ -278,23 +278,12 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>MONTH</th>
-                            <th>RECEIVED BY</th>
-                            <th></th>
-                            <th></th>
-                            <th></th>
-                            <th>RECORD OF TRANSACTIONS</th>
-                            <th></th>
-                            <th></th>
-                            <th>TOTAL PROPOSALS RECEIVED</th>
-                            <th></th>
-                            <th></th>
-                            <th></th>
-                            <th></th>
-                            <th>ACCOMPLISHED ON TIME</th>
+                            <th rowspan="2">MONTH</th>
+                            <th colspan="4">RECEIVED BY</th>
+                            <th colspan="5">TOTAL PROPOSALS RECEIVED</th>
+                            <th rowspan="2">ACCOMPLISHED ON TIME</th>
                         </tr>
                         <tr>
-                            <th></th>
                             <th>Ma’am Ann</th>
                             <th>Sir Mike</th>
                             <th>Sir Christian</th>
@@ -302,12 +291,8 @@
                             <th>Off Campus</th>
                             <th>In Campus</th>
                             <th>OJT</th>
-                            <th>Off Campus</th>
-                            <th>In Campus</th>
                             <th>UNIBE</th>
                             <th>UBO</th>
-                            <th>USC</th>
-                            <th>Yes/No</th>
                         </tr>
                     </thead>
                     <tbody id="monthData"></tbody>
@@ -329,8 +314,8 @@
         const DASHBOARD_URL = 'dashboard.html';
         const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
         const monthShorts = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
-        const categories = ['maam_ann', 'sir_mike', 'sir_christian', 'sir_ronald', 'off_campus', 'in_campus', 'ojt'];
-        const proposalTypes = ['off_campus', 'in_campus', 'unibe', 'ubo', 'usc'];
+        const receivedBy = ['maam_ann', 'sir_mike', 'sir_christian', 'sir_ronald'];
+        const proposalTypes = ['off_campus', 'in_campus', 'ojt', 'unibe', 'ubo'];
         let allProposals = [];
 
         if (localStorage.getItem('authToken') !== 'loggedIn') {
@@ -358,14 +343,14 @@
 
         function populateYearFilter() {
             const yearFilter = document.getElementById('yearFilter');
-            const currentYear = new Date().getFullYear(); // e.g., 2025
+            const currentYear = new Date().getFullYear();
             for (let year = currentYear - 5; year <= currentYear + 5; year++) {
                 const option = document.createElement('option');
                 option.value = year;
                 option.textContent = year;
                 yearFilter.appendChild(option);
             }
-            yearFilter.value = currentYear; // Default to 2025
+            yearFilter.value = currentYear;
         }
 
         function createMonthRows(proposalData) {
@@ -374,25 +359,22 @@
             const monthData = {};
             const accomplishedData = {};
 
-            // Process proposals based on MM-YYYY-XXXX format
             proposalData.forEach(proposal => {
-                const monthMatch = proposal.proposalId.match(/^(\d{2})-(\d{4})-\d{4}$/); // e.g., 02-2025-0001
+                const monthMatch = proposal.proposalId.match(/^(\d{2})-(\d{4})-\d{4}$/);
                 if (monthMatch) {
-                    const monthNum = parseInt(monthMatch[1], 10) - 1; // MM (e.g., 02 -> 1 for February)
-                    const year = monthMatch[2]; // YYYY (e.g., 2025)
-                    const entryNum = monthMatch[3]; // XXXX (e.g., 0001, entry number, unused here)
+                    const monthNum = parseInt(monthMatch[1], 10) - 1;
+                    const year = monthMatch[2];
                     if (monthNum >= 0 && monthNum < 12) {
                         const monthShort = monthShorts[monthNum];
                         if (!monthData[monthShort]) {
                             monthData[monthShort] = {};
-                            categories.forEach(cat => monthData[monthShort][cat] = 0);
+                            receivedBy.forEach(cat => monthData[monthShort][cat] = 0);
                             proposalTypes.forEach(type => monthData[monthShort][type] = 0);
                             accomplishedData[monthShort] = { yes: 0, total: 0 };
                         }
                         const receiverLower = proposal.receiver.toLowerCase().replace(/\s/g, '_');
-                        if (categories.includes(receiverLower)) monthData[monthShort][receiverLower]++;
+                        if (receivedBy.includes(receiverLower)) monthData[monthShort][receiverLower]++;
                         const natureLower = (proposal.nature || '').toLowerCase().trim().replace(/\s/g, '_');
-                        if (categories.slice(4).includes(natureLower)) monthData[monthShort][natureLower]++;
                         if (proposalTypes.includes(natureLower)) monthData[monthShort][natureLower]++;
                         if (proposal.accomplished.toLowerCase() === 'yes') accomplishedData[monthShort].yes++;
                         accomplishedData[monthShort].total++;
@@ -405,10 +387,7 @@
                 if (monthData[monthShort]) {
                     const row = document.createElement('tr');
                     row.innerHTML = `<td>${month}</td>` + 
-                        categories.slice(0, 4).map(cat => 
-                            `<td><input type="number" name="${monthShort}_${cat}" value="${monthData[monthShort][cat] || 0}" min="0" readonly></td>`
-                        ).join('') +
-                        categories.slice(4).map(cat => 
+                        receivedBy.map(cat => 
                             `<td><input type="number" name="${monthShort}_${cat}" value="${monthData[monthShort][cat] || 0}" min="0" readonly></td>`
                         ).join('') +
                         proposalTypes.map(type => 
@@ -421,7 +400,7 @@
 
             const totalRow = document.createElement('tr');
             totalRow.innerHTML = `<td><strong>TOTAL</strong></td>` +
-                categories.map(cat => `<td><input type="number" name="total_${cat}" value="0" readonly></td>`).join('') +
+                receivedBy.map(cat => `<td><input type="number" name="total_${cat}" value="0" readonly></td>`).join('') +
                 proposalTypes.map(type => `<td><input type="number" name="total_${type}" value="0" readonly></td>`).join('') +
                 `<td><input type="text" name="total_acted_upon" value="0/0" readonly></td>`;
             tbody.appendChild(totalRow);
@@ -433,7 +412,7 @@
             const rows = document.querySelectorAll('#monthData tr:not(:last-child)');
             let totalYes = 0, totalProposals = 0;
 
-            categories.forEach(cat => {
+            receivedBy.forEach(cat => {
                 const total = Array.from(rows).reduce((sum, row) => 
                     sum + (parseInt(row.querySelector(`input[name$="_${cat}"]`).value) || 0), 0);
                 document.querySelector(`input[name="total_${cat}"]`).value = total;
@@ -461,7 +440,7 @@
                 const data = await response.json();
                 if (data.error) throw new Error(data.message);
                 allProposals = data.length > 0 ? data : [];
-                filterDataByYear(); // Filter for 2025 on initial load
+                filterDataByYear();
                 alert(allProposals.length > 0 ? 'Data loaded successfully!' : 'No data found.');
             } catch (error) {
                 console.error('Error:', error);
@@ -478,8 +457,8 @@
             let filteredData = allProposals;
             if (yearFilter) {
                 filteredData = allProposals.filter(proposal => {
-                    const match = proposal.proposalId.match(/^(\d{2})-(\d{4})-\d{4}$/); // MM-YYYY-XXXX
-                    return match && match[2] === yearFilter; // Filter by YYYY
+                    const match = proposal.proposalId.match(/^(\d{2})-(\d{4})-\d{4}$/);
+                    return match && match[2] === yearFilter;
                 });
             }
             createMonthRows(filteredData);
@@ -497,7 +476,7 @@
             const rows = document.querySelectorAll('#monthData tr:not(:last-child)');
             rows.forEach(row => {
                 const month = row.cells[0].textContent.toLowerCase().substring(0, 3);
-                categories.forEach(cat => {
+                receivedBy.forEach(cat => {
                     const value = parseInt(row.querySelector(`input[name="${month}_${cat}"]`).value) || 0;
                     if (value > 0) data[`${month}_${cat}`] = value;
                 });
