@@ -110,6 +110,7 @@
             padding: 12px;
             text-align: center;
             border: 1px solid #eee;
+            white-space: nowrap; /* Prevent text wrapping */
         }
 
         th {
@@ -372,7 +373,7 @@
                             proposalTypes.forEach(type => monthData[monthShort][type] = 0);
                             accomplishedData[monthShort] = { yes: 0, total: 0 };
                         }
-                        const receiverLower = proposal.receiver.toLowerCase().replace(/\s/g, '_');
+                        const receiverLower = proposal.receiver.toLowerCase().replace(/\s/g, '_').replace(/’/, '');
                         if (receivedBy.includes(receiverLower)) monthData[monthShort][receiverLower]++;
                         const natureLower = (proposal.nature || '').toLowerCase().trim().replace(/\s/g, '_');
                         if (proposalTypes.includes(natureLower)) monthData[monthShort][natureLower]++;
