@@ -283,6 +283,7 @@
                             <th colspan="4">RECEIVED BY</th>
                             <th colspan="5">TOTAL PROPOSALS RECEIVED</th>
                             <th rowspan="2">ACCOMPLISHED ON TIME</th>
+                            <th rowspan="2">PERCENTAGE</th>
                         </tr>
                         <tr>
                             <th>Ma’am Ann</th>
@@ -405,6 +406,9 @@
             // Generate table rows
             months.forEach((month, index) => {
                 const monthShort = monthShorts[index];
+                const yes = accomplishedData[monthShort].yes;
+                const total = accomplishedData[monthShort].total;
+                const percentage = total > 0 ? ((yes / total) * 100).toFixed(0) + '%' : '0%';
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>${month}</td>
@@ -414,18 +418,23 @@
                     ${proposalTypes.map(type => 
                         `<td><input type="number" name="${monthShort}_${type}" value="${monthData[monthShort][type]}" min="0" readonly></td>`
                     ).join('')}
-                    <td><input type="text" name="${monthShort}_acted_upon" value="${accomplishedData[monthShort].total > 0 ? `${accomplishedData[monthShort].yes}/${accomplishedData[monthShort].total}` : '0/0'}" readonly></td>
+                    <td><input type="text" name="${monthShort}_acted_upon" value="${total > 0 ? `${yes}/${total}` : '0/0'}" readonly></td>
+                    <td><input type="text" name="${monthShort}_percentage" value="${percentage}" readonly></td>
                 `;
                 tbody.appendChild(row);
             });
 
             // Add total row
+            const totalYes = monthShorts.reduce((sum, month) => sum + accomplishedData[month].yes, 0);
+            const totalProposals = monthShorts.reduce((sum, month) => sum + accomplishedData[month].total, 0);
+            const totalPercentage = totalProposals > 0 ? ((totalYes / totalProposals) * 100).toFixed(0) + '%' : '0%';
             const totalRow = document.createElement('tr');
             totalRow.innerHTML = `
                 <td><strong>TOTAL</strong></td>
                 ${receivedByKeys.map(cat => `<td><input type="number" name="total_${cat}" value="0" readonly></td>`).join('')}
                 ${proposalTypes.map(type => `<td><input type="number" name="total_${type}" value="0" readonly></td>`).join('')}
-                <td><input type="text" name="total_acted_upon" value="0/0" readonly></td>
+                <td><input type="text" name="total_acted_upon" value="${totalProposals > 0 ? `${totalYes}/${totalProposals}` : '0/0'}" readonly></td>
+                <td><input type="text" name="total_percentage" value="${totalPercentage}" readonly></td>
             `;
             tbody.appendChild(totalRow);
 
@@ -454,6 +463,7 @@
                 totalProposals += total || 0;
             });
             document.querySelector(`input[name="total_acted_upon"]`).value = `${totalYes}/${totalProposals}`;
+            document.querySelector(`input[name="total_percentage"]`).value = totalProposals > 0 ? ((totalYes / totalProposals) * 100).toFixed(0) + '%' : '0%';
         }
 
         async function fetchAndDisplayData() {
@@ -511,6 +521,8 @@
                 });
                 const [yes, total] = row.querySelector(`input[name="${month}_acted_upon"]`).value.split('/').map(Number);
                 if (total > 0) data[`${month}_accomplished`] = yes === total ? 'Yes' : 'No';
+                const percentage = row.querySelector(`input[name="${month}_percentage"]`).value;
+                if (percentage !== '0%') data[`${month}_percentage`] = percentage;
             });
 
             try {
