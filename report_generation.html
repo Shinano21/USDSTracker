@@ -315,7 +315,6 @@
         const DASHBOARD_URL = 'dashboard.html';
         const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
         const monthShorts = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
-        // Match exact names from sheets
         const receivedByNames = ["Ma'am Ann", "Sir Mike", "Sir Christian", "Sir Ronald"];
         const receivedByKeys = ['maam_ann', 'sir_mike', 'sir_christian', 'sir_ronald'];
         const proposalTypes = ['off_campus', 'in_campus', 'ojt', 'unibe', 'ubo'];
@@ -377,14 +376,15 @@
                     const monthNum = parseInt(monthMatch[1], 10) - 1;
                     if (monthNum >= 0 && monthNum < 12) {
                         const monthShort = monthShorts[monthNum];
-                        // Handle receiver with exact match
-                        const receiver = (proposal.receiver || '').trim();
-                        const receiverIndex = receivedByNames.indexOf(receiver);
+                        // Try different possible field names for receiver
+                        const receiver = (proposal.receiver || proposal.Receiver || proposal['Received By'] || '').trim();
+                        const receiverLower = receiver.toLowerCase();
+                        const receiverIndex = receivedByNames.findIndex(name => name.toLowerCase() === receiverLower);
                         if (receiverIndex !== -1) {
                             const receiverKey = receivedByKeys[receiverIndex];
                             monthData[monthShort][receiverKey]++;
                         } else if (receiver) {
-                            console.warn(`Unrecognized receiver: "${proposal.receiver}" in proposal ${proposal.proposalId}`);
+                            console.warn(`Unrecognized receiver: "${receiver}" in proposal ${proposal.proposalId}`);
                         }
 
                         // Handle proposal types
@@ -464,6 +464,7 @@
                 const data = await response.json();
                 if (data.error) throw new Error(data.message);
                 allProposals = data.length > 0 ? data : [];
+                console.log('Raw API Data:', allProposals); // Debug raw data
                 filterDataByYear();
                 alert(allProposals.length > 0 ? 'Data loaded successfully!' : 'No data found.');
             } catch (error) {
