@@ -110,7 +110,7 @@
             padding: 12px;
             text-align: center;
             border: 1px solid #eee;
-            white-space: nowrap; /* Prevent text wrapping */
+            white-space: nowrap;
         }
 
         th {
@@ -315,7 +315,9 @@
         const DASHBOARD_URL = 'dashboard.html';
         const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
         const monthShorts = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
-        const receivedBy = ['maam_ann', 'sir_mike', 'sir_christian', 'sir_ronald'];
+        // Match exact names from sheets
+        const receivedByNames = ["Ma'am Ann", "Sir Mike", "Sir Christian", "Sir Ronald"];
+        const receivedByKeys = ['maam_ann', 'sir_mike', 'sir_christian', 'sir_ronald'];
         const proposalTypes = ['off_campus', 'in_campus', 'ojt', 'unibe', 'ubo'];
         let allProposals = [];
 
@@ -360,50 +362,71 @@
             const monthData = {};
             const accomplishedData = {};
 
+            // Initialize data structure for each month
+            monthShorts.forEach(monthShort => {
+                monthData[monthShort] = {};
+                receivedByKeys.forEach(cat => monthData[monthShort][cat] = 0);
+                proposalTypes.forEach(type => monthData[monthShort][type] = 0);
+                accomplishedData[monthShort] = { yes: 0, total: 0 };
+            });
+
+            // Process proposal data
             proposalData.forEach(proposal => {
                 const monthMatch = proposal.proposalId.match(/^(\d{2})-(\d{4})-\d{4}$/);
                 if (monthMatch) {
                     const monthNum = parseInt(monthMatch[1], 10) - 1;
-                    const year = monthMatch[2];
                     if (monthNum >= 0 && monthNum < 12) {
                         const monthShort = monthShorts[monthNum];
-                        if (!monthData[monthShort]) {
-                            monthData[monthShort] = {};
-                            receivedBy.forEach(cat => monthData[monthShort][cat] = 0);
-                            proposalTypes.forEach(type => monthData[monthShort][type] = 0);
-                            accomplishedData[monthShort] = { yes: 0, total: 0 };
+                        // Handle receiver with exact match
+                        const receiver = (proposal.receiver || '').trim();
+                        const receiverIndex = receivedByNames.indexOf(receiver);
+                        if (receiverIndex !== -1) {
+                            const receiverKey = receivedByKeys[receiverIndex];
+                            monthData[monthShort][receiverKey]++;
+                        } else if (receiver) {
+                            console.warn(`Unrecognized receiver: "${proposal.receiver}" in proposal ${proposal.proposalId}`);
                         }
-                        const receiverLower = proposal.receiver.toLowerCase().replace(/\s/g, '_').replace(/’/, '');
-                        if (receivedBy.includes(receiverLower)) monthData[monthShort][receiverLower]++;
+
+                        // Handle proposal types
                         const natureLower = (proposal.nature || '').toLowerCase().trim().replace(/\s/g, '_');
-                        if (proposalTypes.includes(natureLower)) monthData[monthShort][natureLower]++;
-                        if (proposal.accomplished.toLowerCase() === 'yes') accomplishedData[monthShort].yes++;
+                        if (proposalTypes.includes(natureLower)) {
+                            monthData[monthShort][natureLower]++;
+                        }
+
+                        // Handle accomplished
+                        if (proposal.accomplished && proposal.accomplished.toLowerCase() === 'yes') {
+                            accomplishedData[monthShort].yes++;
+                        }
                         accomplishedData[monthShort].total++;
                     }
                 }
             });
 
+            // Generate table rows
             months.forEach((month, index) => {
                 const monthShort = monthShorts[index];
-                if (monthData[monthShort]) {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `<td>${month}</td>` + 
-                        receivedBy.map(cat => 
-                            `<td><input type="number" name="${monthShort}_${cat}" value="${monthData[monthShort][cat] || 0}" min="0" readonly></td>`
-                        ).join('') +
-                        proposalTypes.map(type => 
-                            `<td><input type="number" name="${monthShort}_${type}" value="${monthData[monthShort][type] || 0}" min="0" readonly></td>`
-                        ).join('') +
-                        `<td><input type="text" name="${monthShort}_acted_upon" value="${accomplishedData[monthShort].total > 0 ? `${accomplishedData[monthShort].yes}/${accomplishedData[monthShort].total}` : '0/0'}" readonly></td>`;
-                    tbody.appendChild(row);
-                }
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${month}</td>
+                    ${receivedByKeys.map(cat => 
+                        `<td><input type="number" name="${monthShort}_${cat}" value="${monthData[monthShort][cat]}" min="0" readonly></td>`
+                    ).join('')}
+                    ${proposalTypes.map(type => 
+                        `<td><input type="number" name="${monthShort}_${type}" value="${monthData[monthShort][type]}" min="0" readonly></td>`
+                    ).join('')}
+                    <td><input type="text" name="${monthShort}_acted_upon" value="${accomplishedData[monthShort].total > 0 ? `${accomplishedData[monthShort].yes}/${accomplishedData[monthShort].total}` : '0/0'}" readonly></td>
+                `;
+                tbody.appendChild(row);
             });
 
+            // Add total row
             const totalRow = document.createElement('tr');
-            totalRow.innerHTML = `<td><strong>TOTAL</strong></td>` +
-                receivedBy.map(cat => `<td><input type="number" name="total_${cat}" value="0" readonly></td>`).join('') +
-                proposalTypes.map(type => `<td><input type="number" name="total_${type}" value="0" readonly></td>`).join('') +
-                `<td><input type="text" name="total_acted_upon" value="0/0" readonly></td>`;
+            totalRow.innerHTML = `
+                <td><strong>TOTAL</strong></td>
+                ${receivedByKeys.map(cat => `<td><input type="number" name="total_${cat}" value="0" readonly></td>`).join('')}
+                ${proposalTypes.map(type => `<td><input type="number" name="total_${type}" value="0" readonly></td>`).join('')}
+                <td><input type="text" name="total_acted_upon" value="0/0" readonly></td>
+            `;
             tbody.appendChild(totalRow);
 
             calculateTotals();
@@ -413,7 +436,7 @@
             const rows = document.querySelectorAll('#monthData tr:not(:last-child)');
             let totalYes = 0, totalProposals = 0;
 
-            receivedBy.forEach(cat => {
+            receivedByKeys.forEach(cat => {
                 const total = Array.from(rows).reduce((sum, row) => 
                     sum + (parseInt(row.querySelector(`input[name$="_${cat}"]`).value) || 0), 0);
                 document.querySelector(`input[name="total_${cat}"]`).value = total;
@@ -477,7 +500,7 @@
             const rows = document.querySelectorAll('#monthData tr:not(:last-child)');
             rows.forEach(row => {
                 const month = row.cells[0].textContent.toLowerCase().substring(0, 3);
-                receivedBy.forEach(cat => {
+                receivedByKeys.forEach(cat => {
                     const value = parseInt(row.querySelector(`input[name="${month}_${cat}"]`).value) || 0;
                     if (value > 0) data[`${month}_${cat}`] = value;
                 });
