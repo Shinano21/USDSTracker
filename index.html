@@ -6,51 +6,118 @@
     <title>Login Form</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
-            background-color: #f0f0f0;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
         }
+        
         .login-container {
             background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            animation: fadeIn 0.5s ease-in;
         }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         .login-container h2 {
             text-align: center;
+            color: #333;
+            margin-bottom: 25px;
         }
+
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+            position: relative;
         }
+
         .form-group label {
             display: block;
             margin-bottom: 5px;
+            color: #555;
+            font-size: 14px;
         }
+
         .form-group input {
             width: 100%;
-            padding: 8px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
             box-sizing: border-box;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
         }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+        }
+
+        .checkbox-group {
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .forgot-password {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+
+        .forgot-password a {
+            color: #007bff;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+
         button {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             background-color: #007bff;
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 5px;
             cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
         }
+
         button:hover {
             background-color: #0056b3;
         }
+
+        button:active {
+            transform: translateY(1px);
+        }
+
         #message {
             text-align: center;
-            margin-top: 10px;
-            color: red;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .contact-info {
+            display: none;
+            text-align: center;
+            margin-top: 15px;
+            color: #666;
+            font-size: 13px;
         }
     </style>
 </head>
@@ -59,22 +126,45 @@
         <h2>Login</h2>
         <form id="loginForm">
             <div class="form-group">
-                <label for="username">Username:</label>
-                <input type="text" id="username" name="username" required>
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required placeholder="Enter your username">
             </div>
             <div class="form-group">
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" required>
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required placeholder="Enter your password">
+            </div>
+            <div class="checkbox-group">
+                <input type="checkbox" id="showPassword">
+                <label for="showPassword">Show Password</label>
+            </div>
+            <div class="forgot-password">
+                <a href="#" id="forgotPasswordLink">Forgot Password?</a>
             </div>
             <button type="submit">Login</button>
         </form>
         <div id="message"></div>
+        <div class="contact-info" id="contactInfo">
+            Please contact your administrator: 09380828470 or randielasis15@gmail.com
+        </div>
     </div>
 
     <script>
         const API_URL = 'https://script.google.com/macros/s/AKfycbyHKJ6-qlH4F3dLdUNuu2mcyiQHhv7kTd7cfWnqustB9nD3aquVk0xkmmp4t7Uj620/exec';
         const DASHBOARD_URL = 'dashboard.html';
         const INDEX_URL = 'index.html';
+
+        // Show/Hide Password
+        document.getElementById('showPassword').addEventListener('change', function() {
+            const passwordInput = document.getElementById('password');
+            passwordInput.type = this.checked ? 'text' : 'password';
+        });
+
+        // Forgot Password Toggle
+        document.getElementById('forgotPasswordLink').addEventListener('click', function(e) {
+            e.preventDefault();
+            const contactInfo = document.getElementById('contactInfo');
+            contactInfo.style.display = contactInfo.style.display === 'block' ? 'none' : 'block';
+        });
 
         document.getElementById('loginForm').addEventListener('submit', async function(event) {
             event.preventDefault();
@@ -83,12 +173,10 @@
             const password = document.getElementById('password').value;
             const messageDiv = document.getElementById('message');
 
-            console.log('Sending:', { action: "login", username, password });
-
             try {
                 const response = await fetch(API_URL, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'text/plain' }, // Avoids CORS preflight
+                    headers: { 'Content-Type': 'text/plain' },
                     body: JSON.stringify({ action: "login", username, password })
                 });
 
@@ -98,19 +186,20 @@
                 }
 
                 const result = await response.json();
-                console.log('Server response:', result);
 
                 if (result.success) {
-                    localStorage.setItem('authToken', 'loggedIn'); // Set auth token
+                    localStorage.setItem('authToken', 'loggedIn');
                     messageDiv.style.color = 'green';
                     messageDiv.textContent = 'Login successful! Redirecting...';
                     setTimeout(() => {
                         window.location.href = DASHBOARD_URL;
                     }, 1000);
                 } else {
+                    messageDiv.style.color = 'red';
                     messageDiv.textContent = 'Invalid username or password.';
                 }
             } catch (error) {
+                messageDiv.style.color = 'red';
                 messageDiv.textContent = 'An error occurred. Please try again.';
                 console.error('Fetch error:', error);
             }
