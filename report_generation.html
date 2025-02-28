@@ -111,8 +111,8 @@
             padding: 12px;
             text-align: center;
             border: 1px solid #eee;
-            min-width: 80px; /* Ensure columns have enough width */
-            white-space: nowrap; /* Keep nowrap but with min-width */
+            min-width: 80px;
+            white-space: nowrap;
         }
 
         th {
@@ -134,12 +134,12 @@
 
         input[type="number"],
         input[type="text"] {
-            width: 100%; /* Full width within cell */
+            width: 100%;
             padding: 6px;
             border: 1px solid #ddd;
             border-radius: 4px;
             text-align: center;
-            min-width: 0; /* Prevent input from forcing column too wide */
+            min-width: 0;
         }
 
         input[readonly] {
@@ -199,7 +199,7 @@
             th, td {
                 padding: 8px;
                 font-size: 0.8rem;
-                min-width: 60px; /* Slightly smaller on mobile */
+                min-width: 60px;
             }
 
             .button-group {
@@ -296,7 +296,7 @@
                             <th>Sir Ronald</th>
                             <th>Off Campus</th>
                             <th>In Campus</th>
-                            <th>OJT</th>
+                            <th>USC</th>
                             <th>UNIBE</th>
                             <th>UBO</th>
                         </tr>
@@ -322,7 +322,7 @@
         const monthShorts = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
         const receivedByNames = ["Ma'am Ann", "Sir Mike", "Sir Christian", "Sir Ronald"];
         const receivedByKeys = ['maam_ann', 'sir_mike', 'sir_christian', 'sir_ronald'];
-        const proposalTypes = ['off_campus', 'in_campus', 'ojt', 'unibe', 'ubo'];
+        const proposalTypes = ['off_campus', 'in_campus', 'usc', 'unibe', 'ubo']; // USC included here
         let allProposals = [];
 
         if (localStorage.getItem('authToken') !== 'loggedIn') {
@@ -397,7 +397,7 @@
                         let natureKey = '';
                         if (nature.includes('off') && nature.includes('campus')) natureKey = 'off_campus';
                         else if (nature.includes('in') && nature.includes('campus')) natureKey = 'in_campus';
-                        else if (nature.includes('ojt') || nature.includes('on-the-job') || nature.includes('training')) natureKey = 'ojt';
+                        else if (nature.includes('usc')) natureKey = 'usc'; // USC detection
                         else if (nature.includes('unibe')) natureKey = 'unibe';
                         else if (nature.includes('ubo')) natureKey = 'ubo';
 
