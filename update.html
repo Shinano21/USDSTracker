@@ -146,13 +146,13 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label for="college">College:</label>
-                        <select id="college" name="college" onchange="updateDepartments()" >
+                        <select id="college" name="college" onchange="updateDepartments()">
                             <option value="">Select College</option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="department">Department:</label>
-                        <select id="department" name="department" >
+                        <select id="department" name="department">
                             <option value="">Select Department</option>
                         </select>
                     </div>
@@ -594,7 +594,7 @@
             }
         });
 
-        window.onload = loadProposalData;
+        document.addEventListener('DOMContentLoaded', loadProposalData);
     </script>
 </body>
 </html>
