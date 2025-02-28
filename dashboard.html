@@ -98,7 +98,7 @@
       border: 1px solid #ddd;
       border-radius: 4px;
       width: 100%;
-      max-width: 400px;
+      max-width: 500px;
       font-size: 0.9rem;
       box-sizing: border-box;
     }
@@ -142,6 +142,7 @@
     th {
       background-color: #4CAF50;
       color: white;
+      white-space: nowrap;
     }
 
     tr:nth-child(even) {
@@ -150,6 +151,13 @@
 
     tr:hover {
       background-color: #f0f0f0;
+    }
+
+    /* Specific styles for the Action column */
+    th:last-child, td:last-child {
+      text-align: center; /* Center-align the Action column */
+      width: 120px; /* Fixed width for consistency */
+      min-width: 120px; /* Ensure it doesn't shrink too much */
     }
 
     .action-select {
@@ -161,6 +169,8 @@
       font-size: 0.875rem;
       width: 100%;
       max-width: 100px;
+      text-align: center;
+      transition: border-color 0.3s ease;
     }
 
     .action-select:hover {
@@ -220,13 +230,15 @@
         font-size: 0.75rem;
       }
 
-      .action-select {
-        max-width: 80px;
-        font-size: 0.75rem;
+      th:last-child, td:last-child {
+        width: 80px;
+        min-width: 80px;
       }
 
-      table {
+      .action-select {
+        max-width: 70px;
         font-size: 0.75rem;
+        padding: 5px;
       }
 
       /* Ensure table content wraps on small screens */
@@ -261,6 +273,11 @@
         font-size: 0.875rem;
       }
 
+      th:last-child, td:last-child {
+        width: 100px;
+        min-width: 100px;
+      }
+
       .action-select {
         max-width: 90px;
       }
@@ -286,6 +303,11 @@
 
       th, td {
         font-size: 0.9rem;
+      }
+
+      th:last-child, td:last-child {
+        width: 110px;
+        min-width: 110px;
       }
     }
 
@@ -321,7 +343,7 @@
       }
 
       .action-select {
-        max-width: 120px;
+        max-width: 100px;
       }
     }
   </style>
@@ -443,7 +465,7 @@
           <td>${proposal.particulars || 'Untitled'}</td>
           <td>
             <select class="action-select" onchange="handleAction(this, '${proposal.proposalId}')">
-              <option value="">Action</option>
+              <option value="">Select</option>
               <option value="view">View</option>
               <option value="update">Update</option>
             </select>
