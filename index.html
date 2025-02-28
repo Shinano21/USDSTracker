@@ -6,6 +6,10 @@
     <link rel="icon" type="image/png" href="images/USDS.png">
     <title>Login Form</title>
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
             display: flex;
@@ -14,11 +18,12 @@
             min-height: 100vh;
             margin: 0;
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 15px;
         }
         
         .login-container {
             background-color: white;
-            padding: 30px;
+            padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             width: 100%;
@@ -35,10 +40,11 @@
             text-align: center;
             color: #333;
             margin-bottom: 25px;
+            font-size: 1.5rem;
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             position: relative;
         }
 
@@ -46,16 +52,15 @@
             display: block;
             margin-bottom: 5px;
             color: #555;
-            font-size: 14px;
+            font-size: 0.875rem;
         }
 
         .form-group input {
             width: 100%;
-            padding: 10px;
+            padding: 8px;
             border: 1px solid #ddd;
             border-radius: 5px;
-            box-sizing: border-box;
-            font-size: 16px;
+            font-size: 1rem;
             transition: border-color 0.3s ease;
         }
 
@@ -70,17 +75,18 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            font-size: 0.875rem;
         }
 
         .forgot-password {
             text-align: right;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .forgot-password a {
             color: #007bff;
             text-decoration: none;
-            font-size: 14px;
+            font-size: 0.875rem;
         }
 
         .forgot-password a:hover {
@@ -89,13 +95,13 @@
 
         button {
             width: 100%;
-            padding: 12px;
+            padding: 10px;
             background-color: #007bff;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 1rem;
             transition: background-color 0.3s ease;
         }
 
@@ -110,7 +116,7 @@
         #message {
             text-align: center;
             margin-top: 15px;
-            font-size: 14px;
+            font-size: 0.875rem;
         }
 
         .contact-info {
@@ -118,7 +124,42 @@
             text-align: center;
             margin-top: 15px;
             color: #666;
-            font-size: 13px;
+            font-size: 0.8125rem;
+        }
+
+        /* Media Queries for Responsive Design */
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 15px;
+                margin: 0 10px;
+            }
+
+            .login-container h2 {
+                font-size: 1.25rem;
+                margin-bottom: 20px;
+            }
+
+            .form-group {
+                margin-bottom: 12px;
+            }
+
+            .form-group input {
+                padding: 6px;
+                font-size: 0.9375rem;
+            }
+
+            button {
+                padding: 8px;
+                font-size: 0.9375rem;
+            }
+
+            .checkbox-group {
+                font-size: 0.8125rem;
+            }
+
+            .forgot-password a {
+                font-size: 0.8125rem;
+            }
         }
     </style>
 </head>
@@ -154,13 +195,11 @@
         const DASHBOARD_URL = 'dashboard.html';
         const INDEX_URL = 'index.html';
 
-        // Show/Hide Password
         document.getElementById('showPassword').addEventListener('change', function() {
             const passwordInput = document.getElementById('password');
             passwordInput.type = this.checked ? 'text' : 'password';
         });
 
-        // Forgot Password Toggle
         document.getElementById('forgotPasswordLink').addEventListener('click', function(e) {
             e.preventDefault();
             const contactInfo = document.getElementById('contactInfo');
@@ -206,7 +245,6 @@
             }
         });
 
-        // Redirect to dashboard if already logged in
         if (localStorage.getItem('authToken') === 'loggedIn') {
             window.location.href = DASHBOARD_URL;
         }
