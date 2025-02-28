@@ -52,6 +52,7 @@
       border-radius: 4px;
       cursor: pointer;
       font-size: 0.9rem;
+      transition: background-color 0.3s ease;
     }
 
     .logout-container button:hover {
@@ -65,23 +66,31 @@
       flex-wrap: wrap;
     }
 
-    .filter-container label {
-      font-weight: bold;
-      margin-right: 5px;
-      font-size: 0.9rem;
+    .filter-group {
+      display: flex;
+      align-items: center;
+      gap: 5px;
     }
 
-    .filter-container select {
+    .filter-group label {
+      font-weight: bold;
+      font-size: 0.9rem;
+      color: #333;
+    }
+
+    .filter-group select {
       padding: 8px;
       border-radius: 4px;
       cursor: pointer;
-      width: 100%;
-      max-width: 200px;
       font-size: 0.9rem;
+      border: 1px solid #ddd;
+      background-color: white;
+      max-width: 150px;
     }
 
     .search-container {
       margin: 15px 0;
+      width: 100%;
     }
 
     .search-container input {
@@ -91,6 +100,7 @@
       width: 100%;
       max-width: 400px;
       font-size: 0.9rem;
+      box-sizing: border-box;
     }
 
     .button-container {
@@ -107,6 +117,7 @@
       border-radius: 4px;
       cursor: pointer;
       font-size: 0.9rem;
+      transition: background-color 0.3s ease;
     }
 
     .button-container button:hover {
@@ -118,6 +129,7 @@
       border-collapse: collapse;
       background-color: white;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      table-layout: auto;
     }
 
     th, td {
@@ -136,6 +148,10 @@
       background-color: #f9f9f9;
     }
 
+    tr:hover {
+      background-color: #f0f0f0;
+    }
+
     .action-select {
       padding: 6px;
       border: 1px solid #ccc;
@@ -144,6 +160,7 @@
       cursor: pointer;
       font-size: 0.875rem;
       width: 100%;
+      max-width: 100px;
     }
 
     .action-select:hover {
@@ -183,9 +200,10 @@
       .filter-container {
         flex-direction: column;
         gap: 10px;
+        align-items: stretch;
       }
 
-      .filter-container select {
+      .filter-group select {
         max-width: 100%;
       }
 
@@ -199,11 +217,22 @@
 
       th, td {
         padding: 8px;
-        font-size: 0.8125rem;
+        font-size: 0.75rem;
+      }
+
+      .action-select {
+        max-width: 80px;
+        font-size: 0.75rem;
       }
 
       table {
-        font-size: 0.8125rem;
+        font-size: 0.75rem;
+      }
+
+      /* Ensure table content wraps on small screens */
+      td:nth-child(2) {
+        white-space: normal;
+        word-wrap: break-word;
       }
     }
 
@@ -229,6 +258,11 @@
 
       th, td {
         padding: 10px;
+        font-size: 0.875rem;
+      }
+
+      .action-select {
+        max-width: 90px;
       }
     }
 
@@ -246,8 +280,12 @@
         flex-wrap: nowrap;
       }
 
-      .filter-container select {
-        max-width: 180px;
+      .filter-group select {
+        max-width: 130px;
+      }
+
+      th, td {
+        font-size: 0.9rem;
       }
     }
 
@@ -268,18 +306,22 @@
 
       .logout-container button,
       .button-container button,
-      .filter-container select,
+      .filter-group select,
       .search-container input {
         font-size: 1rem;
         padding: 10px 20px;
       }
 
-      .filter-container select {
-        max-width: 220px;
+      .filter-group select {
+        max-width: 150px;
       }
 
       .search-container input {
         max-width: 500px;
+      }
+
+      .action-select {
+        max-width: 120px;
       }
     }
   </style>
@@ -292,31 +334,35 @@
         <button onclick="logout()">Logout</button>
       </div>
       <div class="filter-container">
-        <label for="monthFilter">Month:</label>
-        <select id="monthFilter" onchange="filterProposals()">
-          <option value="">All</option>
-          <option value="01">January</option>
-          <option value="02">February</option>
-          <option value="03">March</option>
-          <option value="04">April</option>
-          <option value="05">May</option>
-          <option value="06">June</option>
-          <option value="07">July</option>
-          <option value="08">August</option>
-          <option value="09">September</option>
-          <option value="10">October</option>
-          <option value="11">November</option>
-          <option value="12">December</option>
-        </select>
-        <label for="yearFilter">Year:</label>
-        <select id="yearFilter" onchange="filterProposals()">
-          <option value="">All</option>
-          <script>
-            for (let year = 2020; year <= new Date().getFullYear(); year++) {
-              document.write(`<option value="${year}">${year}</option>`);
-            }
-          </script>
-        </select>
+        <div class="filter-group">
+          <label for="monthFilter">Month:</label>
+          <select id="monthFilter" onchange="filterProposals()">
+            <option value="">All</option>
+            <option value="01">January</option>
+            <option value="02">February</option>
+            <option value="03">March</option>
+            <option value="04">April</option>
+            <option value="05">May</option>
+            <option value="06">June</option>
+            <option value="07">July</option>
+            <option value="08">August</option>
+            <option value="09">September</option>
+            <option value="10">October</option>
+            <option value="11">November</option>
+            <option value="12">December</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="yearFilter">Year:</label>
+          <select id="yearFilter" onchange="filterProposals()">
+            <option value="">All</option>
+            <script>
+              for (let year = 2020; year <= new Date().getFullYear(); year++) {
+                document.write(`<option value="${year}">${year}</option>`);
+              }
+            </script>
+          </select>
+        </div>
       </div>
       <div class="button-container">
         <button onclick="window.location.href='add.html'">+ Record</button>
