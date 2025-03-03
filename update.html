@@ -598,9 +598,7 @@
 
         // Function to initialize datetime fields with current Manila time (if no data loaded)
         function initializeDateTimeFields() {
-            const now = new Date('2025-03-03T20:43:00+08:00'); // Fixed example: March 03, 2025, 08:43 PM Manila time
-            // Uncomment below for real current Manila time:
-            // const now = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila' }));
+            const now = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila' })); // Dynamic current Manila time
 
             const fields = [
                 { input: 'dateTime', hidden: 'dateTimeFormatted' },

@@ -214,7 +214,7 @@
             }
 
             h2 {
-                font-size: 1.75rem;
+                font-size:  quizzes1.75rem;
             }
 
             .form-group {
@@ -608,10 +608,7 @@
 
         // Function to initialize datetime fields with current Manila time
         function initializeDateTimeFields() {
-            // Set to March 03, 2025, 08:43 PM Manila time as a fixed example
-            const now = new Date('2025-03-03T20:43:00+08:00');
-            // Uncomment the line below to use real current Manila time instead:
-            // const now = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila' }));
+            const now = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila' })); // Dynamic current Manila time
 
             const fields = [
                 { input: 'dateTime', hidden: 'dateTimeFormatted' },
@@ -751,7 +748,7 @@
                     populateColleges();
                     updateDepartments();
                     populateReceiver();
-                    initializeDateTimeFields(); // Reset date-time fields
+                    initializeDateTimeFields(); // Reset date-time fields to current Manila time
                     window.location.href = DASHBOARD_URL;
                 } else {
                     alert('Failed to submit proposal: ' + result.message);
