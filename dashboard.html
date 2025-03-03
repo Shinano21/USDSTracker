@@ -7,7 +7,6 @@
   <link rel="icon" type="image/png" href="images/USDS.png">
   <title>Proposal Dashboard</title>
   <style>
-    /* Your existing CSS remains unchanged */
     * {
       box-sizing: border-box;
     }
@@ -155,7 +154,6 @@
       background-color: #f0f0f0;
     }
 
-    /* Specific styles for the Action column */
     th:last-child, td:last-child {
       text-align: center;
       width: 120px;
@@ -185,7 +183,6 @@
       box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
     }
 
-    /* Responsive styles remain unchanged */
     @media (max-width: 480px) {
       body {
         padding: 10px;
@@ -387,7 +384,7 @@
       <div class="button-container">
         <button onclick="window.location.href='add.html'">+ Record</button>
         <button onclick="window.location.href='report_generation.html'">Print</button>
-        <button onclick="window.location.href='https://docs.google.com/spreadsheets/d/1T5qHMQAFBd1c6ZJOF91v3moXKI5rhpvKL68u3mrjplc/edit?usp=sharing'">Sheets</button>
+        <button onclick="window.open('https://docs.google.com/spreadsheets/d/1T5qHMQAFBd1c6ZJOF91v3moXKI5rhpvKL68u3mrjplc/edit?usp=sharing', '_blank')">Sheets</button>
       </div>
     </div>
     <div class="search-container">
@@ -397,7 +394,7 @@
       <thead>
         <tr>
           <th>Proposal ID</th>
-          <th>College</th> <!-- Added College column here -->
+          <th>College</th>
           <th>Title of Activity</th>
           <th>Action</th>
         </tr>
@@ -443,7 +440,7 @@
           return;
         }
         if (!Array.isArray(data) || data.length === 0) {
-          document.getElementById('proposalTable').innerHTML = '<tr><td colspan="4">No proposals found</td></tr>'; // Updated colspan to 4
+          document.getElementById('proposalTable').innerHTML = '<tr><td colspan="4">No proposals found</td></tr>';
           return;
         }
         allProposals = data;
@@ -461,7 +458,7 @@
         const row = document.createElement('tr');
         row.innerHTML = `
           <td>${proposal.proposalId || ''}</td>
-          <td>${proposal.college || ''}</td> <!-- Added College data here -->
+          <td>${proposal.college || ''}</td>
           <td>${proposal.particulars || 'Untitled'}</td>
           <td>
             <select class="action-select" onchange="handleAction(this, '${proposal.proposalId}')">
