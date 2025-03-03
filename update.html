@@ -387,8 +387,8 @@
                     </div>
                     <div class="form-group">
                         <label for="dateTime">Date & Time Received (Manila Time):</label>
-                        <input type="datetime-local" id="dateTime" value="2025-02-04T13:39">
-                        <input type="hidden" id="dateTimeFormatted" name="dateTime" value="02/04/2025 @ 01:39:59 PM">
+                        <input type="datetime-local" id="dateTime">
+                        <input type="hidden" id="dateTimeFormatted" name="dateTime">
                     </div>
                 </div>
             </div>
@@ -415,13 +415,13 @@
                     </div>
                     <div class="form-group">
                         <label for="statusDate">Status Date & Time (Manila Time):</label>
-                        <input type="datetime-local" id="statusDate" value="2025-02-04T13:39">
-                        <input type="hidden" id="statusDateFormatted" name="statusDate" value="02/04/2025 @ 01:39:59 PM">
+                        <input type="datetime-local" id="statusDate">
+                        <input type="hidden" id="statusDateFormatted" name="statusDate">
                     </div>
                     <div class="form-group">
                         <label for="returnedDate">Returned Date & Time (if applicable, Manila Time):</label>
-                        <input type="datetime-local" id="returnedDate" value="2025-02-04T13:39">
-                        <input type="hidden" id="returnedDateFormatted" name="returnedDate" value="02/04/2025 @ 01:39:59 PM">
+                        <input type="datetime-local" id="returnedDate">
+                        <input type="hidden" id="returnedDateFormatted" name="returnedDate">
                     </div>
                     <div class="form-group">
                         <label for="officeDestination">Office Destination:</label>
@@ -585,13 +585,23 @@
             const year = parts.find(p => p.type === 'year').value;
             const hour = parts.find(p => p.type === 'hour').value.padStart(2, '0');
             const minute = parts.find(p => p.type === 'minute').value.padStart(2, '0');
-            const second = includeSeconds ? parts.find(p => p.type === 'second').value.padStart(2, '0') : '59'; // Default to 59 if not provided
+            const second = includeSeconds ? parts.find(p => p.type === 'second').value.padStart(2, '0') : '59';
             const period = parts.find(p => p.type === 'dayPeriod').value;
             return `${month}/${day}/${year} @ ${hour}:${minute}:${second} ${period}`;
         }
 
-        // Function to update hidden fields when datetime-local changes
-        function updateFormattedFields() {
+        // Function to set datetime-local input value in ISO format (YYYY-MM-DDThh:mm)
+        function setDateTimeLocalValue(inputId, date) {
+            const isoString = date.toLocaleString('sv', { timeZone: 'Asia/Manila' }).slice(0, 16); // YYYY-MM-DDThh:mm
+            document.getElementById(inputId).value = isoString;
+        }
+
+        // Function to initialize datetime fields with current Manila time (if no data loaded)
+        function initializeDateTimeFields() {
+            const now = new Date('2025-03-03T20:43:00+08:00'); // Fixed example: March 03, 2025, 08:43 PM Manila time
+            // Uncomment below for real current Manila time:
+            // const now = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila' }));
+
             const fields = [
                 { input: 'dateTime', hidden: 'dateTimeFormatted' },
                 { input: 'statusDate', hidden: 'statusDateFormatted' },
@@ -601,17 +611,20 @@
             fields.forEach(({ input, hidden }) => {
                 const inputEl = document.getElementById(input);
                 const hiddenEl = document.getElementById(hidden);
+
+                // Only set if no value exists (to preserve loaded data)
+                if (!inputEl.value) {
+                    setDateTimeLocalValue(input, now);
+                    hiddenEl.value = formatToManilaTime(now, false); // Seconds hardcoded to :59
+                }
+
+                // Update hidden field on change
                 inputEl.addEventListener('change', () => {
                     const date = new Date(inputEl.value);
                     if (!isNaN(date)) {
-                        hiddenEl.value = formatToManilaTime(date, false); // Force :59 seconds
+                        hiddenEl.value = formatToManilaTime(date, false);
                     }
                 });
-                // Set initial value
-                const initialDate = new Date(inputEl.value);
-                if (!isNaN(initialDate)) {
-                    hiddenEl.value = formatToManilaTime(initialDate, false); // Initial value gets :59
-                }
             });
         }
 
@@ -715,18 +728,18 @@
 
                 // Handle date-time fields
                 if (data.dateTime) {
-                    const date = new Date(data.dateTime);
-                    document.getElementById('dateTime').value = date.toISOString().slice(0, 16);
+                    const date = new Date(data.dateTime.replace(" @ ", " "));
+                    setDateTimeLocalValue('dateTime', date);
                     document.getElementById('dateTimeFormatted').value = formatToManilaTime(date, false);
                 }
                 if (data.statusDate) {
-                    const date = new Date(data.statusDate);
-                    document.getElementById('statusDate').value = date.toISOString().slice(0, 16);
+                    const date = new Date(data.statusDate.replace(" @ ", " "));
+                    setDateTimeLocalValue('statusDate', date);
                     document.getElementById('statusDateFormatted').value = formatToManilaTime(date, false);
                 }
                 if (data.returnedDate) {
-                    const date = new Date(data.returnedDate);
-                    document.getElementById('returnedDate').value = date.toISOString().slice(0, 16);
+                    const date = new Date(data.returnedDate.replace(" @ ", " "));
+                    setDateTimeLocalValue('returnedDate', date);
                     document.getElementById('returnedDateFormatted').value = formatToManilaTime(date, false);
                 }
 
@@ -807,7 +820,7 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             loadProposalData();
-            updateFormattedFields(); // Initialize event listeners for date-time conversion
+            initializeDateTimeFields(); // Initialize date-time fields with current Manila time if no data
         });
     </script>
 </body>
