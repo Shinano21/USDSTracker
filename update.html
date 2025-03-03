@@ -7,7 +7,6 @@
     <link rel="icon" type="image/png" href="images/USDS.png">
     <title>Update Proposal</title>
     <style>
-        /* [Previous CSS unchanged] */
         * {
             box-sizing: border-box;
         }
@@ -387,8 +386,9 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="dateTime">Date & Time Received:</label>
-                        <input type="text" id="dateTime" name="dateTime" placeholder="MM/dd/yyyy @ hh:mm:ss AM/PM">
+                        <label for="dateTime">Date & Time Received (Manila Time):</label>
+                        <input type="datetime-local" id="dateTime" value="2025-02-04T13:39">
+                        <input type="hidden" id="dateTimeFormatted" name="dateTime" value="02/04/2025 @ 01:39:59 PM">
                     </div>
                 </div>
             </div>
@@ -414,12 +414,14 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="statusDate">Status Date & Time:</label>
-                        <input type="text" id="statusDate" name="statusDate" placeholder="MM/dd/yyyy @ hh:mm:ss AM/PM">
+                        <label for="statusDate">Status Date & Time (Manila Time):</label>
+                        <input type="datetime-local" id="statusDate" value="2025-02-04T13:39">
+                        <input type="hidden" id="statusDateFormatted" name="statusDate" value="02/04/2025 @ 01:39:59 PM">
                     </div>
                     <div class="form-group">
-                        <label for="returnedDate">Returned Date & Time (if applicable):</label>
-                        <input type="text" id="returnedDate" name="returnedDate" placeholder="MM/dd/yyyy @ hh:mm:ss AM/PM">
+                        <label for="returnedDate">Returned Date & Time (if applicable, Manila Time):</label>
+                        <input type="datetime-local" id="returnedDate" value="2025-02-04T13:39">
+                        <input type="hidden" id="returnedDateFormatted" name="returnedDate" value="02/04/2025 @ 01:39:59 PM">
                     </div>
                     <div class="form-group">
                         <label for="officeDestination">Office Destination:</label>
@@ -564,6 +566,55 @@
             ]
         };
 
+        // Function to format date to MM/dd/yyyy @ hh:mm:ss AM/PM in Manila time (UTC+8)
+        function formatToManilaTime(date, includeSeconds = true) {
+            const options = {
+                timeZone: 'Asia/Manila',
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: true
+            };
+            const formatter = new Intl.DateTimeFormat('en-US', options);
+            const parts = formatter.formatToParts(date);
+            const month = parts.find(p => p.type === 'month').value;
+            const day = parts.find(p => p.type === 'day').value;
+            const year = parts.find(p => p.type === 'year').value;
+            const hour = parts.find(p => p.type === 'hour').value.padStart(2, '0');
+            const minute = parts.find(p => p.type === 'minute').value.padStart(2, '0');
+            const second = includeSeconds ? parts.find(p => p.type === 'second').value.padStart(2, '0') : '59'; // Default to 59 if not provided
+            const period = parts.find(p => p.type === 'dayPeriod').value;
+            return `${month}/${day}/${year} @ ${hour}:${minute}:${second} ${period}`;
+        }
+
+        // Function to update hidden fields when datetime-local changes
+        function updateFormattedFields() {
+            const fields = [
+                { input: 'dateTime', hidden: 'dateTimeFormatted' },
+                { input: 'statusDate', hidden: 'statusDateFormatted' },
+                { input: 'returnedDate', hidden: 'returnedDateFormatted' }
+            ];
+
+            fields.forEach(({ input, hidden }) => {
+                const inputEl = document.getElementById(input);
+                const hiddenEl = document.getElementById(hidden);
+                inputEl.addEventListener('change', () => {
+                    const date = new Date(inputEl.value);
+                    if (!isNaN(date)) {
+                        hiddenEl.value = formatToManilaTime(date, false); // Force :59 seconds
+                    }
+                });
+                // Set initial value
+                const initialDate = new Date(inputEl.value);
+                if (!isNaN(initialDate)) {
+                    hiddenEl.value = formatToManilaTime(initialDate, false); // Initial value gets :59
+                }
+            });
+        }
+
         function goBack() {
             window.location.href = DASHBOARD_URL;
         }
@@ -661,12 +712,27 @@
                 document.getElementById('docSeq').value = data.docSeq || '';
                 document.getElementById('copies').value = data.copies || '';
                 populateReceiver(data.receiver || '');
-                document.getElementById('dateTime').value = data.dateTime || '';
+
+                // Handle date-time fields
+                if (data.dateTime) {
+                    const date = new Date(data.dateTime);
+                    document.getElementById('dateTime').value = date.toISOString().slice(0, 16);
+                    document.getElementById('dateTimeFormatted').value = formatToManilaTime(date, false);
+                }
+                if (data.statusDate) {
+                    const date = new Date(data.statusDate);
+                    document.getElementById('statusDate').value = date.toISOString().slice(0, 16);
+                    document.getElementById('statusDateFormatted').value = formatToManilaTime(date, false);
+                }
+                if (data.returnedDate) {
+                    const date = new Date(data.returnedDate);
+                    document.getElementById('returnedDate').value = date.toISOString().slice(0, 16);
+                    document.getElementById('returnedDateFormatted').value = formatToManilaTime(date, false);
+                }
+
                 document.getElementById('usds').value = data.usds || '';
                 document.getElementById('notations').value = data.notations || '';
                 document.getElementById('status').value = data.status || '';
-                document.getElementById('statusDate').value = data.statusDate || '';
-                document.getElementById('returnedDate').value = data.returnedDate || '';
                 document.getElementById('officeDestination').value = data.officeDestination || '';
             } catch (error) {
                 console.error('Error fetching proposal data:', error);
@@ -739,7 +805,10 @@
             }
         });
 
-        document.addEventListener('DOMContentLoaded', loadProposalData);
+        document.addEventListener('DOMContentLoaded', () => {
+            loadProposalData();
+            updateFormattedFields(); // Initialize event listeners for date-time conversion
+        });
     </script>
 </body>
 </html>
