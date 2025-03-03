@@ -7,6 +7,7 @@
   <link rel="icon" type="image/png" href="images/USDS.png">
   <title>Proposal Dashboard</title>
   <style>
+    /* Your existing CSS remains unchanged */
     * {
       box-sizing: border-box;
     }
@@ -156,9 +157,9 @@
 
     /* Specific styles for the Action column */
     th:last-child, td:last-child {
-      text-align: center; /* Center-align the Action column */
-      width: 120px; /* Fixed width for consistency */
-      min-width: 120px; /* Ensure it doesn't shrink too much */
+      text-align: center;
+      width: 120px;
+      min-width: 120px;
     }
 
     .action-select {
@@ -184,7 +185,7 @@
       box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
     }
 
-    /* Mobile (up to 480px) */
+    /* Responsive styles remain unchanged */
     @media (max-width: 480px) {
       body {
         padding: 10px;
@@ -242,14 +243,12 @@
         padding: 5px;
       }
 
-      /* Ensure table content wraps on small screens */
       td:nth-child(2) {
         white-space: normal;
         word-wrap: break-word;
       }
     }
 
-    /* Tablet (481px to 768px) */
     @media (min-width: 481px) and (max-width: 768px) {
       h1 {
         font-size: 1.5rem;
@@ -284,7 +283,6 @@
       }
     }
 
-    /* Laptop (769px to 1200px) */
     @media (min-width: 769px) and (max-width: 1200px) {
       .table-container {
         max-width: 1000px;
@@ -312,7 +310,6 @@
       }
     }
 
-    /* Desktop (1201px and up) */
     @media (min-width: 1201px) {
       .table-container {
         max-width: 1400px;
@@ -400,6 +397,7 @@
       <thead>
         <tr>
           <th>Proposal ID</th>
+          <th>College</th> <!-- Added College column here -->
           <th>Title of Activity</th>
           <th>Action</th>
         </tr>
@@ -445,7 +443,7 @@
           return;
         }
         if (!Array.isArray(data) || data.length === 0) {
-          document.getElementById('proposalTable').innerHTML = '<tr><td colspan="3">No proposals found</td></tr>';
+          document.getElementById('proposalTable').innerHTML = '<tr><td colspan="4">No proposals found</td></tr>'; // Updated colspan to 4
           return;
         }
         allProposals = data;
@@ -463,6 +461,7 @@
         const row = document.createElement('tr');
         row.innerHTML = `
           <td>${proposal.proposalId || ''}</td>
+          <td>${proposal.college || ''}</td> <!-- Added College data here -->
           <td>${proposal.particulars || 'Untitled'}</td>
           <td>
             <select class="action-select" onchange="handleAction(this, '${proposal.proposalId}')">
