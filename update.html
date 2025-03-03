@@ -7,6 +7,7 @@
     <link rel="icon" type="image/png" href="images/USDS.png">
     <title>Update Proposal</title>
     <style>
+        /* [Previous CSS unchanged] */
         * {
             box-sizing: border-box;
         }
@@ -132,7 +133,6 @@
             background-color: #c82333;
         }
 
-        /* Mobile (up to 480px) */
         @media (max-width: 480px) {
             body {
                 padding: 10px;
@@ -185,7 +185,6 @@
             }
         }
 
-        /* Tablet (481px to 768px) */
         @media (min-width: 481px) and (max-width: 768px) {
             .container {
                 padding: 20px;
@@ -210,7 +209,6 @@
             }
         }
 
-        /* Laptop (769px to 1200px) */
         @media (min-width: 769px) and (max-width: 1200px) {
             .container {
                 max-width: 1000px;
@@ -229,7 +227,6 @@
             }
         }
 
-        /* Desktop (1201px and up) */
         @media (min-width: 1201px) {
             .container {
                 max-width: 1400px;
@@ -386,8 +383,12 @@
                     <div class="form-group">
                         <label for="receiver">Received By:</label>
                         <select id="receiver" name="receiver">
-                            <option value="" disabled selected>Select Received By</option>
+                            <option value="" disabled>Select Received By</option>
                         </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="dateTime">Date & Time Received:</label>
+                        <input type="text" id="dateTime" name="dateTime" placeholder="MM/dd/yyyy @ hh:mm:ss AM/PM">
                     </div>
                 </div>
             </div>
@@ -411,6 +412,14 @@
                             <option value="Returned">Returned</option>
                             <option value="Forwarded">Forwarded</option>
                         </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="statusDate">Status Date & Time:</label>
+                        <input type="text" id="statusDate" name="statusDate" placeholder="MM/dd/yyyy @ hh:mm:ss AM/PM">
+                    </div>
+                    <div class="form-group">
+                        <label for="returnedDate">Returned Date & Time (if applicable):</label>
+                        <input type="text" id="returnedDate" name="returnedDate" placeholder="MM/dd/yyyy @ hh:mm:ss AM/PM">
                     </div>
                     <div class="form-group">
                         <label for="officeDestination">Office Destination:</label>
@@ -652,9 +661,12 @@
                 document.getElementById('docSeq').value = data.docSeq || '';
                 document.getElementById('copies').value = data.copies || '';
                 populateReceiver(data.receiver || '');
+                document.getElementById('dateTime').value = data.dateTime || '';
                 document.getElementById('usds').value = data.usds || '';
                 document.getElementById('notations').value = data.notations || '';
                 document.getElementById('status').value = data.status || '';
+                document.getElementById('statusDate').value = data.statusDate || '';
+                document.getElementById('returnedDate').value = data.returnedDate || '';
                 document.getElementById('officeDestination').value = data.officeDestination || '';
             } catch (error) {
                 console.error('Error fetching proposal data:', error);

@@ -7,6 +7,7 @@
     <link rel="icon" type="image/png" href="images/USDS.png">
     <title>Proposal Submission Form</title>
     <style>
+        /* [Previous CSS unchanged] */
         * {
             box-sizing: border-box;
         }
@@ -132,7 +133,6 @@
             background-color: #c82333;
         }
 
-        /* Mobile (up to 480px) */
         @media (max-width: 480px) {
             body {
                 padding: 10px;
@@ -185,7 +185,6 @@
             }
         }
 
-        /* Tablet (481px to 768px) */
         @media (min-width: 481px) and (max-width: 768px) {
             .container {
                 padding: 20px;
@@ -210,7 +209,6 @@
             }
         }
 
-        /* Laptop (769px to 1200px) */
         @media (min-width: 769px) and (max-width: 1200px) {
             .container {
                 max-width: 1000px;
@@ -229,7 +227,6 @@
             }
         }
 
-        /* Desktop (1201px and up) */
         @media (min-width: 1201px) {
             .container {
                 max-width: 1400px;
@@ -389,6 +386,10 @@
                             <option value="" disabled selected>Select receiver</option>
                         </select>
                     </div>
+                    <div class="form-group">
+                        <label for="dateTime">Date & Time Received:</label>
+                        <input type="text" id="dateTime" name="dateTime" placeholder="MM/dd/yyyy @ hh:mm:ss AM/PM">
+                    </div>
                 </div>
             </div>
 
@@ -413,8 +414,16 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="office">Office Destination:</label>
-                        <input type="text" id="office" name="office" placeholder="Enter office destination">
+                        <label for="statusDate">Status Date & Time:</label>
+                        <input type="text" id="statusDate" name="statusDate" placeholder="MM/dd/yyyy @ hh:mm:ss AM/PM">
+                    </div>
+                    <div class="form-group">
+                        <label for="returnedDate">Returned Date & Time (if applicable):</label>
+                        <input type="text" id="returnedDate" name="returnedDate" placeholder="MM/dd/yyyy @ hh:mm:ss AM/PM">
+                    </div>
+                    <div class="form-group">
+                        <label for="officeDestination">Office Destination:</label>
+                        <input type="text" id="officeDestination" name="officeDestination" placeholder="Enter office destination">
                     </div>
                 </div>
             </div>
