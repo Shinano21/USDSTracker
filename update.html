@@ -398,7 +398,14 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label for="usds">Action of USDS:</label>
-                        <input type="text" id="usds" name="usds" placeholder="Enter USDS action">
+                        <select id="usds" name="usds" required>
+                            <option value="" disabled selected>Select USDS Action</option>
+                            <option value="Favorably Forwarded to">Favorably Forwarded to</option>
+                            <option value="Returned for Compliance">Returned for Compliance</option>
+                            <option value="Pending Review">Pending Review</option>
+                            <option value="Approved">Approved</option>
+                            <option value="Disapproved">Disapproved</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="notations">Notations:</label>
@@ -741,7 +748,7 @@
                     document.getElementById('returnedDateFormatted').value = formatToManilaTime(date, false);
                 }
 
-                document.getElementById('usds').value = data.usds || '';
+                document.getElementById('usds').value = data.usds || ''; // Set dropdown value if it matches an option
                 document.getElementById('notations').value = data.notations || '';
                 document.getElementById('status').value = data.status || '';
                 document.getElementById('officeDestination').value = data.officeDestination || '';
