@@ -214,7 +214,7 @@
             }
 
             h2 {
-                font-size:  quizzes1.75rem;
+                font-size: 1.75rem;
             }
 
             .form-group {
@@ -477,10 +477,7 @@
                 "Certificate in College Teaching (CCT)",
                 "Integrated Laboratory High School Department"
             ],
-            "BU COLLEGE OF EDUCATION Integrated Laboratory High School Department (BUCEILS)": [
-            "NA"
-
-            ],
+            "BU COLLEGE OF EDUCATION Integrated Laboratory High School Department (BUCEILS)": ["NA"],
             "BU COLLEGE OF SCIENCE (BUCS)": [
                 "Bachelor of Science in Biology (BSBio)",
                 "Bachelor of Science in Chemistry (BSChem)",
@@ -617,14 +614,14 @@
             document.getElementById(inputId).value = isoString;
         }
 
-        // Function to initialize datetime fields with current Manila time
+        // Function to initialize datetime fields with current Manila time (excluding returnedDate)
         function initializeDateTimeFields() {
             const now = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila' })); // Dynamic current Manila time
 
             const fields = [
                 { input: 'dateTime', hidden: 'dateTimeFormatted' },
                 { input: 'statusDate', hidden: 'statusDateFormatted' },
-                { input: 'returnedDate', hidden: 'returnedDateFormatted' }
+                // 'returnedDate' is intentionally excluded from auto-initialization
             ];
 
             fields.forEach(({ input, hidden }) => {
@@ -643,6 +640,20 @@
                         hiddenEl.value = formatToManilaTime(date, false);
                     }
                 });
+            });
+
+            // Handle returnedDate separately - leave it blank unless changed
+            const returnedInput = document.getElementById('returnedDate');
+            const returnedHidden = document.getElementById('returnedDateFormatted');
+            returnedInput.value = ''; // Ensure it starts blank
+            returnedHidden.value = ''; // Ensure hidden field starts blank
+            returnedInput.addEventListener('change', () => {
+                const date = new Date(returnedInput.value);
+                if (!isNaN(date)) {
+                    returnedHidden.value = formatToManilaTime(date, false);
+                } else {
+                    returnedHidden.value = '';
+                }
             });
         }
 
@@ -759,7 +770,7 @@
                     populateColleges();
                     updateDepartments();
                     populateReceiver();
-                    initializeDateTimeFields(); // Reset date-time fields to current Manila time
+                    initializeDateTimeFields(); // Reset date-time fields (returnedDate stays blank)
                     window.location.href = DASHBOARD_URL;
                 } else {
                     alert('Failed to submit proposal: ' + result.message);
@@ -773,7 +784,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             populateColleges();
             populateReceiver();
-            initializeDateTimeFields(); // Initialize date-time fields with current Manila time
+            initializeDateTimeFields(); // Initialize date-time fields with returnedDate blank
         });
     </script>
 </body>
