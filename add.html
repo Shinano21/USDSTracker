@@ -408,7 +408,14 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label for="usds">Action of USDS:</label>
-                        <input type="text" id="usds" name="usds" placeholder="Enter USDS action">
+                        <select id="usds" name="usds" required>
+                            <option value="" disabled selected>Select USDS Action</option>
+                            <option value="Favorably Forwarded to">Favorably Forwarded to</option>
+                            <option value="Returned for Compliance">Returned for Compliance</option>
+                            <option value="Pending Review">Pending Review</option>
+                            <option value="Approved">Approved</option>
+                            <option value="Disapproved">Disapproved</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="notations">Notations:</label>
