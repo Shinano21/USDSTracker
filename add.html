@@ -398,8 +398,8 @@
                     </div>
                     <div class="form-group">
                         <label for="dateTime">Date & Time Received (Manila Time):</label>
-                        <input type="datetime-local" id="dateTime">
-                        <input type="hidden" id="dateTimeFormatted" name="dateTime">
+                        <input type="datetime-local" id="dateTime" name="dateTime" required>
+                        <div id="dateTimeError" class="error"></div>
                     </div>
                 </div>
             </div>
@@ -433,13 +433,13 @@
                     </div>
                     <div class="form-group">
                         <label for="statusDate">Status Date & Time (Manila Time):</label>
-                        <input type="datetime-local" id="statusDate">
-                        <input type="hidden" id="statusDateFormatted" name="statusDate">
+                        <input type="datetime-local" id="statusDate" name="statusDate">
+                        <div id="statusDateError" class="error"></div>
                     </div>
                     <div class="form-group">
                         <label for="returnedDate">Returned Date & Time (if applicable, Manila Time):</label>
-                        <input type="datetime-local" id="returnedDate">
-                        <input type="hidden" id="returnedDateFormatted" name="returnedDate">
+                        <input type="datetime-local" id="returnedDate" name="returnedDate">
+                        <div id="returnedDateError" class="error"></div>
                     </div>
                     <div class="form-group">
                         <label for="officeDestination">Office Destination:</label>
@@ -456,14 +456,14 @@
     </div>
 
     <script>
-        const API_URL = 'https://script.google.com/macros/s/AKfycbyHKJ6-qlH4F3dLdUNuu2mcyiQHhv7kTd7cfWnqustB9nD3aquVk0xkmmp4t7Uj620/exec'; // Replace with your actual deployed URL
+        const API_URL = 'https://script.google.com/macros/s/AKfycbyHKJ6-qlH4F3dLdUNuu2mcyiQHhv7kTd7cfWnqustB9nD3aquVk0xkmmp4t7Uj620/exec';
         const DASHBOARD_URL = 'dashboard.html';
         const INDEX_URL = 'index.html';
-    
+
         if (localStorage.getItem('authToken') !== 'loggedIn') {
             window.location.href = INDEX_URL;
         }
-    
+
         const collegeData = {
             "BU COLLEGE OF EDUCATION (BUCE)": [
                 "Bachelor of Culture and Arts Education (BCAEd)",
@@ -584,8 +584,8 @@
                 "Bachelor of Technology and Livelihood Education, major in ICT (BTLED-ICT)"
             ]
         };
-    
-        function formatToManilaTime(date, includeSeconds = true) {
+
+        function formatToCustomString(date) {
             const options = {
                 timeZone: 'Asia/Manila',
                 year: 'numeric',
@@ -596,62 +596,75 @@
                 second: '2-digit',
                 hour12: true
             };
+            
             const formatter = new Intl.DateTimeFormat('en-US', options);
             const parts = formatter.formatToParts(date);
+            
             const month = parts.find(p => p.type === 'month').value;
             const day = parts.find(p => p.type === 'day').value;
             const year = parts.find(p => p.type === 'year').value;
             const hour = parts.find(p => p.type === 'hour').value.padStart(2, '0');
             const minute = parts.find(p => p.type === 'minute').value.padStart(2, '0');
-            const second = includeSeconds ? parts.find(p => p.type === 'second').value.padStart(2, '0') : '59';
+            const second = parts.find(p => p.type === 'second').value.padStart(2, '0');
             const period = parts.find(p => p.type === 'dayPeriod').value;
+            
             return `${month}/${day}/${year} @ ${hour}:${minute}:${second} ${period}`;
         }
-    
-        function setDateTimeLocalValue(inputId, date) {
-            const isoString = date.toLocaleString('sv', { timeZone: 'Asia/Manila' }).slice(0, 16);
-            document.getElementById(inputId).value = isoString;
+
+        function setDateTimeDefault(inputId) {
+            const input = document.getElementById(inputId);
+            const now = new Date();
+            const manilaTime = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Manila' }));
+            const formatted = manilaTime.toISOString().slice(0, 16);
+            input.value = formatted;
+            return formatToCustomString(manilaTime);
         }
-    
+
+        function validateDateTime(inputId, errorId) {
+            const input = document.getElementById(inputId);
+            const error = document.getElementById(errorId);
+            const value = input.value;
+            
+            if (value) {
+                const date = new Date(value);
+                if (isNaN(date.getTime())) {
+                    error.textContent = 'Invalid date/time format';
+                    return false;
+                }
+                if (date > new Date()) {
+                    error.textContent = 'Date cannot be in the future';
+                    return false;
+                }
+                error.textContent = '';
+                return true;
+            }
+            return !input.required;
+        }
+
         function initializeDateTimeFields() {
-            const now = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila' }));
-            const fields = [
-                { input: 'dateTime', hidden: 'dateTimeFormatted' },
-                { input: 'statusDate', hidden: 'statusDateFormatted' }
+            const dateFields = [
+                { id: 'dateTime', error: 'dateTimeError', default: true },
+                { id: 'statusDate', error: 'statusDateError', default: false },
+                { id: 'returnedDate', error: 'returnedDateError', default: false }
             ];
-    
-            fields.forEach(({ input, hidden }) => {
-                const inputEl = document.getElementById(input);
-                const hiddenEl = document.getElementById(hidden);
-                setDateTimeLocalValue(input, now);
-                hiddenEl.value = formatToManilaTime(now, false);
-    
-                inputEl.addEventListener('change', () => {
-                    const date = new Date(inputEl.value);
-                    if (!isNaN(date)) {
-                        hiddenEl.value = formatToManilaTime(date, false);
-                    }
+
+            dateFields.forEach(field => {
+                const input = document.getElementById(field.id);
+                
+                if (field.default) {
+                    setDateTimeDefault(field.id);
+                }
+
+                input.addEventListener('change', () => {
+                    validateDateTime(field.id, field.error);
                 });
             });
-    
-            const returnedInput = document.getElementById('returnedDate');
-            const returnedHidden = document.getElementById('returnedDateFormatted');
-            returnedInput.value = '';
-            returnedHidden.value = '';
-            returnedInput.addEventListener('change', () => {
-                const date = new Date(returnedInput.value);
-                if (!isNaN(date)) {
-                    returnedHidden.value = formatToManilaTime(date, false);
-                } else {
-                    returnedHidden.value = '';
-                }
-            });
         }
-    
+
         function goBack() {
             window.location.href = DASHBOARD_URL;
         }
-    
+
         function populateColleges() {
             const collegeSelect = document.getElementById('college');
             collegeSelect.innerHTML = '<option value="">Select College</option>';
@@ -662,7 +675,7 @@
                 collegeSelect.appendChild(option);
             });
         }
-    
+
         function updateDepartments() {
             const college = document.getElementById("college").value;
             const departmentSelect = document.getElementById("department");
@@ -677,7 +690,7 @@
                 });
             }
         }
-    
+
         async function populateReceiver(silent = false) {
             try {
                 const response = await fetch(`${API_URL}?action=getReceivers`, {
@@ -697,7 +710,6 @@
                 });
             } catch (error) {
                 console.error('Error fetching receivers:', error);
-                // Only show alert on initial load, not after successful submission
                 if (!silent) {
                     alert(`Failed to load receivers: ${error.message}. Using default options.`);
                 }
@@ -712,12 +724,12 @@
                 });
             }
         }
-    
+
         document.getElementById('proposalForm').addEventListener('submit', async function(event) {
             event.preventDefault();
-    
+
             let valid = true;
-    
+
             const proposalId = document.getElementById('proposalId');
             const proposalIdError = document.getElementById('proposalIdError');
             if (proposalId.value && !/^\d{2}-\d{4}-\d{4}$/.test(proposalId.value)) {
@@ -726,7 +738,7 @@
             } else {
                 proposalIdError.textContent = '';
             }
-    
+
             const amount = document.getElementById('amount');
             const amountError = document.getElementById('amountError');
             if (!amount.value || isNaN(amount.value) || amount.value <= 0) {
@@ -735,7 +747,7 @@
             } else {
                 amountError.textContent = '';
             }
-    
+
             const docSeq = document.getElementById('docSeq');
             const docSeqError = document.getElementById('docSeqError');
             if (!docSeq.value) {
@@ -744,7 +756,7 @@
             } else {
                 docSeqError.textContent = '';
             }
-    
+
             const copies = document.getElementById('copies');
             const copiesError = document.getElementById('copiesError');
             if (!copies.value || isNaN(copies.value) || copies.value < 1) {
@@ -753,16 +765,25 @@
             } else {
                 copiesError.textContent = '';
             }
-    
+
+            valid &= validateDateTime('dateTime', 'dateTimeError');
+            valid &= validateDateTime('statusDate', 'statusDateError');
+            valid &= validateDateTime('returnedDate', 'returnedDateError');
+
             if (!valid) return;
-    
+
             const formData = new FormData(this);
             const data = {};
             formData.forEach((value, key) => {
-                data[key] = value;
+                if (['dateTime', 'statusDate', 'returnedDate'].includes(key) && value) {
+                    const date = new Date(value);
+                    data[key] = formatToCustomString(date);
+                } else {
+                    data[key] = value;
+                }
             });
             data.action = "add";
-    
+
             try {
                 const response = await fetch(API_URL, {
                     method: 'POST',
@@ -775,13 +796,12 @@
                 }
                 const result = await response.json();
                 console.log('Server response:', result);
-    
+
                 if (result.success) {
                     alert(`Proposal submitted successfully! Proposal ID: ${result.proposalId}`);
                     document.getElementById('proposalForm').reset();
                     populateColleges();
                     updateDepartments();
-                    // Silent mode to avoid alert after successful submission
                     await populateReceiver(true);
                     initializeDateTimeFields();
                     window.location.href = DASHBOARD_URL;
@@ -793,10 +813,10 @@
                 alert('Error submitting proposal: ' + error.message);
             }
         });
-    
+
         document.addEventListener('DOMContentLoaded', function() {
             populateColleges();
-            populateReceiver(); // Initial load with alert if fails
+            populateReceiver();
             initializeDateTimeFields();
         });
     </script>
