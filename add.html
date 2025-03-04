@@ -266,7 +266,8 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label for="proposalId">Proposal ID (Leave blank to auto-generate):</label>
-                        <input type="text" id="proposalId" name="proposalId" placeholder="Enter Proposal ID (MM-YYYY-XXXX(01-2025-0001)) or leave blank">
+                        <input type="text" id="proposalId" name="proposalId" placeholder="Enter Proposal ID (MM-YYYY-XXXX e.g., 01-2025-0003)">
+                        <div id="proposalIdError" class="error"></div>
                     </div>
                 </div>
             </div>
@@ -408,7 +409,7 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label for="usds">Action of USDS:</label>
-                        <select id="usds" name="usds" >
+                        <select id="usds" name="usds">
                             <option value="" disabled selected>Select USDS Action</option>
                             <option value="Favorably Forwarded to">Favorably Forwarded to</option>
                             <option value="Returned for Compliance">Returned for Compliance</option>
@@ -455,14 +456,14 @@
     </div>
 
     <script>
-        const API_URL = 'https://script.google.com/macros/s/AKfycbyHKJ6-qlH4F3dLdUNuu2mcyiQHhv7kTd7cfWnqustB9nD3aquVk0xkmmp4t7Uj620/exec';
+        const API_URL = 'https://script.google.com/macros/s/AKfycbyHKJ6-qlH4F3dLdUNuu2mcyiQHhv7kTd7cfWnqustB9nD3aquVk0xkmmp4t7Uj620/exec'; // Replace with your actual deployed URL
         const DASHBOARD_URL = 'dashboard.html';
         const INDEX_URL = 'index.html';
-
+    
         if (localStorage.getItem('authToken') !== 'loggedIn') {
             window.location.href = INDEX_URL;
         }
-
+    
         const collegeData = {
             "BU COLLEGE OF EDUCATION (BUCE)": [
                 "Bachelor of Culture and Arts Education (BCAEd)",
@@ -583,8 +584,7 @@
                 "Bachelor of Technology and Livelihood Education, major in ICT (BTLED-ICT)"
             ]
         };
-
-        // Function to format date to MM/dd/yyyy @ hh:mm:ss AM/PM in Manila time (UTC+8)
+    
         function formatToManilaTime(date, includeSeconds = true) {
             const options = {
                 timeZone: 'Asia/Manila',
@@ -607,33 +607,25 @@
             const period = parts.find(p => p.type === 'dayPeriod').value;
             return `${month}/${day}/${year} @ ${hour}:${minute}:${second} ${period}`;
         }
-
-        // Function to set datetime-local input value in ISO format (YYYY-MM-DDThh:mm)
+    
         function setDateTimeLocalValue(inputId, date) {
-            const isoString = date.toLocaleString('sv', { timeZone: 'Asia/Manila' }).slice(0, 16); // YYYY-MM-DDThh:mm
+            const isoString = date.toLocaleString('sv', { timeZone: 'Asia/Manila' }).slice(0, 16);
             document.getElementById(inputId).value = isoString;
         }
-
-        // Function to initialize datetime fields with current Manila time (excluding returnedDate)
+    
         function initializeDateTimeFields() {
-            const now = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila' })); // Dynamic current Manila time
-
+            const now = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila' }));
             const fields = [
                 { input: 'dateTime', hidden: 'dateTimeFormatted' },
-                { input: 'statusDate', hidden: 'statusDateFormatted' },
-                // 'returnedDate' is intentionally excluded from auto-initialization
+                { input: 'statusDate', hidden: 'statusDateFormatted' }
             ];
-
+    
             fields.forEach(({ input, hidden }) => {
                 const inputEl = document.getElementById(input);
                 const hiddenEl = document.getElementById(hidden);
-
-                // Set datetime-local input
                 setDateTimeLocalValue(input, now);
-                // Set hidden formatted field
-                hiddenEl.value = formatToManilaTime(now, false); // Seconds hardcoded to :59
-
-                // Update hidden field on change
+                hiddenEl.value = formatToManilaTime(now, false);
+    
                 inputEl.addEventListener('change', () => {
                     const date = new Date(inputEl.value);
                     if (!isNaN(date)) {
@@ -641,12 +633,11 @@
                     }
                 });
             });
-
-            // Handle returnedDate separately - leave it blank unless changed
+    
             const returnedInput = document.getElementById('returnedDate');
             const returnedHidden = document.getElementById('returnedDateFormatted');
-            returnedInput.value = ''; // Ensure it starts blank
-            returnedHidden.value = ''; // Ensure hidden field starts blank
+            returnedInput.value = '';
+            returnedHidden.value = '';
             returnedInput.addEventListener('change', () => {
                 const date = new Date(returnedInput.value);
                 if (!isNaN(date)) {
@@ -656,11 +647,11 @@
                 }
             });
         }
-
+    
         function goBack() {
             window.location.href = DASHBOARD_URL;
         }
-
+    
         function populateColleges() {
             const collegeSelect = document.getElementById('college');
             collegeSelect.innerHTML = '<option value="">Select College</option>';
@@ -671,7 +662,7 @@
                 collegeSelect.appendChild(option);
             });
         }
-
+    
         function updateDepartments() {
             const college = document.getElementById("college").value;
             const departmentSelect = document.getElementById("department");
@@ -686,8 +677,8 @@
                 });
             }
         }
-
-        async function populateReceiver() {
+    
+        async function populateReceiver(silent = false) {
             try {
                 const response = await fetch(`${API_URL}?action=getReceivers`, {
                     method: 'GET',
@@ -706,51 +697,72 @@
                 });
             } catch (error) {
                 console.error('Error fetching receivers:', error);
-                alert(`Failed to load receivers: ${error.message}`);
+                // Only show alert on initial load, not after successful submission
+                if (!silent) {
+                    alert(`Failed to load receivers: ${error.message}. Using default options.`);
+                }
+                const defaultReceivers = ["Ma'am Ann", "Sir Ronald", "Sir Mike", "Sir Christian"];
+                const receiverSelect = document.getElementById('receiver');
+                receiverSelect.innerHTML = '<option value="" disabled selected>Select receiver</option>';
+                defaultReceivers.forEach(receiver => {
+                    const option = document.createElement('option');
+                    option.value = receiver;
+                    option.text = receiver;
+                    receiverSelect.appendChild(option);
+                });
             }
         }
-
+    
         document.getElementById('proposalForm').addEventListener('submit', async function(event) {
             event.preventDefault();
-
+    
             let valid = true;
-
-            let amount = document.getElementById('amount');
-            let amountError = document.getElementById('amountError');
+    
+            const proposalId = document.getElementById('proposalId');
+            const proposalIdError = document.getElementById('proposalIdError');
+            if (proposalId.value && !/^\d{2}-\d{4}-\d{4}$/.test(proposalId.value)) {
+                proposalIdError.textContent = 'Proposal ID must be in format MM-YYYY-XXXX (e.g., 01-2025-0003)';
+                valid = false;
+            } else {
+                proposalIdError.textContent = '';
+            }
+    
+            const amount = document.getElementById('amount');
+            const amountError = document.getElementById('amountError');
             if (!amount.value || isNaN(amount.value) || amount.value <= 0) {
                 amountError.textContent = 'Total amount must be a positive number.';
                 valid = false;
             } else {
                 amountError.textContent = '';
             }
-
-            let docSeq = document.getElementById('docSeq');
-            let docSeqError = document.getElementById('docSeqError');
+    
+            const docSeq = document.getElementById('docSeq');
+            const docSeqError = document.getElementById('docSeqError');
             if (!docSeq.value) {
                 docSeqError.textContent = 'Please enter a document sequence number.';
                 valid = false;
             } else {
                 docSeqError.textContent = '';
             }
-
-            let copies = document.getElementById('copies');
-            let copiesError = document.getElementById('copiesError');
+    
+            const copies = document.getElementById('copies');
+            const copiesError = document.getElementById('copiesError');
             if (!copies.value || isNaN(copies.value) || copies.value < 1) {
                 copiesError.textContent = 'Number of copies must be at least 1.';
                 valid = false;
             } else {
                 copiesError.textContent = '';
             }
-
+    
             if (!valid) return;
-
+    
             const formData = new FormData(this);
             const data = {};
             formData.forEach((value, key) => {
                 data[key] = value;
             });
             data.action = "add";
-
+    
             try {
                 const response = await fetch(API_URL, {
                     method: 'POST',
@@ -763,14 +775,15 @@
                 }
                 const result = await response.json();
                 console.log('Server response:', result);
-
+    
                 if (result.success) {
-                    alert('Proposal submitted successfully! ');
+                    alert(`Proposal submitted successfully! Proposal ID: ${result.proposalId}`);
                     document.getElementById('proposalForm').reset();
                     populateColleges();
                     updateDepartments();
-                    populateReceiver();
-                    initializeDateTimeFields(); // Reset date-time fields (returnedDate stays blank)
+                    // Silent mode to avoid alert after successful submission
+                    await populateReceiver(true);
+                    initializeDateTimeFields();
                     window.location.href = DASHBOARD_URL;
                 } else {
                     alert('Failed to submit proposal: ' + result.message);
@@ -780,11 +793,11 @@
                 alert('Error submitting proposal: ' + error.message);
             }
         });
-
+    
         document.addEventListener('DOMContentLoaded', function() {
             populateColleges();
-            populateReceiver();
-            initializeDateTimeFields(); // Initialize date-time fields with returnedDate blank
+            populateReceiver(); // Initial load with alert if fails
+            initializeDateTimeFields();
         });
     </script>
 </body>
