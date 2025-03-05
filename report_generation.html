@@ -8,13 +8,13 @@
     <title>Reports Generation Form</title>
     <style>
         :root {
-            --primary-color: #2c3e50; /* Navbar and Sidebar */
-            --secondary-color: #c0392b; /* Logout and Go Back button */
-            --item-highlight: #2980b9; /* Buttons like Load Data, Submit Data */
+            --primary-color: #2c3e50;
+            --secondary-color: #c0392b;
+            --item-highlight: #2980b9;
             --sidebar-width: 250px;
             --header-height: 60px;
             --text-color: #333;
-            --error-color: #c0392b; /* Matches secondary color */
+            --error-color: #c0392b;
             --border-radius: 8px;
         }
 
@@ -48,15 +48,15 @@
             padding: 0 20px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             z-index: 1000;
-            flex-wrap: wrap; /* Allow wrapping if needed */
+            flex-wrap: wrap;
             min-height: var(--header-height);
         }
 
         .navbar-brand {
             display: flex;
             align-items: center;
-            flex: 1; /* Allow it to take available space */
-            min-width: 0; /* Prevent overflow */
+            flex: 1;
+            min-width: 0;
         }
 
         .toggle-btn {
@@ -233,22 +233,23 @@
             width: 100%;
             border-collapse: collapse;
             font-size: 0.9rem;
+            min-width: 900px; /* Ensure table is wide enough to trigger scrolling on mobile */
         }
 
         th, td {
             padding: 12px;
             text-align: center;
             border: 1px solid #eee;
-            min-width: 80px;
+            min-width: 60px; /* Reduced min-width for better fit */
             white-space: nowrap;
         }
 
         th.accomplished-on-time, td.accomplished-on-time {
-            min-width: 60px; /* Reduced width for better print fit */
+            min-width: 50px; /* Further reduced */
         }
 
         th.percentage, td.percentage {
-            min-width: 70px; /* Ensure percentage column fits */
+            min-width: 60px; /* Further reduced */
         }
 
         th {
@@ -405,23 +406,23 @@
             }
 
             th, td {
-                padding: 8px;
-                font-size: 0.75rem;
-                min-width: 50px;
+                padding: 6px; /* Reduced padding */
+                font-size: 0.65rem; /* Smaller font size */
+                min-width: 40px; /* Further reduced min-width */
             }
 
             th.accomplished-on-time, td.accomplished-on-time {
-                min-width: 40px;
+                min-width: 30px; /* Further reduced */
             }
 
             th.percentage, td.percentage {
-                min-width: 50px;
+                min-width: 40px; /* Further reduced */
             }
 
             input[type="number"],
             input[type="text"] {
                 padding: 4px;
-                font-size: 0.75rem;
+                font-size: 0.65rem;
             }
 
             .button-group {
@@ -473,16 +474,17 @@
             }
 
             th, td {
-                padding: 10px;
-                font-size: 0.875rem;
-            }
-
-            th.accomplished-on-time, td.accomplished-on-time {
+                padding: 8px;
+                font-size: 0.8rem;
                 min-width: 50px;
             }
 
+            th.accomplished-on-time, td.accomplished-on-time {
+                min-width: 40px;
+            }
+
             th.percentage, td.percentage {
-                min-width: 60px;
+                min-width: 50px;
             }
 
             .button-group {
@@ -509,7 +511,7 @@
             }
 
             th, td {
-                padding: 12px;
+                padding: 10px;
             }
         }
 
@@ -725,7 +727,6 @@
             window.location.href = INDEX_URL;
         }
 
-        // Navbar and Sidebar functionality
         function updateDateTime() {
             const now = new Date();
             const isMobile = window.innerWidth <= 480;
