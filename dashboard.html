@@ -61,6 +61,7 @@
       margin: 0;
       font-size: 1.5rem;
       font-weight: 500;
+      color: white;
     }
 
     .datetime {
@@ -489,7 +490,7 @@
     }
 
     function setActiveSidebarItem() {
-      const sidebarItems = document.querySelectorAll('.sidebar ul li a');
+      const sidebarItems = document.querySelectorAll('.sidebar ul li a:not(.logout-btn)');
       const currentPage = window.location.pathname.split('/').pop() || 'dashboard.html';
       
       sidebarItems.forEach(item => {
@@ -498,7 +499,6 @@
           item.classList.add('active');
         }
         item.addEventListener('click', function(e) {
-          if (this.classList.contains('logout-btn')) return; // Skip logout link
           sidebarItems.forEach(i => i.classList.remove('active'));
           this.classList.add('active');
         });
