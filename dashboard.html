@@ -7,127 +7,132 @@
   <link rel="icon" type="image/png" href="images/USDS.png">
   <title>USDS Proposal Tracker</title>
   <style>
+    :root {
+      --primary-color: #2c3e50;
+      --secondary-color: #3498db;
+      --sidebar-width: 250px;
+      --header-height: 60px;
+    }
+
     * {
       box-sizing: border-box;
     }
 
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', Arial, sans-serif;
       margin: 0;
       padding: 0;
-      background-color: #f5f5f5;
+      background-color: #ecf0f1;
       min-height: 100vh;
       display: flex;
-      transition: margin-left 0.3s ease;
-    }
-
-    .sidebar {
-      width: 250px;
-      background-color: #f8f9fa;
-      padding: 20px;
-      height: 100vh;
-      position: fixed;
-      border-right: 1px solid #ddd;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      transition: transform 0.3s ease;
-      transform: translateX(0);
-      z-index: 1001;
-    }
-
-    .sidebar.hidden {
-      transform: translateX(-250px);
-    }
-
-    .sidebar h2 {
-      font-size: 1.5rem;
-      color: #333;
-      margin-bottom: 20px;
-    }
-
-    .sidebar-item {
-      padding: 10px;
-      margin: 5px 0;
-      cursor: pointer;
-      border-radius: 4px;
-      transition: background-color 0.3s ease;
-    }
-
-    .sidebar-item:hover {
-      background-color: #e9ecef;
-    }
-
-    .logout-btn {
-      padding: 10px;
-      background-color: #dc3545;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      width: 100%;
-      text-align: left;
-      transition: background-color 0.3s ease;
-    }
-
-    .logout-btn:hover {
-      background-color: #c82333;
     }
 
     .navbar {
+      background-color: var(--primary-color);
+      color: white;
+      height: var(--header-height);
       position: fixed;
+      width: 100%;
       top: 0;
-      left: 0;
-      right: 0;
-      background-color: #fff;
-      padding: 10px 20px;
-      border-bottom: 1px solid #ddd;
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
       z-index: 1000;
-      transition: left 0.3s ease;
     }
 
-    .navbar h1 {
-      margin: 0;
-      font-size: 1.5rem;
-      color: #333;
-    }
-
-    .datetime {
-      font-size: 0.9rem;
-      color: #666;
+    .navbar-brand {
+      display: flex;
+      align-items: center;
     }
 
     .toggle-btn {
       background: none;
       border: none;
+      color: white;
       font-size: 1.5rem;
       cursor: pointer;
       padding: 0 10px;
+      margin-right: 10px;
     }
 
-    .main-content {
-      margin-left: 250px;
-      padding: 80px 20px 20px;
-      width: calc(100% - 250px);
+    .navbar h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 500;
+    }
+
+    .datetime {
+      font-size: 1rem;
+      padding: 8px 15px;
+      background-color: rgba(255,255,255,0.1);
+      border-radius: 4px;
+    }
+
+    .sidebar {
+      width: var(--sidebar-width);
+      background-color: var(--primary-color);
+      color: white;
+      position: fixed;
+      height: calc(100% - var(--header-height));
+      top: var(--header-height);
+      left: 0;
+      padding-top: 20px;
+      transform: translateX(-100%);
+      transition: transform 0.3s ease;
+      z-index: 999;
+    }
+
+    .sidebar.active {
+      transform: translateX(0);
+    }
+
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .sidebar ul li a {
+      color: white;
+      text-decoration: none;
+      padding: 15px 20px;
+      display: block;
       transition: all 0.3s ease;
     }
 
-    body.sidebar-hidden .main-content {
-      margin-left: 0;
-      width: 100%;
+    .sidebar ul li a:hover {
+      background-color: var(--secondary-color);
+      padding-left: 25px;
     }
 
-    body.sidebar-hidden .navbar {
-      left: 0;
+    .sidebar ul li a.active {
+      background-color: var(--secondary-color);
+      padding-left: 25px;
+      font-weight: 600;
+    }
+
+    .main-content {
+      margin-left: 0;
+      margin-top: var(--header-height);
+      padding: 20px;
+      width: 100%;
+      transition: margin-left 0.3s ease;
+    }
+
+    .main-content.sidebar-active {
+      margin-left: var(--sidebar-width);
     }
 
     .table-container {
       max-width: 1400px;
       margin: 0 auto;
       width: 100%;
+      background-color: white;
+      padding: 25px;
+      border-radius: 8px;
+      box-shadow: 0 2px 15px rgba(0,0,0,0.05);
     }
 
     .header-row {
@@ -159,13 +164,12 @@
     }
 
     .filter-group select {
-      padding: 8px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 0.9rem;
+      padding: 10px;
       border: 1px solid #ddd;
-      background-color: white;
+      border-radius: 4px;
+      font-size: 1rem;
       max-width: 150px;
+      background-color: white;
     }
 
     .search-container {
@@ -174,12 +178,11 @@
     }
 
     .search-container input {
-      padding: 8px;
+      padding: 10px;
       border: 1px solid #ddd;
       border-radius: 4px;
       width: 100%;
-      max-width: 500px;
-      font-size: 0.9rem;
+      font-size: 1rem;
       box-sizing: border-box;
     }
 
@@ -190,47 +193,44 @@
     }
 
     .button-container button {
-      padding: 8px 16px;
-      background-color: #4CAF50;
+      padding: 10px 20px;
+      background-color: var(--secondary-color);
       color: white;
       border: none;
       border-radius: 4px;
       cursor: pointer;
-      font-size: 0.9rem;
+      font-size: 1rem;
       transition: background-color 0.3s ease;
     }
 
     .button-container button:hover {
-      background-color: #45a049;
+      background-color: #2980b9;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
       background-color: white;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      table-layout: auto;
     }
 
     th, td {
-      border: 1px solid #ddd;
+      border: 1px solid #eee;
       padding: 12px;
       text-align: left;
       font-size: 0.9rem;
     }
 
     th {
-      background-color: #4CAF50;
-      color: white;
-      white-space: nowrap;
+      background-color: #f8f9fa;
+      font-weight: 600;
     }
 
     tr:nth-child(even) {
-      background-color: #f9f9f9;
+      background-color: #f8f9fa;
     }
 
     tr:hover {
-      background-color: #f0f0f0;
+      background-color: #f1f3f5;
     }
 
     th:last-child, td:last-child {
@@ -249,33 +249,75 @@
       width: 100%;
       max-width: 100px;
       text-align: center;
-      transition: border-color 0.3s ease;
     }
 
-    .action-select:hover {
-      border-color: #4CAF50;
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1001;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.4);
     }
 
-    .action-select:focus {
-      outline: none;
-      border-color: #4CAF50;
-      box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+    .modal-content {
+      background-color: white;
+      margin: 15% auto;
+      padding: 20px;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      text-align: center;
+    }
+
+    .modal-content p {
+      margin: 0 0 20px 0;
+      font-size: 1.1rem;
+    }
+
+    .modal-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .modal-button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background-color 0.3s ease;
+    }
+
+    .confirm-btn {
+      background-color: #c0392b;
+      color: white;
+    }
+
+    .confirm-btn:hover {
+      background-color: #a93226;
+    }
+
+    .cancel-btn {
+      background-color: #7f8c8d;
+      color: white;
+    }
+
+    .cancel-btn:hover {
+      background-color: #6c7778;
     }
 
     @media (max-width: 768px) {
       .sidebar {
         width: 200px;
       }
-      .sidebar.hidden {
-        transform: translateX(-200px);
-      }
-      .main-content {
+      .main-content.sidebar-active {
         margin-left: 200px;
-        width: calc(100% - 200px);
-      }
-      body.sidebar-hidden .main-content {
-        margin-left: 0;
-        width: 100%;
       }
       .header-row {
         flex-direction: column;
@@ -287,34 +329,31 @@
       .button-container {
         justify-content: center;
       }
+      .search-container input {
+        max-width: 100%;
+      }
     }
 
     @media (max-width: 480px) {
       .sidebar {
         width: 100%;
-        transform: translateX(-100%);
-      }
-      .sidebar.hidden {
-        transform: translateX(-100%);
-      }
-      .sidebar:not(.hidden) {
-        transform: translateX(0);
       }
       .main-content {
+        margin-top: var(--header-height);
+      }
+      .main-content.sidebar-active {
         margin-left: 0;
-        width: 100%;
-        padding-top: 60px;
       }
       .navbar {
-        padding: 5px 10px;
+        padding: 0 10px;
+      }
+      .navbar h1 {
+        font-size: 1.2rem;
       }
       .datetime {
         font-size: 0.8rem;
       }
       .filter-group select {
-        max-width: 100%;
-      }
-      .search-container input {
         max-width: 100%;
       }
       th, td {
@@ -329,23 +368,21 @@
   </style>
 </head>
 <body>
-  <div class="sidebar hidden" id="sidebar">
-    <div>
-      <h2>Menu</h2>
-      <div class="sidebar-item" onclick="window.location.href='dashboard.html'">Dashboard</div>
-      <div class="sidebar-item" onclick="window.location.href='report_generation.html'">Reports</div>
-      <div class="sidebar-item" onclick="window.open('https://docs.google.com/spreadsheets/d/1T5qHMQAFBd1c6ZJOF91v3moXKI5rhpvKL68u3mrjplc/edit?usp=sharing', '_blank')">Sheets</div>
-    </div>
-    <button class="logout-btn" onclick="logout()">Logout</button>
-  </div>
-
-  <!-- Navbar with toggle, title, and date/time -->
   <div class="navbar">
-    <div style="display: flex; align-items: center;">
+    <div class="navbar-brand">
       <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
       <h1>USDS Proposal Tracker</h1>
     </div>
     <div class="datetime" id="datetime"></div>
+  </div>
+
+  <div class="sidebar" id="sidebar">
+    <ul>
+      <li><a href="dashboard.html" data-page="dashboard.html">Dashboard</a></li>
+      <li><a href="report_generation.html" data-page="report_generation.html">Reports</a></li>
+      <li><a href="https://docs.google.com/spreadsheets/d/1T5qHMQAFBd1c6ZJOF91v3moXKI5rhpvKL68u3mrjplc/edit?usp=sharing" target="_blank" data-page="sheets">Sheets</a></li>
+      <li><a href="#" class="logout-btn" onclick="showLogoutModal()">Logout</a></li>
+    </ul>
   </div>
 
   <div class="main-content">
@@ -403,6 +440,17 @@
     </div>
   </div>
 
+  <!-- Logout Modal -->
+  <div id="logoutModal" class="modal">
+    <div class="modal-content">
+      <p>Are you sure you want to logout?</p>
+      <div class="modal-buttons">
+        <button class="modal-button confirm-btn" onclick="performLogout()">Yes</button>
+        <button class="modal-button cancel-btn" onclick="hideLogoutModal()">No</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     const API_URL = 'https://script.google.com/macros/s/AKfycbyHKJ6-qlH4F3dLdUNuu2mcyiQHhv7kTd7cfWnqustB9nD3aquVk0xkmmp4t7Uj620/exec';
     const UPDATE_URL = 'update.html';
@@ -416,7 +464,8 @@
       document.getElementById('monthFilter').value = formattedMonth;
       fetchProposals();
       updateDateTime();
-      setInterval(updateDateTime, 1000); // Update every second
+      setInterval(updateDateTime, 1000);
+      setActiveSidebarItem();
     };
 
     function updateDateTime() {
@@ -434,9 +483,39 @@
 
     function toggleSidebar() {
       const sidebar = document.getElementById('sidebar');
-      const body = document.body;
-      sidebar.classList.toggle('hidden');
-      body.classList.toggle('sidebar-hidden');
+      const mainContent = document.querySelector('.main-content');
+      sidebar.classList.toggle('active');
+      mainContent.classList.toggle('sidebar-active');
+    }
+
+    function setActiveSidebarItem() {
+      const sidebarItems = document.querySelectorAll('.sidebar ul li a');
+      const currentPage = window.location.pathname.split('/').pop() || 'dashboard.html';
+      
+      sidebarItems.forEach(item => {
+        const page = item.getAttribute('data-page');
+        if (page === currentPage || (page === 'sheets' && item.href.includes('docs.google.com'))) {
+          item.classList.add('active');
+        }
+        item.addEventListener('click', function(e) {
+          if (this.classList.contains('logout-btn')) return; // Skip logout link
+          sidebarItems.forEach(i => i.classList.remove('active'));
+          this.classList.add('active');
+        });
+      });
+    }
+
+    function showLogoutModal() {
+      document.getElementById('logoutModal').style.display = 'block';
+    }
+
+    function hideLogoutModal() {
+      document.getElementById('logoutModal').style.display = 'none';
+    }
+
+    function performLogout() {
+      localStorage.removeItem('authToken');
+      window.location.replace(LOGIN_URL);
     }
 
     function checkAuth() {
@@ -541,11 +620,6 @@
       }
 
       select.value = '';
-    }
-
-    function logout() {
-      localStorage.removeItem('authToken');
-      window.location.replace(LOGIN_URL);
     }
   </script>
 </body>
