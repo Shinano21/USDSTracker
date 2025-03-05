@@ -10,6 +10,7 @@
     :root {
       --primary-color: #2c3e50;
       --secondary-color: #3498db;
+      --logout-highlight: #c0392b;
       --sidebar-width: 250px;
       --header-height: 60px;
     }
@@ -110,6 +111,12 @@
 
     .sidebar ul li a.active {
       background-color: var(--secondary-color);
+      padding-left: 25px;
+      font-weight: 600;
+    }
+
+    .sidebar ul li a.logout-btn.active {
+      background-color: var(--logout-highlight);
       padding-left: 25px;
       font-weight: 600;
     }
@@ -490,12 +497,13 @@
     }
 
     function setActiveSidebarItem() {
-      const sidebarItems = document.querySelectorAll('.sidebar ul li a:not(.logout-btn)');
+      const sidebarItems = document.querySelectorAll('.sidebar ul li a');
       const currentPage = window.location.pathname.split('/').pop() || 'dashboard.html';
       
       sidebarItems.forEach(item => {
         const page = item.getAttribute('data-page');
-        if (page === currentPage || (page === 'sheets' && item.href.includes('docs.google.com'))) {
+        // Exclude "sheets" from auto-highlighting
+        if (page !== 'sheets' && (page === currentPage)) {
           item.classList.add('active');
         }
         item.addEventListener('click', function(e) {
