@@ -7,6 +7,14 @@
     <link rel="icon" type="image/png" href="images/USDS.png">
     <title>Proposal Submission Form</title>
     <style>
+        :root {
+            --primary-color: #2c3e50; /* Navbar and Sidebar */
+            --secondary-color: #c0392b; /* Go Back button (matches Logout) */
+            --item-highlight: #2980b9; /* Submit button */
+            --sidebar-width: 250px;
+            --header-height: 60px;
+        }
+
         * {
             box-sizing: border-box;
         }
@@ -15,11 +23,119 @@
             font-family: 'Arial', sans-serif;
             background-color: #f4f4f4;
             margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
+            padding: 0;
             min-height: 100vh;
+            display: flex;
+        }
+
+        .navbar {
+            background-color: var(--primary-color);
+            color: white;
+            height: var(--header-height);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+        }
+
+        .toggle-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0 10px;
+            margin-right: 10px;
+        }
+
+        .navbar h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: white;
+        }
+
+        .datetime {
+            font-size: 1rem;
+            padding: 8px 15px;
+            background-color: rgba(255,255,255,0.1);
+            border-radius: 4px;
+        }
+
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--primary-color);
+            color: white;
+            position: fixed;
+            height: calc(100% - var(--header-height));
+            top: var(--header-height);
+            left: 0;
+            padding-top: 20px;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            z-index: 999;
+        }
+
+        .sidebar.active {
+            transform: translateX(0);
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar ul li a {
+            color: white;
+            text-decoration: none;
+            padding: 15px 20px;
+            display: block;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar ul li a:not(.logout-btn):hover {
+            background-color: var(--item-highlight);
+            padding-left: 25px;
+        }
+
+        .sidebar ul li a:not(.logout-btn).active {
+            background-color: var(--item-highlight);
+            padding-left: 25px;
+            font-weight: 600;
+        }
+
+        .sidebar ul li a.logout-btn:hover {
+            background-color: var(--secondary-color);
+            padding-left: 25px;
+        }
+
+        .sidebar ul li a.logout-btn.active {
+            background-color: var(--secondary-color);
+            padding-left: 25px;
+            font-weight: 600;
+        }
+
+        .main-content {
+            margin-left: 0;
+            margin-top: var(--header-height);
+            padding: 20px;
+            width: 100%;
+            transition: margin-left 0.3s ease;
+        }
+
+        .main-content.sidebar-active {
+            margin-left: var(--sidebar-width);
         }
 
         .container {
@@ -47,7 +163,7 @@
             color: #555;
             margin-bottom: 15px;
             padding-bottom: 5px;
-            border-bottom: 2px solid #28a745;
+            border-bottom: 2px solid var(--item-highlight);
             display: inline-block;
         }
 
@@ -82,7 +198,7 @@
         }
 
         input:focus, select:focus, textarea:focus {
-            border-color: #28a745;
+            border-color: var(--item-highlight);
             outline: none;
         }
 
@@ -92,7 +208,7 @@
         }
 
         .error {
-            color: #dc3545;
+            color: var(--secondary-color);
             font-size: 0.75rem;
             margin-top: 5px;
         }
@@ -115,68 +231,73 @@
         }
 
         .submit-btn {
-            background-color: #28a745;
+            background-color: var(--item-highlight);
             color: white;
         }
 
         .submit-btn:hover {
-            background-color: #218838;
+            background-color: #1f6692;
         }
 
         .back-btn {
-            background-color: #dc3545;
+            background-color: var(--secondary-color);
             color: white;
         }
 
         .back-btn:hover {
-            background-color: #c82333;
+            background-color: #a93226;
         }
 
         @media (max-width: 480px) {
-            body {
-                padding: 10px;
+            .sidebar {
+                width: 100%;
             }
-
+            .main-content {
+                margin-top: var(--header-height);
+            }
+            .main-content.sidebar-active {
+                margin-left: 0;
+            }
+            .navbar {
+                padding: 0 10px;
+            }
+            .navbar h1 {
+                font-size: 1.2rem;
+            }
+            .datetime {
+                font-size: 0.8rem;
+            }
             .container {
                 padding: 15px;
                 max-width: 100%;
             }
-
             h2 {
                 font-size: 1.25rem;
                 margin-bottom: 15px;
             }
-
             .form-section {
                 margin-bottom: 20px;
             }
-
             .section-title {
                 font-size: 1rem;
             }
-
             .form-row {
                 flex-direction: column;
                 gap: 15px;
             }
-
             .form-group {
                 min-width: 100%;
             }
-
             label, input, select, textarea {
                 font-size: 0.8125rem;
             }
-
             textarea {
                 min-height: 80px;
             }
-
             .button-row {
                 flex-direction: column;
                 gap: 10px;
             }
-
             button {
                 width: 100%;
                 padding: 10px;
@@ -185,24 +306,26 @@
         }
 
         @media (min-width: 481px) and (max-width: 768px) {
+            .sidebar {
+                width: 200px;
+            }
+            .main-content.sidebar-active {
+                margin-left: 200px;
+            }
             .container {
                 padding: 20px;
                 max-width: 700px;
             }
-
             h2 {
                 font-size: 1.5rem;
             }
-
             .form-row {
                 flex-direction: column;
                 gap: 15px;
             }
-
             .form-group {
                 min-width: 100%;
             }
-
             button {
                 padding: 10px 20px;
             }
@@ -212,15 +335,12 @@
             .container {
                 max-width: 1000px;
             }
-
             h2 {
                 font-size: 1.75rem;
             }
-
             .form-group {
                 min-width: 280px;
             }
-
             .form-row {
                 gap: 15px;
             }
@@ -231,23 +351,18 @@
                 max-width: 1400px;
                 padding: 35px;
             }
-
             h2 {
                 font-size: 2rem;
             }
-
             .section-title {
                 font-size: 1.25rem;
             }
-
             .form-group {
                 min-width: 300px;
             }
-
             label, input, select, textarea {
                 font-size: 1rem;
             }
-
             button {
                 padding: 14px 28px;
                 font-size: 1.1rem;
@@ -256,203 +371,222 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <h2>Proposal Submission</h2>
-        <form id="proposalForm">
-            <input type="hidden" name="type" value="proposal">
+    <div class="navbar">
+        <div class="navbar-brand">
+            <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
+            <h1>Proposal Submission</h1>
+        </div>
+        <div class="datetime" id="datetime"></div>
+    </div>
 
-            <div class="form-section">
-                <div class="section-title">Proposal Identification</div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="proposalId">Proposal ID (Leave blank to auto-generate):</label>
-                        <input type="text" id="proposalId" name="proposalId" placeholder="Enter Proposal ID (MM-YYYY-XXXX e.g., 01-2025-0003)">
-                        <div id="proposalIdError" class="error"></div>
+    <div class="sidebar" id="sidebar">
+        <ul>
+            <li><a href="dashboard.html" data-page="dashboard.html">Dashboard</a></li>
+            <li><a href="report_generation.html" data-page="report_generation.html">Reports</a></li>
+            <li><a href="https://docs.google.com/spreadsheets/d/1T5qHMQAFBd1c6ZJOF91v3moXKI5rhpvKL68u3mrjplc/edit?usp=sharing" target="_blank" data-page="sheets">Sheets</a></li>
+            <li><a href="#" class="logout-btn" onclick="showLogoutModal()">Logout</a></li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <div class="container">
+            <h2>Proposal Submission</h2>
+            <form id="proposalForm">
+                <input type="hidden" name="type" value="proposal">
+
+                <div class="form-section">
+                    <div class="section-title">Proposal Identification</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="proposalId">Proposal ID (Leave blank to auto-generate):</label>
+                            <input type="text" id="proposalId" name="proposalId" placeholder="Enter Proposal ID (MM-YYYY-XXXX e.g., 01-2025-0003)">
+                            <div id="proposalIdError" class="error"></div>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="form-section">
-                <div class="section-title">Activity Details</div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="particulars">Title of Activity:</label>
-                        <textarea id="particulars" name="particulars" placeholder="Enter title..." required></textarea>
+                <div class="form-section">
+                    <div class="section-title">Activity Details</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="particulars">Title of Activity:</label>
+                            <textarea id="particulars" name="particulars" placeholder="Enter title..." required></textarea>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="form-section">
-                <div class="section-title">Implementing Unit</div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="college">College:</label>
-                        <select id="college" name="college" onchange="updateDepartments()">
-                            <option value="">Select College</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="department">Department:</label>
-                        <select id="department" name="department">
-                            <option value="">Select Department</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="others">If others, please specify:</label>
-                        <input type="text" id="others" name="others" placeholder="Specify if others">
+                <div class="form-section">
+                    <div class="section-title">Implementing Unit</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="college">College:</label>
+                            <select id="college" name="college" onchange="updateDepartments()">
+                                <option value="">Select College</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="department">Department:</label>
+                            <select id="department" name="department">
+                                <option value="">Select Department</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="others">If others, please specify:</label>
+                            <input type="text" id="others" name="others" placeholder="Specify if others">
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="form-section">
-                <div class="section-title">Basic Information of the Activity</div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="objectives">Objectives:</label>
-                        <textarea id="objectives" name="objectives" placeholder="Enter objectives..." required></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="nature">Nature/Classification:</label>
-                        <select id="nature" name="nature" required>
-                            <option value="" disabled selected>Select Nature/Classification</option>
-                            <option value="Off Campus">Off Campus</option>
-                            <option value="In Campus">In Campus</option>
-                            <option value="OJT">OJT</option>
-                            <option value="USC">USC</option>
-                            <option value="UNIBE">UNIBE</option>
-                            <option value="UBO">UBO</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="locale">Locale:</label>
-                        <input type="text" id="locale" name="locale" placeholder="Enter locale" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="durationOfActivity">Duration of Activity:</label>
-                        <input type="text" id="durationOfActivity" name="durationOfActivity" placeholder="Enter duration" required>
+                <div class="form-section">
+                    <div class="section-title">Basic Information of the Activity</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="objectives">Objectives:</label>
+                            <textarea id="objectives" name="objectives" placeholder="Enter objectives..." required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="nature">Nature/Classification:</label>
+                            <select id="nature" name="nature" required>
+                                <option value="" disabled selected>Select Nature/Classification</option>
+                                <option value="Off Campus">Off Campus</option>
+                                <option value="In Campus">In Campus</option>
+                                <option value="OJT">OJT</option>
+                                <option value="USC">USC</option>
+                                <option value="UNIBE">UNIBE</option>
+                                <option value="UBO">UBO</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="locale">Locale:</label>
+                            <input type="text" id="locale" name="locale" placeholder="Enter locale" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="durationOfActivity">Duration of Activity:</label>
+                            <input type="text" id="durationOfActivity" name="durationOfActivity" placeholder="Enter duration" required>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="form-section">
-                <div class="section-title">Funding Requirement</div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="funding">Funding Source:</label>
-                        <input type="text" id="funding" name="funding" placeholder="Enter funding source" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="amount">Total Amount:</label>
-                        <input type="number" id="amount" name="amount" step="0.01" placeholder="Enter amount" required>
-                        <div id="amountError" class="error"></div>
+                <div class="form-section">
+                    <div class="section-title">Funding Requirement</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="funding">Funding Source:</label>
+                            <input type="text" id="funding" name="funding" placeholder="Enter funding source" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="amount">Total Amount:</label>
+                            <input type="number" id="amount" name="amount" step="0.01" placeholder="Enter amount" required>
+                            <div id="amountError" class="error"></div>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="form-section">
-                <div class="section-title">Contact and Documents</div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="contact">Number/Email of Contact Person:</label>
-                        <input type="text" id="contact" name="contact" placeholder="Enter contact info" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="documents">Scanned Copy of Documents:</label>
-                        <input type="text" id="documents" name="documents" placeholder="URL or file reference">
+                <div class="form-section">
+                    <div class="section-title">Contact and Documents</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="contact">Number/Email of Contact Person:</label>
+                            <input type="text" id="contact" name="contact" placeholder="Enter contact info" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="documents">Scanned Copy of Documents:</label>
+                            <input type="text" id="documents" name="documents" placeholder="URL or file reference">
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="form-section">
-                <div class="section-title">1st Evaluation & Review of Compliance</div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="csac">Action of CSAC:</label>
-                        <input type="text" id="csac" name="csac" placeholder="Enter CSAC action">
-                    </div>
-                    <div class="form-group">
-                        <label for="remarks">Remarks:</label>
-                        <textarea id="remarks" name="remarks" placeholder="Enter remarks"></textarea>
+                <div class="form-section">
+                    <div class="section-title">1st Evaluation & Review of Compliance</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="csac">Action of CSAC:</label>
+                            <input type="text" id="csac" name="csac" placeholder="Enter CSAC action">
+                        </div>
+                        <div class="form-group">
+                            <label for="remarks">Remarks:</label>
+                            <textarea id="remarks" name="remarks" placeholder="Enter remarks"></textarea>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="form-section">
-                <div class="section-title">Received by USDS</div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="docSeq">DOC. SEQ. No.:</label>
-                        <input type="text" id="docSeq" name="docSeq" placeholder="Enter sequence number" required>
-                        <div id="docSeqError" class="error"></div>
-                    </div>
-                    <div class="form-group">
-                        <label for="copies">No of Copies:</label>
-                        <input type="number" id="copies" name="copies" min="1" placeholder="Enter number of copies" required>
-                        <div id="copiesError" class="error"></div>
-                    </div>
-                    <div class="form-group">
-                        <label for="receiver">Receiver:</label>
-                        <select id="receiver" name="receiver">
-                            <option value="" disabled selected>Select receiver</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="dateTime">Date & Time Received (Manila Time):</label>
-                        <input type="datetime-local" id="dateTime" name="dateTime" required>
-                        <div id="dateTimeError" class="error"></div>
+                <div class="form-section">
+                    <div class="section-title">Received by USDS</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="docSeq">DOC. SEQ. No.:</label>
+                            <input type="text" id="docSeq" name="docSeq" placeholder="Enter sequence number" required>
+                            <div id="docSeqError" class="error"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="copies">No of Copies:</label>
+                            <input type="number" id="copies" name="copies" min="1" placeholder="Enter number of copies" required>
+                            <div id="copiesError" class="error"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="receiver">Receiver:</label>
+                            <select id="receiver" name="receiver">
+                                <option value="" disabled selected>Select receiver</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="dateTime">Date & Time Received (Manila Time):</label>
+                            <input type="datetime-local" id="dateTime" name="dateTime" required>
+                            <div id="dateTimeError" class="error"></div>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="form-section">
-                <div class="section-title">2nd Evaluation & Review of Compliance</div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="usds">Action of USDS:</label>
-                        <select id="usds" name="usds">
-                            <option value="" disabled selected>Select USDS Action</option>
-                            <option value="Favorably Forwarded to">Favorably Forwarded to</option>
-                            <option value="Returned for Compliance">Returned for Compliance</option>
-                            <option value="Pending Review">Pending Review</option>
-                            <option value="Approved">Approved</option>
-                            <option value="Disapproved">Disapproved</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="notations">Notations:</label>
-                        <textarea id="notations" name="notations" placeholder="Enter notations"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="status">Status:</label>
-                        <select id="status" name="status">
-                            <option value="">Select Status</option>
-                            <option value="Pending">Pending</option>
-                            <option value="Returned">Returned</option>
-                            <option value="Forwarded">Forwarded</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="statusDate">Status Date & Time (Manila Time):</label>
-                        <input type="datetime-local" id="statusDate" name="statusDate">
-                        <div id="statusDateError" class="error"></div>
-                    </div>
-                    <div class="form-group">
-                        <label for="returnedDate">Returned Date & Time (if applicable, Manila Time):</label>
-                        <input type="datetime-local" id="returnedDate" name="returnedDate">
-                        <div id="returnedDateError" class="error"></div>
-                    </div>
-                    <div class="form-group">
-                        <label for="officeDestination">Office Destination:</label>
-                        <input type="text" id="officeDestination" name="officeDestination" placeholder="Enter office destination">
+                <div class="form-section">
+                    <div class="section-title">2nd Evaluation & Review of Compliance</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="usds">Action of USDS:</label>
+                            <select id="usds" name="usds">
+                                <option value="" disabled selected>Select USDS Action</option>
+                                <option value="Favorably Forwarded to">Favorably Forwarded to</option>
+                                <option value="Returned for Compliance">Returned for Compliance</option>
+                                <option value="Pending Review">Pending Review</option>
+                                <option value="Approved">Approved</option>
+                                <option value="Disapproved">Disapproved</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="notations">Notations:</label>
+                            <textarea id="notations" name="notations" placeholder="Enter notations"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="status">Status:</label>
+                            <select id="status" name="status">
+                                <option value="">Select Status</option>
+                                <option value="Pending">Pending</option>
+                                <option value="Returned">Returned</option>
+                                <option value="Forwarded">Forwarded</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="statusDate">Status Date & Time (Manila Time):</label>
+                            <input type="datetime-local" id="statusDate" name="statusDate">
+                            <div id="statusDateError" class="error"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="returnedDate">Returned Date & Time (if applicable, Manila Time):</label>
+                            <input type="datetime-local" id="returnedDate" name="returnedDate">
+                            <div id="returnedDateError" class="error"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="officeDestination">Office Destination:</label>
+                            <input type="text" id="officeDestination" name="officeDestination" placeholder="Enter office destination">
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="button-row">
-                <button type="submit" class="submit-btn">Submit</button>
-                <button type="button" class="back-btn" onclick="goBack()">Go Back</button>
-            </div>
-        </form>
+                <div class="button-row">
+                    <button type="submit" class="submit-btn">Submit</button>
+                    <button type="button" class="back-btn" onclick="goBack()">Go Back</button>
+                </div>
+            </form>
+        </div>
     </div>
 
     <script>
@@ -463,6 +597,56 @@
         if (localStorage.getItem('authToken') !== 'loggedIn') {
             window.location.href = INDEX_URL;
         }
+
+        // Navbar and Sidebar functionality
+        function updateDateTime() {
+            const now = new Date();
+            const options = { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric', 
+                hour: '2-digit', 
+                minute: '2-digit', 
+                second: '2-digit' 
+            };
+            document.getElementById('datetime').textContent = now.toLocaleString('en-US', options);
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.querySelector('.main-content');
+            sidebar.classList.toggle('active');
+            mainContent.classList.toggle('sidebar-active');
+        }
+
+        function setActiveSidebarItem() {
+            const sidebarItems = document.querySelectorAll('.sidebar ul li a');
+            const currentPage = window.location.pathname.split('/').pop() || 'add.html';
+            
+            sidebarItems.forEach(item => {
+                const page = item.getAttribute('data-page');
+                if (page !== 'sheets' && (page === currentPage)) {
+                    item.classList.add('active');
+                }
+                item.addEventListener('click', function(e) {
+                    sidebarItems.forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+        }
+
+        function showLogoutModal() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('authToken');
+                window.location.href = INDEX_URL;
+            }
+        }
+
+        window.onload = function() {
+            updateDateTime();
+            setInterval(updateDateTime, 1000);
+            setActiveSidebarItem();
+        };
 
         const collegeData = {
             "BU COLLEGE OF EDUCATION (BUCE)": [

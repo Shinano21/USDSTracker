@@ -8,10 +8,13 @@
     <title>Reports Generation Form</title>
     <style>
         :root {
-            --primary-color: #4CAF50;
-            --secondary-color: #f5f5f5;
+            --primary-color: #2c3e50; /* Navbar and Sidebar */
+            --secondary-color: #c0392b; /* Logout and Go Back button */
+            --item-highlight: #2980b9; /* Buttons like Load Data, Submit Data */
+            --sidebar-width: 250px;
+            --header-height: 60px;
             --text-color: #333;
-            --error-color: #d32f2f;
+            --error-color: #c0392b; /* Matches secondary color */
             --border-radius: 8px;
         }
 
@@ -25,9 +28,121 @@
             font-family: 'Segoe UI', Arial, sans-serif;
             line-height: 1.6;
             color: var(--text-color);
-            padding: 20px;
+            margin: 0;
+            padding: 0;
             background-color: #fafafa;
             min-height: 100vh;
+            display: flex;
+        }
+
+        .navbar {
+            background-color: var(--primary-color);
+            color: white;
+            height: var(--header-height);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+        }
+
+        .toggle-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0 10px;
+            margin-right: 10px;
+        }
+
+        .navbar h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: white;
+        }
+
+        .datetime {
+            font-size: 1rem;
+            padding: 8px 15px;
+            background-color: rgba(255,255,255,0.1);
+            border-radius: 4px;
+        }
+
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--primary-color);
+            color: white;
+            position: fixed;
+            height: calc(100% - var(--header-height));
+            top: var(--header-height);
+            left: 0;
+            padding-top: 20px;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            z-index: 999;
+        }
+
+        .sidebar.active {
+            transform: translateX(0);
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar ul li a {
+            color: white;
+            text-decoration: none;
+            padding: 15px 20px;
+            display: block;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar ul li a:not(.logout-btn):hover {
+            background-color: var(--item-highlight);
+            padding-left: 25px;
+        }
+
+        .sidebar ul li a:not(.logout-btn).active {
+            background-color: var(--item-highlight);
+            padding-left: 25px;
+            font-weight: 600;
+        }
+
+        .sidebar ul li a.logout-btn:hover {
+            background-color: var(--secondary-color);
+            padding-left: 25px;
+        }
+
+        .sidebar ul li a.logout-btn.active {
+            background-color: var(--secondary-color);
+            padding-left: 25px;
+            font-weight: 600;
+        }
+
+        .main-content {
+            margin-left: 0;
+            margin-top: var(--header-height);
+            padding: 20px;
+            width: 100%;
+            transition: margin-left 0.3s ease;
+        }
+
+        .main-content.sidebar-active {
+            margin-left: var(--sidebar-width);
         }
 
         .container {
@@ -41,7 +156,7 @@
         }
 
         .header {
-            background: linear-gradient(135deg, var(--primary-color), #45a049);
+            background: var(--primary-color);
             color: white;
             padding: 1.5rem;
             text-align: center;
@@ -85,7 +200,7 @@
 
         .filter-group select:focus,
         .report-name input:focus {
-            border-color: var(--primary-color);
+            border-color: var(--item-highlight);
             outline: none;
         }
 
@@ -120,8 +235,16 @@
             white-space: nowrap;
         }
 
+        th.accomplished-on-time, td.accomplished-on-time {
+            min-width: 60px; /* Reduced width for better print fit */
+        }
+
+        th.percentage, td.percentage {
+            min-width: 70px; /* Ensure percentage column fits */
+        }
+
         th {
-            background-color: var(--secondary-color);
+            background-color: #f5f5f5;
             font-weight: 600;
             position: sticky;
             top: 0;
@@ -163,7 +286,7 @@
 
         button {
             padding: 12px 24px;
-            background-color: var(--primary-color);
+            background-color: var(--item-highlight);
             color: white;
             border: none;
             border-radius: var(--border-radius);
@@ -174,11 +297,19 @@
         }
 
         button:hover {
-            background-color: #45a049;
+            background-color: #1f6692;
         }
 
         button:active {
             transform: scale(0.98);
+        }
+
+        .go-back-btn {
+            background-color: var(--secondary-color);
+        }
+
+        .go-back-btn:hover {
+            background-color: #a93226;
         }
 
         .error-message {
@@ -197,51 +328,62 @@
             pointer-events: none;
         }
 
-        /* Mobile (up to 480px) */
         @media (max-width: 480px) {
-            body {
-                padding: 10px;
+            .sidebar {
+                width: 100%;
             }
-
+            .main-content {
+                margin-top: var(--header-height);
+            }
+            .main-content.sidebar-active {
+                margin-left: 0;
+            }
+            .navbar {
+                padding: 0 10px;
+            }
+            .navbar h1 {
+                font-size: 1.2rem;
+            }
+            .datetime {
+                font-size: 0.8rem;
+            }
             .container {
                 padding: 0;
             }
-
             .header {
                 font-size: 1.25rem;
                 padding: 1rem;
             }
-
             .form-container {
                 padding: 15px;
             }
-
             .filters {
                 flex-direction: column;
                 gap: 15px;
             }
-
             .filter-group, .report-name {
                 min-width: 100%;
             }
-
             th, td {
                 padding: 8px;
                 font-size: 0.75rem;
-                min-width: 60px;
+                min-width: 50px;
             }
-
+            th.accomplished-on-time, td.accomplished-on-time {
+                min-width: 40px;
+            }
+            th.percentage, td.percentage {
+                min-width: 50px;
+            }
             input[type="number"],
             input[type="text"] {
                 padding: 4px;
                 font-size: 0.75rem;
             }
-
             .button-group {
                 flex-direction: column;
                 gap: 8px;
             }
-
             button {
                 width: 100%;
                 padding: 10px;
@@ -249,116 +391,117 @@
             }
         }
 
-        /* Tablet (481px to 768px) */
         @media (min-width: 481px) and (max-width: 768px) {
+            .sidebar {
+                width: 200px;
+            }
+            .main-content.sidebar-active {
+                margin-left: 200px;
+            }
             .container {
                 max-width: 700px;
             }
-
             .header {
                 font-size: 1.5rem;
             }
-
             .filters {
                 flex-direction: column;
                 gap: 15px;
             }
-
             th, td {
                 padding: 10px;
                 font-size: 0.875rem;
             }
-
+            th.accomplished-on-time, td.accomplished-on-time {
+                min-width: 50px;
+            }
+            th.percentage, td.percentage {
+                min-width: 60px;
+            }
             .button-group {
                 flex-direction: column;
                 gap: 10px;
             }
-
             button {
                 padding: 10px 20px;
             }
         }
 
-        /* Laptop (769px to 1200px) */
         @media (min-width: 769px) and (max-width: 1200px) {
             .container {
                 max-width: 1000px;
             }
-
             .header {
                 font-size: 1.75rem;
             }
-
             .filters {
                 gap: 15px;
             }
-
             th, td {
                 padding: 12px;
             }
         }
 
-        /* Desktop (1201px and up) */
         @media (min-width: 1201px) {
             .container {
                 max-width: 1400px;
             }
-
             .header {
                 font-size: 2rem;
                 padding: 2rem;
             }
-
             .form-container {
                 padding: 30px;
             }
-
             .filters {
                 gap: 25px;
             }
-
             th, td {
                 padding: 14px;
                 font-size: 1rem;
             }
-
             input[type="number"],
             input[type="text"] {
                 padding: 8px;
                 font-size: 0.9rem;
             }
-
             button {
                 padding: 14px 28px;
                 font-size: 1.1rem;
             }
         }
 
-        /* Print styles remain unchanged */
         @media print {
             @page {
                 size: landscape;
+                margin: 0.5in;
             }
             body {
+                padding: 0;
+                font-size: 10pt; /* Reduced font size for print */
+            }
+            .navbar, .sidebar {
+                display: none;
+            }
+            .main-content {
+                margin: 0;
                 padding: 0;
             }
             .container {
                 box-shadow: none;
                 border: none;
-                max-width: none;
+                max-width: 100%;
                 width: 100%;
             }
             .header {
                 background: none;
                 color: black;
                 border-bottom: 2px solid #000;
+                padding: 10px;
+                font-size: 14pt;
             }
-            th {
-                background-color: white !important;
-                border: 1px solid #000;
-            }
-            td {
-                border: 1px solid #000;
+            .form-container {
+                padding: 10px;
             }
             .button-group, .filters, .report-name label, .error-message {
                 display: none;
@@ -366,70 +509,111 @@
             .report-name input {
                 border: none;
                 padding: 0;
-                font-size: 1.2rem;
+                font-size: 12pt;
                 font-weight: bold;
                 background: none;
                 width: auto;
                 display: inline;
             }
+            .table-wrapper {
+                overflow-x: visible;
+            }
+            table {
+                width: 100%;
+                font-size: 8pt; /* Smaller font for print */
+            }
+            th, td {
+                padding: 6px; /* Reduced padding for print */
+                border: 1px solid #000;
+                min-width: 0; /* Allow columns to shrink */
+                white-space: normal; /* Allow text wrapping */
+                word-wrap: break-word;
+            }
+            th {
+                background-color: white !important;
+            }
+            th.accomplished-on-time, td.accomplished-on-time {
+                width: 50px; /* Fixed width for print */
+            }
+            th.percentage, td.percentage {
+                width: 60px; /* Fixed width for print */
+            }
             input {
                 border: none;
                 padding: 0;
                 background: none;
-            }
-            .table-wrapper {
-                overflow-x: visible;
+                font-size: 8pt;
+                width: 100%;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">REPORTS GENERATION FORM</div>
-        <div class="form-container">
-            <div class="filters">
-                <div class="filter-group">
-                    <label for="yearFilter">Year:</label>
-                    <select id="yearFilter" onchange="filterDataByYear()">
-                        <option value="">All Years</option>
-                    </select>
+    <div class="navbar">
+        <div class="navbar-brand">
+            <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
+            <h1>Reports Generation</h1>
+        </div>
+        <div class="datetime" id="datetime"></div>
+    </div>
+
+    <div class="sidebar" id="sidebar">
+        <ul>
+            <li><a href="dashboard.html" data-page="dashboard.html">Dashboard</a></li>
+            <li><a href="report_generation.html" data-page="report_generation.html">Reports</a></li>
+            <li><a href="https://docs.google.com/spreadsheets/d/1T5qHMQAFBd1c6ZJOF91v3moXKI5rhpvKL68u3mrjplc/edit?usp=sharing" target="_blank" data-page="sheets">Sheets</a></li>
+            <li><a href="#" class="logout-btn" onclick="showLogoutModal()">Logout</a></li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <div class="container">
+            <div class="header">REPORTS GENERATION FORM</div>
+            <div class="form-container">
+                <div class="filters">
+                    <div class="filter-group">
+                        <label for="yearFilter">Year:</label>
+                        <select id="yearFilter" onchange="filterDataByYear()">
+                            <option value="">All Years</option>
+                        </select>
+                    </div>
+                    <div class="report-name">
+                        <label for="reportName">Report Name:</label>
+                        <input type="text" id="reportName" placeholder="Enter Report Name Here">
+                    </div>
                 </div>
-                <div class="report-name">
-                    <label for="reportName">Report Name:</label>
-                    <input type="text" id="reportName" placeholder="Enter Report Name Here">
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th rowspan="2">MONTH</th>
+                                <th colspan="4">RECEIVED BY</th>
+                                <th colspan="5">TOTAL PROPOSALS RECEIVED</th>
+                                <th rowspan="2" class="accomplished-on-time">ACCOMPLISHED ON TIME</th>
+                                <th rowspan="2" class="percentage">PERCENTAGE</th>
+                            </tr>
+                            <tr>
+                                <th>Ma’am Ann</th>
+                                <th>Sir Mike</th>
+                                <th>Sir Christian</th>
+                                <th>Sir Ronald</th>
+                                <th>Off Campus</th>
+                                <th>In Campus</th>
+                                <th>USC</th>
+                                <th>UNIBE</th>
+                                <th>UBO</th>
+                            </tr>
+                        </thead>
+                        <tbody id="monthData"></tbody>
+                    </table>
                 </div>
-            </div>
-            <div class="table-wrapper">
-                <table>
-                    <thead>
-                        <tr>
-                            <th rowspan="2">MONTH</th>
-                            <th colspan="4">RECEIVED BY</th>
-                            <th colspan="5">TOTAL PROPOSALS RECEIVED</th>
-                            <th rowspan="2">ACCOMPLISHED ON TIME</th>
-                            <th rowspan="2">PERCENTAGE</th>
-                        </tr>
-                        <tr>
-                            <th>Ma’am Ann</th>
-                            <th>Sir Mike</th>
-                            <th>Sir Christian</th>
-                            <th>Sir Ronald</th>
-                            <th>Off Campus</th>
-                            <th>In Campus</th>
-                            <th>USC</th>
-                            <th>UNIBE</th>
-                            <th>UBO</th>
-                        </tr>
-                    </thead>
-                    <tbody id="monthData"></tbody>
-                </table>
-            </div>
-            <div id="errorMessage" class="error-message">Failed to load data. Please try again or enter manually.</div>
-            <div class="button-group">
-                <button onclick="fetchAndDisplayData()">Load Data</button>
-                <button onclick="submitForm()">Submit Data</button>
-                <button onclick="printReport()">Print</button>
-                <button onclick="goBack()">Go Back</button>
+                <div id="errorMessage" class="error-message">Failed to load data. Please try again or enter manually.</div>
+                <div class="button-group">
+                    <button onclick="fetchAndDisplayData()">Load Data</button>
+                    <button onclick="submitForm()">Submit Data</button>
+                    <button onclick="printReport()">Print</button>
+                    <button class="go-back-btn" onclick="goBack()">Go Back</button>
+                </div>
             </div>
         </div>
     </div>
@@ -448,6 +632,56 @@
         if (localStorage.getItem('authToken') !== 'loggedIn') {
             window.location.href = INDEX_URL;
         }
+
+        // Navbar and Sidebar functionality
+        function updateDateTime() {
+            const now = new Date();
+            const options = { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric', 
+                hour: '2-digit', 
+                minute: '2-digit', 
+                second: '2-digit' 
+            };
+            document.getElementById('datetime').textContent = now.toLocaleString('en-US', options);
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.querySelector('.main-content');
+            sidebar.classList.toggle('active');
+            mainContent.classList.toggle('sidebar-active');
+        }
+
+        function setActiveSidebarItem() {
+            const sidebarItems = document.querySelectorAll('.sidebar ul li a');
+            const currentPage = window.location.pathname.split('/').pop() || 'report_generation.html';
+            
+            sidebarItems.forEach(item => {
+                const page = item.getAttribute('data-page');
+                if (page !== 'sheets' && (page === currentPage)) {
+                    item.classList.add('active');
+                }
+                item.addEventListener('click', function(e) {
+                    sidebarItems.forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+        }
+
+        function showLogoutModal() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('authToken');
+                window.location.href = INDEX_URL;
+            }
+        }
+
+        window.onload = function() {
+            updateDateTime();
+            setInterval(updateDateTime, 1000);
+            setActiveSidebarItem();
+        };
 
         function toggleLoading(state) {
             document.body.classList.toggle('loading', state);
@@ -545,8 +779,8 @@
                     ${proposalTypes.map(type => 
                         `<td><input type="number" name="${monthShort}_${type}" value="${monthData[monthShort][type]}" min="0" readonly></td>`
                     ).join('')}
-                    <td><input type="text" name="${monthShort}_acted_upon" value="${total > 0 ? `${yes}/${total}` : '0/0'}" readonly></td>
-                    <td><input type="text" name="${monthShort}_percentage" value="${percentage}" readonly></td>
+                    <td class="accomplished-on-time"><input type="text" name="${monthShort}_acted_upon" value="${total > 0 ? `${yes}/${total}` : '0/0'}" readonly></td>
+                    <td class="percentage"><input type="text" name="${monthShort}_percentage" value="${percentage}" readonly></td>
                 `;
                 tbody.appendChild(row);
             });
@@ -559,8 +793,8 @@
                 <td><strong>TOTAL</strong></td>
                 ${receivedByKeys.map(cat => `<td><input type="number" name="total_${cat}" value="0" readonly></td>`).join('')}
                 ${proposalTypes.map(type => `<td><input type="number" name="total_${type}" value="0" readonly></td>`).join('')}
-                <td><input type="text" name="total_acted_upon" value="${totalProposals > 0 ? `${totalYes}/${totalProposals}` : '0/0'}" readonly></td>
-                <td><input type="text" name="total_percentage" value="${totalPercentage}" readonly></td>
+                <td class="accomplished-on-time"><input type="text" name="total_acted_upon" value="${totalProposals > 0 ? `${totalYes}/${totalProposals}` : '0/0'}" readonly></td>
+                <td class="percentage"><input type="text" name="total_percentage" value="${totalPercentage}" readonly></td>
             `;
             tbody.appendChild(totalRow);
 
