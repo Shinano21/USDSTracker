@@ -275,36 +275,41 @@
 
         @media (max-width: 480px) {
             .navbar {
-                height: var(--header-height);
-                padding: 0 10px;
-                flex-wrap: nowrap;
-                justify-content: space-between;
+                height: var(--header-height); /* Keep fixed height */
+                padding: 5px 10px; /* Match dashboard padding */
+                flex-wrap: nowrap; /* Keep items in one line */
+                justify-content: space-between; /* Align items properly */
             }
 
             .navbar-brand {
                 display: flex;
                 align-items: center;
                 justify-content: flex-start; /* Align to the left */
-                position: relative;
+                width: auto; /* Adjust width to fit content */
             }
 
             .toggle-btn {
                 padding: 0 5px;
                 font-size: 1.2rem;
-                margin-right: 5px; /* Reduce margin for tighter spacing */
+                margin-right: 10px; /* Match spacing from dashboard */
             }
 
             .navbar h1 {
                 font-size: 1rem;
                 text-align: left; /* Align to the left */
                 margin: 0;
+                flex-grow: 1; /* Allow the title to take available space */
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
             }
 
             .datetime {
-                font-size: 0.7rem;
+                font-size: 0.7rem; /* Match dashboard font size */
                 padding: 4px 8px;
-                max-width: 40%;
+                max-width: 50%; /* Match dashboard max-width */
                 text-align: right;
+                background-color: rgba(255,255,255,0.1); /* Match dashboard style */
             }
 
             .sidebar {

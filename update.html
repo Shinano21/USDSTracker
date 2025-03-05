@@ -41,13 +41,15 @@
             padding: 0 15px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             z-index: 1000;
+            flex-wrap: nowrap;
         }
 
         .navbar-brand {
             display: flex;
             align-items: center;
-            flex: 1;
             min-width: 0;
+            position: relative;
+            justify-content: flex-start; /* Align to the left */
         }
 
         .toggle-btn {
@@ -56,7 +58,8 @@
             color: white;
             font-size: 1.5rem;
             cursor: pointer;
-            padding: 0 10px;
+            padding: 0 8px;
+            margin-right: 8px;
         }
 
         .navbar h1 {
@@ -67,7 +70,7 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            flex-grow: 1;
+            text-align: left; /* Align to the left */
         }
 
         .datetime {
@@ -78,6 +81,8 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            max-width: 50%;
+            text-align: right;
         }
 
         .sidebar {
@@ -258,41 +263,41 @@
 
         @media (max-width: 480px) {
             .navbar {
-                flex-direction: row;
-                align-items: center;
-                justify-content: space-between;
-                padding: 10px 15px;
-                height: auto;
-                min-height: var(--header-height);
+                height: var(--header-height); /* Keep fixed height */
+                padding: 5px 10px; /* Match dashboard padding */
+                flex-wrap: nowrap; /* Keep items in one line */
+                justify-content: space-between; /* Align items properly */
             }
 
             .navbar-brand {
-                flex: 1;
+                display: flex;
                 align-items: center;
-                justify-content: flex-start;
-                margin-right: 10px;
+                justify-content: flex-start; /* Align to the left */
+                width: auto; /* Adjust width to fit content */
             }
 
             .toggle-btn {
-                font-size: 1.2rem;
                 padding: 0 5px;
-                order: 1;
+                font-size: 1.2rem;
+                margin-right: 10px; /* Match spacing from dashboard */
             }
 
             .navbar h1 {
-                font-size: 1.1rem;
-                flex-grow: 1;
-                text-align: left;
-                margin-left: 10px;
-                order: 2;
+                font-size: 1rem;
+                text-align: left; /* Align to the left */
+                margin: 0;
+                flex-grow: 1; /* Allow the title to take available space */
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
             }
 
             .datetime {
-                font-size: 0.7rem;
-                padding: 4px 6px;
-                margin-left: auto;
-                order: 3;
-                max-width: 120px;
+                font-size: 0.7rem; /* Match dashboard font size */
+                padding: 4px 8px;
+                max-width: 50%; /* Match dashboard max-width */
+                text-align: right;
+                background-color: rgba(255,255,255,0.1); /* Match dashboard style */
             }
 
             .sidebar {
@@ -343,14 +348,14 @@
             }
 
             .button-row {
-                flex-direction: column;
-                gap: 10px;
+                flex-wrap: wrap; /* Allow wrapping to create two columns */
+                gap: 8px; /* Adjust gap for mobile */
             }
 
             button {
-                width: 100%;
-                padding: 10px;
-                font-size: 0.875rem;
+                width: calc(50% - 4px); /* Two columns: 50% width minus half the gap */
+                padding: 10px; /* Adjust padding for mobile */
+                font-size: 0.875rem; /* Adjust font size for mobile */
             }
         }
 
@@ -669,8 +674,8 @@
             const now = new Date();
             const isMobile = window.innerWidth <= 480;
             const options = isMobile
-                ? { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }
-                : { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+                ? { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true }
+                : { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
             document.getElementById('datetime').textContent = now.toLocaleString('en-US', options);
         }
 
