@@ -48,11 +48,15 @@
             padding: 0 20px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             z-index: 1000;
+            flex-wrap: wrap; /* Allow wrapping if needed */
+            min-height: var(--header-height);
         }
 
         .navbar-brand {
             display: flex;
             align-items: center;
+            flex: 1; /* Allow it to take available space */
+            min-width: 0; /* Prevent overflow */
         }
 
         .toggle-btn {
@@ -77,6 +81,10 @@
             padding: 8px 15px;
             background-color: rgba(255,255,255,0.1);
             border-radius: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 50%;
         }
 
         .sidebar {
@@ -329,61 +337,98 @@
         }
 
         @media (max-width: 480px) {
+            .navbar {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 5px 10px;
+                height: auto;
+            }
+
+            .navbar-brand {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .toggle-btn {
+                padding: 0 5px;
+                font-size: 1.2rem;
+            }
+
+            .navbar h1 {
+                font-size: 1rem;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                flex-grow: 1;
+            }
+
+            .datetime {
+                font-size: 0.7rem;
+                padding: 4px 8px;
+                margin-top: 5px;
+                max-width: 100%;
+                text-align: right;
+            }
+
             .sidebar {
                 width: 100%;
             }
+
             .main-content {
                 margin-top: var(--header-height);
             }
+
             .main-content.sidebar-active {
                 margin-left: 0;
             }
-            .navbar {
-                padding: 0 10px;
-            }
-            .navbar h1 {
-                font-size: 1.2rem;
-            }
-            .datetime {
-                font-size: 0.8rem;
-            }
+
             .container {
                 padding: 0;
             }
+
             .header {
                 font-size: 1.25rem;
                 padding: 1rem;
             }
+
             .form-container {
                 padding: 15px;
             }
+
             .filters {
                 flex-direction: column;
                 gap: 15px;
             }
+
             .filter-group, .report-name {
                 min-width: 100%;
             }
+
             th, td {
                 padding: 8px;
                 font-size: 0.75rem;
                 min-width: 50px;
             }
+
             th.accomplished-on-time, td.accomplished-on-time {
                 min-width: 40px;
             }
+
             th.percentage, td.percentage {
                 min-width: 50px;
             }
+
             input[type="number"],
             input[type="text"] {
                 padding: 4px;
                 font-size: 0.75rem;
             }
+
             .button-group {
                 flex-direction: column;
                 gap: 8px;
             }
+
             button {
                 width: 100%;
                 padding: 10px;
@@ -392,36 +437,59 @@
         }
 
         @media (min-width: 481px) and (max-width: 768px) {
+            .navbar {
+                flex-wrap: nowrap;
+            }
+
+            .datetime {
+                font-size: 0.9rem;
+                padding: 6px 10px;
+                max-width: 40%;
+            }
+
+            .navbar h1 {
+                font-size: 1.3rem;
+            }
+
             .sidebar {
                 width: 200px;
             }
+
             .main-content.sidebar-active {
                 margin-left: 200px;
             }
+
             .container {
                 max-width: 700px;
             }
+
             .header {
                 font-size: 1.5rem;
             }
+
             .filters {
                 flex-direction: column;
                 gap: 15px;
             }
+
             th, td {
                 padding: 10px;
                 font-size: 0.875rem;
             }
+
             th.accomplished-on-time, td.accomplished-on-time {
                 min-width: 50px;
             }
+
             th.percentage, td.percentage {
                 min-width: 60px;
             }
+
             .button-group {
                 flex-direction: column;
                 gap: 10px;
             }
+
             button {
                 padding: 10px 20px;
             }
@@ -431,12 +499,15 @@
             .container {
                 max-width: 1000px;
             }
+
             .header {
                 font-size: 1.75rem;
             }
+
             .filters {
                 gap: 15px;
             }
+
             th, td {
                 padding: 12px;
             }
@@ -446,25 +517,31 @@
             .container {
                 max-width: 1400px;
             }
+
             .header {
                 font-size: 2rem;
                 padding: 2rem;
             }
+
             .form-container {
                 padding: 30px;
             }
+
             .filters {
                 gap: 25px;
             }
+
             th, td {
                 padding: 14px;
                 font-size: 1rem;
             }
+
             input[type="number"],
             input[type="text"] {
                 padding: 8px;
                 font-size: 0.9rem;
             }
+
             button {
                 padding: 14px 28px;
                 font-size: 1.1rem;
@@ -476,23 +553,28 @@
                 size: landscape;
                 margin: 0.5in;
             }
+
             body {
                 padding: 0;
-                font-size: 10pt; /* Reduced font size for print */
+                font-size: 10pt;
             }
+
             .navbar, .sidebar {
                 display: none;
             }
+
             .main-content {
                 margin: 0;
                 padding: 0;
             }
+
             .container {
                 box-shadow: none;
                 border: none;
                 max-width: 100%;
                 width: 100%;
             }
+
             .header {
                 background: none;
                 color: black;
@@ -500,12 +582,15 @@
                 padding: 10px;
                 font-size: 14pt;
             }
+
             .form-container {
                 padding: 10px;
             }
+
             .button-group, .filters, .report-name label, .error-message {
                 display: none;
             }
+
             .report-name input {
                 border: none;
                 padding: 0;
@@ -515,29 +600,36 @@
                 width: auto;
                 display: inline;
             }
+
             .table-wrapper {
                 overflow-x: visible;
             }
+
             table {
                 width: 100%;
-                font-size: 8pt; /* Smaller font for print */
+                font-size: 8pt;
             }
+
             th, td {
-                padding: 6px; /* Reduced padding for print */
+                padding: 6px;
                 border: 1px solid #000;
-                min-width: 0; /* Allow columns to shrink */
-                white-space: normal; /* Allow text wrapping */
+                min-width: 0;
+                white-space: normal;
                 word-wrap: break-word;
             }
+
             th {
                 background-color: white !important;
             }
+
             th.accomplished-on-time, td.accomplished-on-time {
-                width: 50px; /* Fixed width for print */
+                width: 50px;
             }
+
             th.percentage, td.percentage {
-                width: 60px; /* Fixed width for print */
+                width: 60px;
             }
+
             input {
                 border: none;
                 padding: 0;
@@ -636,14 +728,10 @@
         // Navbar and Sidebar functionality
         function updateDateTime() {
             const now = new Date();
-            const options = { 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric', 
-                hour: '2-digit', 
-                minute: '2-digit', 
-                second: '2-digit' 
-            };
+            const isMobile = window.innerWidth <= 480;
+            const options = isMobile
+                ? { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }
+                : { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
             document.getElementById('datetime').textContent = now.toLocaleString('en-US', options);
         }
 
