@@ -45,7 +45,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 20px;
+            padding: 0 15px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             z-index: 1000;
             flex-wrap: wrap;
@@ -65,8 +65,8 @@
             color: white;
             font-size: 1.5rem;
             cursor: pointer;
-            padding: 0 10px;
-            margin-right: 10px;
+            padding: 0 8px;
+            margin-right: 8px;
         }
 
         .navbar h1 {
@@ -74,11 +74,12 @@
             font-size: 1.5rem;
             font-weight: 500;
             color: white;
+            white-space: nowrap;
         }
 
         .datetime {
             font-size: 1rem;
-            padding: 8px 15px;
+            padding: 6px 10px;
             background-color: rgba(255,255,255,0.1);
             border-radius: 4px;
             white-space: nowrap;
@@ -233,23 +234,23 @@
             width: 100%;
             border-collapse: collapse;
             font-size: 0.9rem;
-            min-width: 900px; /* Ensure table is wide enough to trigger scrolling on mobile */
+            min-width: 900px;
         }
 
         th, td {
             padding: 12px;
             text-align: center;
             border: 1px solid #eee;
-            min-width: 60px; /* Reduced min-width for better fit */
+            min-width: 60px;
             white-space: nowrap;
         }
 
         th.accomplished-on-time, td.accomplished-on-time {
-            min-width: 50px; /* Further reduced */
+            min-width: 50px;
         }
 
         th.percentage, td.percentage {
-            min-width: 60px; /* Further reduced */
+            min-width: 60px;
         }
 
         th {
@@ -406,17 +407,17 @@
             }
 
             th, td {
-                padding: 6px; /* Reduced padding */
-                font-size: 0.65rem; /* Smaller font size */
-                min-width: 40px; /* Further reduced min-width */
+                padding: 6px;
+                font-size: 0.65rem;
+                min-width: 40px;
             }
 
             th.accomplished-on-time, td.accomplished-on-time {
-                min-width: 30px; /* Further reduced */
+                min-width: 30px;
             }
 
             th.percentage, td.percentage {
-                min-width: 40px; /* Further reduced */
+                min-width: 40px;
             }
 
             input[type="number"],

@@ -62,7 +62,7 @@
             color: white;
             font-size: 1.5rem;
             cursor: pointer;
-            padding: 5px;
+            padding: 0 8px;
             margin-right: 8px;
         }
 
@@ -72,8 +72,6 @@
             font-weight: 500;
             color: white;
             white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
         }
 
         .datetime {
@@ -265,24 +263,20 @@
 
         @media (max-width: 480px) {
             .navbar {
-                flex-direction: row;
-                align-items: center;
+                flex-direction: column;
+                align-items: flex-start;
                 padding: 5px 10px;
                 height: auto;
-                min-height: var(--header-height);
             }
 
             .navbar-brand {
-                display: flex;
-                align-items: center;
-                flex: 1;
-                max-width: 60%;
+                width: 100%;
+                justify-content: space-between;
             }
 
             .toggle-btn {
                 padding: 0 5px;
                 font-size: 1.2rem;
-                margin-right: 5px;
             }
 
             .navbar h1 {
@@ -290,12 +284,14 @@
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
+                flex-grow: 1;
             }
 
             .datetime {
                 font-size: 0.7rem;
                 padding: 4px 8px;
-                max-width: 40%;
+                margin-top: 5px;
+                max-width: 100%;
                 text-align: right;
             }
 
