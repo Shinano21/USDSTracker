@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
   <link rel="icon" type="image/png" href="images/USDS.png">
-  <title>Proposal Dashboard</title>
+  <title>USDS Proposal Tracker</title>
   <style>
     * {
       box-sizing: border-box;
@@ -14,16 +14,114 @@
     body {
       font-family: Arial, sans-serif;
       margin: 0;
-      padding: 20px;
+      padding: 0;
       background-color: #f5f5f5;
       min-height: 100vh;
+      display: flex;
+      transition: margin-left 0.3s ease;
     }
 
-    h1 {
-      text-align: center;
+    .sidebar {
+      width: 250px;
+      background-color: #f8f9fa;
+      padding: 20px;
+      height: 100vh;
+      position: fixed;
+      border-right: 1px solid #ddd;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.3s ease;
+      transform: translateX(0);
+      z-index: 1001;
+    }
+
+    .sidebar.hidden {
+      transform: translateX(-250px);
+    }
+
+    .sidebar h2 {
+      font-size: 1.5rem;
       color: #333;
-      margin-bottom: 25px;
-      font-size: 1.75rem;
+      margin-bottom: 20px;
+    }
+
+    .sidebar-item {
+      padding: 10px;
+      margin: 5px 0;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background-color 0.3s ease;
+    }
+
+    .sidebar-item:hover {
+      background-color: #e9ecef;
+    }
+
+    .logout-btn {
+      padding: 10px;
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 100%;
+      text-align: left;
+      transition: background-color 0.3s ease;
+    }
+
+    .logout-btn:hover {
+      background-color: #c82333;
+    }
+
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background-color: #fff;
+      padding: 10px 20px;
+      border-bottom: 1px solid #ddd;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+      transition: left 0.3s ease;
+    }
+
+    .navbar h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      color: #333;
+    }
+
+    .datetime {
+      font-size: 0.9rem;
+      color: #666;
+    }
+
+    .toggle-btn {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 0 10px;
+    }
+
+    .main-content {
+      margin-left: 250px;
+      padding: 80px 20px 20px;
+      width: calc(100% - 250px);
+      transition: all 0.3s ease;
+    }
+
+    body.sidebar-hidden .main-content {
+      margin-left: 0;
+      width: 100%;
+    }
+
+    body.sidebar-hidden .navbar {
+      left: 0;
     }
 
     .table-container {
@@ -39,25 +137,6 @@
       margin-bottom: 15px;
       flex-wrap: wrap;
       gap: 15px;
-    }
-
-    .logout-container {
-      margin-right: auto;
-    }
-
-    .logout-container button {
-      padding: 8px 16px;
-      background-color: #dc3545;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 0.9rem;
-      transition: background-color 0.3s ease;
-    }
-
-    .logout-container button:hover {
-      background-color: #c82333;
     }
 
     .filter-container {
@@ -183,224 +262,145 @@
       box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
     }
 
-    @media (max-width: 480px) {
-      body {
-        padding: 10px;
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 200px;
       }
-
-      h1 {
-        font-size: 1.25rem;
-        margin-bottom: 15px;
+      .sidebar.hidden {
+        transform: translateX(-200px);
       }
-
+      .main-content {
+        margin-left: 200px;
+        width: calc(100% - 200px);
+      }
+      body.sidebar-hidden .main-content {
+        margin-left: 0;
+        width: 100%;
+      }
       .header-row {
         flex-direction: column;
         align-items: stretch;
-        gap: 10px;
       }
-
-      .logout-container,
-      .filter-container,
-      .button-container {
-        width: 100%;
-        margin: 0;
-      }
-
       .filter-container {
-        flex-direction: column;
-        gap: 10px;
-        align-items: stretch;
+        justify-content: center;
       }
-
-      .filter-group select {
-        max-width: 100%;
-      }
-
-      .search-container input {
-        max-width: 100%;
-      }
-
       .button-container {
         justify-content: center;
       }
+    }
 
+    @media (max-width: 480px) {
+      .sidebar {
+        width: 100%;
+        transform: translateX(-100%);
+      }
+      .sidebar.hidden {
+        transform: translateX(-100%);
+      }
+      .sidebar:not(.hidden) {
+        transform: translateX(0);
+      }
+      .main-content {
+        margin-left: 0;
+        width: 100%;
+        padding-top: 60px;
+      }
+      .navbar {
+        padding: 5px 10px;
+      }
+      .datetime {
+        font-size: 0.8rem;
+      }
+      .filter-group select {
+        max-width: 100%;
+      }
+      .search-container input {
+        max-width: 100%;
+      }
       th, td {
         padding: 8px;
         font-size: 0.75rem;
       }
-
-      th:last-child, td:last-child {
-        width: 80px;
-        min-width: 80px;
-      }
-
       .action-select {
         max-width: 70px;
         font-size: 0.75rem;
-        padding: 5px;
-      }
-
-      td:nth-child(2) {
-        white-space: normal;
-        word-wrap: break-word;
-      }
-    }
-
-    @media (min-width: 481px) and (max-width: 768px) {
-      h1 {
-        font-size: 1.5rem;
-      }
-
-      .header-row {
-        flex-direction: column;
-        align-items: stretch;
-      }
-
-      .filter-container {
-        justify-content: center;
-      }
-
-      .button-container {
-        margin-left: 0;
-        justify-content: center;
-      }
-
-      th, td {
-        padding: 10px;
-        font-size: 0.875rem;
-      }
-
-      th:last-child, td:last-child {
-        width: 100px;
-        min-width: 100px;
-      }
-
-      .action-select {
-        max-width: 90px;
-      }
-    }
-
-    @media (min-width: 769px) and (max-width: 1200px) {
-      .table-container {
-        max-width: 1000px;
-      }
-
-      h1 {
-        font-size: 1.75rem;
-      }
-
-      .header-row {
-        flex-wrap: nowrap;
-      }
-
-      .filter-group select {
-        max-width: 130px;
-      }
-
-      th, td {
-        font-size: 0.9rem;
-      }
-
-      th:last-child, td:last-child {
-        width: 110px;
-        min-width: 110px;
-      }
-    }
-
-    @media (min-width: 1201px) {
-      .table-container {
-        max-width: 1400px;
-      }
-
-      h1 {
-        font-size: 2rem;
-      }
-
-      th, td {
-        padding: 14px;
-        font-size: 1rem;
-      }
-
-      .logout-container button,
-      .button-container button,
-      .filter-group select,
-      .search-container input {
-        font-size: 1rem;
-        padding: 10px 20px;
-      }
-
-      .filter-group select {
-        max-width: 150px;
-      }
-
-      .search-container input {
-        max-width: 500px;
-      }
-
-      .action-select {
-        max-width: 100px;
       }
     }
   </style>
 </head>
 <body>
-  <h1>Proposal Dashboard</h1>
-  <div class="table-container">
-    <div class="header-row">
-      <div class="logout-container">
-        <button onclick="logout()">Logout</button>
-      </div>
-      <div class="filter-container">
-        <div class="filter-group">
-          <label for="monthFilter">Month:</label>
-          <select id="monthFilter" onchange="filterProposals()">
-            <option value="">All</option>
-            <option value="01">January</option>
-            <option value="02">February</option>
-            <option value="03">March</option>
-            <option value="04">April</option>
-            <option value="05">May</option>
-            <option value="06">June</option>
-            <option value="07">July</option>
-            <option value="08">August</option>
-            <option value="09">September</option>
-            <option value="10">October</option>
-            <option value="11">November</option>
-            <option value="12">December</option>
-          </select>
-        </div>
-        <div class="filter-group">
-          <label for="yearFilter">Year:</label>
-          <select id="yearFilter" onchange="filterProposals()">
-            <option value="">All</option>
-            <script>
-              for (let year = 2020; year <= new Date().getFullYear(); year++) {
-                document.write(`<option value="${year}">${year}</option>`);
-              }
-            </script>
-          </select>
-        </div>
-      </div>
-      <div class="button-container">
-        <button onclick="window.location.href='add.html'">+ Record</button>
-        <button onclick="window.location.href='report_generation.html'">Print</button>
-        <button onclick="window.open('https://docs.google.com/spreadsheets/d/1T5qHMQAFBd1c6ZJOF91v3moXKI5rhpvKL68u3mrjplc/edit?usp=sharing', '_blank')">Sheets</button>
-      </div>
+  <div class="sidebar hidden" id="sidebar">
+    <div>
+      <h2>Menu</h2>
+      <div class="sidebar-item" onclick="window.location.href='dashboard.html'">Dashboard</div>
+      <div class="sidebar-item" onclick="window.location.href='report_generation.html'">Reports</div>
+      <div class="sidebar-item" onclick="window.open('https://docs.google.com/spreadsheets/d/1T5qHMQAFBd1c6ZJOF91v3moXKI5rhpvKL68u3mrjplc/edit?usp=sharing', '_blank')">Sheets</div>
     </div>
-    <div class="search-container">
-      <input type="text" id="searchInput" placeholder="Search by Title, Nature, College, Proposal ID, or DOC. SEQ. No" onkeyup="filterProposals()">
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
+
+  <!-- Navbar with toggle, title, and date/time -->
+  <div class="navbar">
+    <div style="display: flex; align-items: center;">
+      <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
+      <h1>USDS Proposal Tracker</h1>
     </div>
-    <table>
-      <thead>
-        <tr>
-          <th>Proposal ID</th>
-          <th>College</th>
-          <th>Title of Activity</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody id="proposalTable"></tbody>
-    </table>
+    <div class="datetime" id="datetime"></div>
+  </div>
+
+  <div class="main-content">
+    <div class="table-container">
+      <div class="header-row">
+        <div class="filter-container">
+          <div class="filter-group">
+            <label for="monthFilter">Month:</label>
+            <select id="monthFilter" onchange="filterProposals()">
+              <option value="">All</option>
+              <option value="01">January</option>
+              <option value="02">February</option>
+              <option value="03">March</option>
+              <option value="04">April</option>
+              <option value="05">May</option>
+              <option value="06">June</option>
+              <option value="07">July</option>
+              <option value="08">August</option>
+              <option value="09">September</option>
+              <option value="10">October</option>
+              <option value="11">November</option>
+              <option value="12">December</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="yearFilter">Year:</label>
+            <select id="yearFilter" onchange="filterProposals()">
+              <option value="">All</option>
+              <script>
+                for (let year = 2020; year <= new Date().getFullYear(); year++) {
+                  document.write(`<option value="${year}">${year}</option>`);
+                }
+              </script>
+            </select>
+          </div>
+        </div>
+        <div class="button-container">
+          <button onclick="window.location.href='add.html'">+ Add Record</button>
+        </div>
+      </div>
+      <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Search by Title, Nature, College, Proposal ID, or DOC. SEQ. No" onkeyup="filterProposals()">
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Proposal ID</th>
+            <th>College</th>
+            <th>Title of Activity</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="proposalTable"></tbody>
+      </table>
+    </div>
   </div>
 
   <script>
@@ -415,7 +415,29 @@
       const formattedMonth = currentMonth < 10 ? `0${currentMonth}` : `${currentMonth}`;
       document.getElementById('monthFilter').value = formattedMonth;
       fetchProposals();
+      updateDateTime();
+      setInterval(updateDateTime, 1000); // Update every second
     };
+
+    function updateDateTime() {
+      const now = new Date();
+      const options = { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric', 
+        hour: '2-digit', 
+        minute: '2-digit', 
+        second: '2-digit' 
+      };
+      document.getElementById('datetime').textContent = now.toLocaleString('en-US', options);
+    }
+
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const body = document.body;
+      sidebar.classList.toggle('hidden');
+      body.classList.toggle('sidebar-hidden');
+    }
 
     function checkAuth() {
       if (localStorage.getItem('authToken') !== 'loggedIn') {
