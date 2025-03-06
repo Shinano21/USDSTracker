@@ -32,7 +32,7 @@ body {
     top: 0;
     display: flex;
     align-items: center;
-    justify-content: space-between; /* Ensures logout button stays on the right */
+    justify-content: space-between;
     padding: 0 15px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     z-index: 1000;
@@ -43,23 +43,6 @@ body {
     align-items: center;
     justify-content: flex-start;
     flex-shrink: 0;
-}
-
-.back-to-dashboard-btn {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 1.5rem;
-    cursor: pointer;
-    padding: 0 8px;
-    margin-right: 8px;
-    transition: color 0.3s ease;
-    font-weight: bold;
-    order: -1;
-}
-
-.back-to-dashboard-btn:hover {
-    color: var(--item-highlight);
 }
 
 .title-wrapper {
@@ -96,15 +79,113 @@ body {
     background-color: var(--secondary-color);
     color: white;
     border: none;
-    padding: 8px 15px;
-    font-size: 0.875rem;
+    padding: 8px;
+    width: 36px;
+    height: 36px;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logout-btn:hover {
+    background-color: #a93226;
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1001;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    overflow: auto;
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 15% auto;
+    padding: 20px;
+    border-radius: var(--border-radius);
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.modal-header h5 {
+    margin: 0;
+    font-size: 1.25rem;
+    color: #333;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #666;
+    cursor: pointer;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+}
+
+.close-btn:hover {
+    color: #000;
+}
+
+.modal-body {
+    padding: 20px 0;
+    color: #444;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    border-top: 1px solid #eee;
+    padding-top: 10px;
+}
+
+.cancel-btn {
+    background-color: #6c757d;
+    color: white;
+    padding: 8px 16px;
+    border: none;
     border-radius: var(--border-radius);
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
 
-.logout-btn:hover {
-    background-color: #a93226; /* Darker shade of secondary-color */
+.cancel-btn:hover {
+    background-color: #5a6268;
+}
+
+.confirm-btn {
+    background-color: var(--secondary-color);
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.confirm-btn:hover {
+    background-color: #a93226;
 }
 
 .main-content {
@@ -227,19 +308,13 @@ button {
     .navbar {
         height: auto;
         padding: 5px 10px;
-        flex-wrap: wrap; /* Allow wrapping for small screens */
+        flex-wrap: wrap;
     }
 
     .navbar-brand {
         width: auto;
         justify-content: flex-start;
         align-items: center;
-    }
-
-    .back-to-dashboard-btn {
-        padding: 0 5px;
-        font-size: 1.2rem;
-        margin-right: 10px;
     }
 
     .title-wrapper {
@@ -265,13 +340,19 @@ button {
     }
 
     .logout-btn {
-        padding: 6px 10px;
-        font-size: 0.75rem;
-        margin-top: 5px; /* Space when wrapped */
+        padding: 6px;
+        width: 32px;
+        height: 32px;
+        margin-top: 5px;
+    }
+
+    .modal-content {
+        margin: 20% auto;
+        width: 95%;
     }
 
     .main-content {
-        margin-top: 100px; /* Increased to account for possible navbar wrapping */
+        margin-top: 100px;
         padding: 15px;
     }
 
@@ -339,8 +420,13 @@ button {
     }
 
     .logout-btn {
-        padding: 8px 12px;
-        font-size: 0.875rem;
+        padding: 8px;
+        width: 36px;
+        height: 36px;
+    }
+
+    .modal-content {
+        width: 80%;
     }
 
     .main-content {
@@ -388,7 +474,13 @@ button {
     }
 
     .logout-btn {
-        padding: 8px 15px;
+        padding: 8px;
+        width: 36px;
+        height: 36px;
+    }
+
+    .modal-content {
+        width: 70%;
     }
 }
 
@@ -420,7 +512,12 @@ button {
     }
 
     .logout-btn {
-        padding: 10px 20px;
-        font-size: 1rem;
+        padding: 10px;
+        width: 40px;
+        height: 40px;
+    }
+
+    .modal-content {
+        width: 50%;
     }
 }

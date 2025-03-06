@@ -42,7 +42,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    flex-shrink: 0; /* Prevent shrinking that might shift contents */
+    flex-shrink: 0;
 }
 
 .back-to-dashboard-btn {
@@ -55,7 +55,7 @@ body {
     margin-right: 8px;
     transition: color 0.3s ease;
     font-weight: bold;
-    order: -1; /* Ensure it stays first in flex order */
+    order: -1;
 }
 
 .back-to-dashboard-btn:hover {
@@ -215,8 +215,8 @@ button {
     }
 
     .navbar-brand {
-        width: auto; /* Avoid stretching full width */
-        justify-content: flex-start; /* Keep back button left */
+        width: auto;
+        justify-content: flex-start;
         align-items: center;
     }
 
@@ -227,9 +227,9 @@ button {
     }
 
     .title-wrapper {
-        flex-direction: column; /* Stack title and datetime vertically */
-        align-items: flex-start; /* Align them left */
-        flex-grow: 1; /* Take remaining space */
+        flex-direction: column;
+        align-items: flex-start;
+        flex-grow: 1;
     }
 
     .navbar h1 {
