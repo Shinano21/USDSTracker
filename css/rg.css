@@ -79,12 +79,13 @@ body {
 .datetime {
     font-size: 1rem;
     padding: 6px 10px;
-    background-color: rgba(255,255,255,0.1);
+    background-color: transparent;
     border-radius: 4px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    margin-left: auto; /* Pushes datetime to the right on larger screens */
+    margin-left: auto;
+    color: white;
 }
 
 .sidebar {
@@ -365,9 +366,9 @@ button:active {
     .navbar h1 {
         font-size: 1rem;
         text-align: left;
-        width: auto; /* Fit content, align with hamburger */
-        overflow: visible; /* Prevent cutoff */
-        text-overflow: clip; /* Prevent ellipsis */
+        width: auto;
+        overflow: visible;
+        text-overflow: clip;
     }
 
     .datetime {
@@ -375,7 +376,6 @@ button:active {
         padding: 4px 8px;
         margin-left: 0;
         text-align: left;
-        background-color: rgba(255,255,255,0.1);
     }
 
     .sidebar {
@@ -656,4 +656,3 @@ button:active {
         width: 100%;
     }
 }
-  

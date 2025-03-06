@@ -7,39 +7,47 @@
     <link rel="icon" type="image/png" href="images/USDS.png">
     <link rel="stylesheet" href="css/add.css">
     <title>Add Proposal</title>
-    <style>
-    
-    </style>
 </head>
 <body>
     <div class="navbar">
         <div class="navbar-brand">
-            <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
+            <button class="back-to-dashboard-btn" onclick="goBack()" title="Back to Dashboard">
+                ←
+            </button>
             <div class="title-wrapper">
                 <h1>+ Proposal</h1>
                 <div class="datetime" id="datetime"></div>
             </div>
         </div>
     </div>
-    <div class="sidebar" id="sidebar">
-        <ul>
-            <li><a href="dashboard.html" data-page="dashboard.html">Dashboard</a></li>
-            <li><a href="report_generation.html" data-page="report_generation.html">Reports</a></li>
-            <li><a href="https://docs.google.com/spreadsheets/d/1T5qHMQAFBd1c6ZJOF91v3moXKI5rhpvKL68u3mrjplc/edit?usp=sharing" target="_blank" data-page="sheets">Sheets</a></li>
-            <li><a href="#" class="logout-btn" onclick="showLogoutModal()">Logout</a></li>
-        </ul>
-    </div>
 
     <div class="main-content">
         <div class="container">
             <h2>Add Proposal</h2>
             <form id="proposalForm" method="POST">
+                <input type="hidden" name="type" value="proposal">
+
+                <div class="form-section">
+                    <div class="section-title">Proposal Identification</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="proposalId">Proposal ID (Leave blank to auto-generate):</label>
+                            <input type="text" id="proposalId" name="proposalId" placeholder="Enter Proposal ID (MM-YYYY-XXXX e.g., 01-2025-0003)">
+                            <div id="proposalIdError" class="error"></div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="form-section">
                     <div class="section-title">Activity Details</div>
                     <div class="form-row">
                         <div class="form-group">
                             <label for="particulars">Title of Activity:</label>
                             <textarea id="particulars" name="particulars" placeholder="Enter title..." required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="description">Description:</label>
+                            <textarea id="description" name="description" placeholder="Enter description..."></textarea>
                         </div>
                     </div>
                 </div>
@@ -90,8 +98,20 @@
                             <input type="text" id="locale" name="locale" placeholder="Enter locale" required>
                         </div>
                         <div class="form-group">
+                            <label for="startDate">Start Date:</label>
+                            <input type="date" id="startDate" name="startDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="endDate">End Date:</label>
+                            <input type="date" id="endDate" name="endDate" required>
+                        </div>
+                        <div class="form-group">
                             <label for="durationOfActivity">Duration of Activity:</label>
                             <input type="text" id="durationOfActivity" name="durationOfActivity" placeholder="Enter duration" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="participants">Participants:</label>
+                            <input type="text" id="participants" name="participants" placeholder="Enter participants (e.g., Students, Faculty)">
                         </div>
                     </div>
                 </div>
@@ -107,6 +127,10 @@
                             <label for="amount">Total Amount:</label>
                             <input type="number" id="amount" name="amount" step="0.01" placeholder="Enter amount" required>
                             <div id="amountError" class="error"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="budgetBreakdown">Budget Breakdown:</label>
+                            <textarea id="budgetBreakdown" name="budgetBreakdown" placeholder="Enter budget breakdown..."></textarea>
                         </div>
                     </div>
                 </div>
@@ -131,6 +155,14 @@
                         <div class="form-group">
                             <label for="csac">Action of CSAC:</label>
                             <input type="text" id="csac" name="csac" placeholder="Enter CSAC action">
+                        </div>
+                        <div class="form-group">
+                            <label for="evaluatorName">Evaluator Name:</label>
+                            <input type="text" id="evaluatorName" name="evaluatorName" placeholder="Enter evaluator name">
+                        </div>
+                        <div class="form-group">
+                            <label for="evaluationDate">Evaluation Date:</label>
+                            <input type="date" id="evaluationDate" name="evaluationDate">
                         </div>
                         <div class="form-group">
                             <label for="remarks">Remarks:</label>
@@ -166,9 +198,52 @@
                     </div>
                 </div>
 
+                <div class="form-section">
+                    <div class="section-title">2nd Evaluation & Review of Compliance</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="usds">Action of USDS:</label>
+                            <select id="usds" name="usds">
+                                <option value="" disabled selected>Select USDS Action</option>
+                                <option value="Favorably Forwarded to">Favorably Forwarded to</option>
+                                <option value="Returned for Compliance">Returned for Compliance</option>
+                                <option value="Pending Review">Pending Review</option>
+                                <option value="Approved">Approved</option>
+                                <option value="Disapproved">Disapproved</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="notations">Notations:</label>
+                            <textarea id="notations" name="notations" placeholder="Enter notations"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="status">Status:</label>
+                            <select id="status" name="status">
+                                <option value="">Select Status</option>
+                                <option value="Pending">Pending</option>
+                                <option value="Returned">Returned</option>
+                                <option value="Forwarded">Forwarded</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="statusDate">Status Date & Time (Manila Time):</label>
+                            <input type="datetime-local" id="statusDate" name="statusDate">
+                            <div id="statusDateError" class="error"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="returnedDate">Returned Date & Time (if applicable, Manila Time):</label>
+                            <input type="datetime-local" id="returnedDate" name="returnedDate">
+                            <div id="returnedDateError" class="error"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="officeDestination">Office Destination:</label>
+                            <input type="text" id="officeDestination" name="officeDestination" placeholder="Enter office destination">
+                        </div>
+                    </div>
+                </div>
+
                 <div class="button-row">
                     <button type="submit" class="submit-btn">Submit</button>
-                    <button type="button" class="back-btn" onclick="goBack()">Back to Dashboard</button>
                 </div>
             </form>
         </div>
@@ -185,34 +260,15 @@
 
         function updateDateTime() {
             const now = new Date();
-            const isMobile = window.innerWidth <= 480;
-            const options = isMobile
-                ? { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true }
-                : { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
+            const options = {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+            };
             document.getElementById('datetime').textContent = now.toLocaleString('en-US', options);
-        }
-
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const mainContent = document.querySelector('.main-content');
-            sidebar.classList.toggle('active');
-            mainContent.classList.toggle('sidebar-active');
-        }
-
-        function setActiveSidebarItem() {
-            const sidebarItems = document.querySelectorAll('.sidebar ul li a');
-            const currentPage = window.location.pathname.split('/').pop() || 'add.html';
-            
-            sidebarItems.forEach(item => {
-                const page = item.getAttribute('data-page');
-                if (page !== 'sheets' && (page === currentPage)) {
-                    item.classList.add('active');
-                }
-                item.addEventListener('click', function(e) {
-                    sidebarItems.forEach(i => i.classList.remove('active'));
-                    this.classList.add('active');
-                });
-            });
         }
 
         function showLogoutModal() {
@@ -225,7 +281,6 @@
         window.onload = function() {
             updateDateTime();
             setInterval(updateDateTime, 1000);
-            setActiveSidebarItem();
             populateColleges();
             populateReceiver();
             initializeDateTimeFields();
@@ -245,6 +300,7 @@
                 "Certificate in College Teaching (CCT)",
                 "Integrated Laboratory High School Department"
             ],
+            "BU COLLEGE OF EDUCATION Integrated Laboratory High School Department (BUCEILS)": ["NA"],
             "BU COLLEGE OF SCIENCE (BUCS)": [
                 "Bachelor of Science in Biology (BSBio)",
                 "Bachelor of Science in Chemistry (BSChem)",
@@ -379,17 +435,52 @@
             document.getElementById(inputId).value = isoString;
         }
 
+        function validateDateTime(inputId, errorId) {
+            const input = document.getElementById(inputId);
+            const error = document.getElementById(errorId);
+            const value = input.value;
+            
+            if (value) {
+                const date = new Date(value);
+                if (isNaN(date.getTime())) {
+                    error.textContent = 'Invalid date/time format';
+                    return false;
+                }
+                if (date > new Date()) {
+                    error.textContent = 'Date cannot be in the future';
+                    return false;
+                }
+                error.textContent = '';
+                return formatToManilaTime(date);
+            }
+            return !input.required ? '' : false;
+        }
+
         function initializeDateTimeFields() {
             const now = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila' }));
             setDateTimeLocalValue('dateTime', now);
             const formattedDateTime = formatToManilaTime(now, false);
             document.getElementById('dateTimeFormatted').value = formattedDateTime;
 
-            document.getElementById('dateTime').addEventListener('change', () => {
-                const date = new Date(document.getElementById('dateTime').value);
-                if (!isNaN(date)) {
-                    document.getElementById('dateTimeFormatted').value = formatToManilaTime(date, false);
+            const dateFields = [
+                { id: 'dateTime', error: 'dateTimeError', default: true },
+                { id: 'statusDate', error: 'statusDateError', default: false },
+                { id: 'returnedDate', error: 'returnedDateError', default: false }
+            ];
+
+            dateFields.forEach(field => {
+                const input = document.getElementById(field.id);
+                
+                if (field.default) {
+                    setDateTimeLocalValue(field.id, now);
                 }
+
+                input.addEventListener('change', () => {
+                    const formatted = validateDateTime(field.id, field.error);
+                    if (field.id === 'dateTime' && formatted) {
+                        document.getElementById('dateTimeFormatted').value = formatted;
+                    }
+                });
             });
         }
 
@@ -422,7 +513,7 @@
             }
         }
 
-        async function populateReceiver() {
+        async function populateReceiver(silent = false) {
             try {
                 const response = await fetch(`${API_URL}?action=getReceivers`, {
                     method: 'GET',
@@ -440,7 +531,9 @@
                 });
             } catch (error) {
                 console.error('Error fetching receivers:', error);
-                alert(`Failed to load receivers: ${error.message}`);
+                if (!silent) {
+                    alert(`Failed to load receivers: ${error.message}`);
+                }
             }
         }
 
@@ -448,8 +541,18 @@
             event.preventDefault();
 
             let valid = true;
-            let amount = document.getElementById('amount');
-            let amountError = document.getElementById('amountError');
+
+            const proposalId = document.getElementById('proposalId');
+            const proposalIdError = document.getElementById('proposalIdError');
+            if (proposalId.value && !/^\d{2}-\d{4}-\d{4}$/.test(proposalId.value)) {
+                proposalIdError.textContent = 'Proposal ID must be in format MM-YYYY-XXXX (e.g., 01-2025-0003)';
+                valid = false;
+            } else {
+                proposalIdError.textContent = '';
+            }
+
+            const amount = document.getElementById('amount');
+            const amountError = document.getElementById('amountError');
             if (!amount.value || isNaN(amount.value) || amount.value <= 0) {
                 amountError.textContent = 'Total amount must be a positive number.';
                 valid = false;
@@ -457,8 +560,8 @@
                 amountError.textContent = '';
             }
 
-            let docSeq = document.getElementById('docSeq');
-            let docSeqError = document.getElementById('docSeqError');
+            const docSeq = document.getElementById('docSeq');
+            const docSeqError = document.getElementById('docSeqError');
             if (!docSeq.value) {
                 docSeqError.textContent = 'Please enter a document sequence number.';
                 valid = false;
@@ -466,14 +569,18 @@
                 docSeqError.textContent = '';
             }
 
-            let copies = document.getElementById('copies');
-            let copiesError = document.getElementById('copiesError');
+            const copies = document.getElementById('copies');
+            const copiesError = document.getElementById('copiesError');
             if (!copies.value || isNaN(copies.value) || copies.value < 1) {
                 copiesError.textContent = 'Number of copies must be at least 1.';
                 valid = false;
             } else {
                 copiesError.textContent = '';
             }
+
+            valid &= validateDateTime('dateTime', 'dateTimeError') !== false;
+            valid &= validateDateTime('statusDate', 'statusDateError') !== false;
+            valid &= validateDateTime('returnedDate', 'returnedDateError') !== false;
 
             if (!valid) return;
 
@@ -493,6 +600,7 @@
                     alert(`Proposal submitted successfully! Proposal ID: ${result.proposalId}`);
                     this.reset();
                     document.getElementById('dateTimeFormatted').value = formatToManilaTime(new Date(), false);
+                    window.location.href = DASHBOARD_URL;
                 } else {
                     alert('Failed to submit proposal: ' + result.message);
                 }

@@ -1,13 +1,17 @@
 :root {
-    --primary-color: #2c3e50; /* Navbar and Sidebar */
-    --secondary-color: #c0392b; /* Back button */
-    --item-highlight: #2980b9; /* Submit button */
+    --primary-color: #2c3e50;
+    --secondary-color: #c0392b;
+    --item-highlight: #2980b9;
     --sidebar-width: 250px;
     --header-height: 60px;
+    --error-color: #c0392b;
+    --border-radius: 6px;
 }
 
 * {
     box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 body {
@@ -37,11 +41,11 @@ body {
 .navbar-brand {
     display: flex;
     align-items: center;
-    min-width: 0;
     justify-content: flex-start;
+    flex-shrink: 0;
 }
 
-.toggle-btn {
+.back-to-dashboard-btn {
     background: none;
     border: none;
     color: white;
@@ -49,12 +53,19 @@ body {
     cursor: pointer;
     padding: 0 8px;
     margin-right: 8px;
+    transition: color 0.3s ease;
+    font-weight: bold;
+    order: -1;
+}
+
+.back-to-dashboard-btn:hover {
+    color: var(--item-highlight);
 }
 
 .title-wrapper {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: row;
+    align-items: center;
     flex-grow: 1;
 }
 
@@ -71,13 +82,14 @@ body {
 
 .datetime {
     font-size: 1rem;
-    padding: 8px 10px;
-    background-color: rgba(255,255,255,0.1);
+    padding: 6px 10px;
+    background-color: transparent;
     border-radius: 4px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    margin-left: auto; /* Pushes datetime to the right on larger screens */
+    margin-left: auto;
+    color: white;
 }
 
 .sidebar {
@@ -216,7 +228,7 @@ textarea {
 }
 
 .error {
-    color: var(--secondary-color);
+    color: var(--error-color);
     font-size: 0.75rem;
     margin-top: 5px;
 }
@@ -247,53 +259,44 @@ button {
     background-color: #1f6692;
 }
 
-.back-btn {
-    background-color: var(--secondary-color);
-    color: white;
-}
-
-.back-btn:hover {
-    background-color: #a93226;
-}
-
 @media (max-width: 480px) {
     .navbar {
-        height: auto; /* Allow height to adjust based on content */
+        height: auto;
         padding: 5px 10px;
     }
 
     .navbar-brand {
-        width: 100%;
+        width: auto;
         justify-content: flex-start;
         align-items: center;
     }
 
-    .toggle-btn {
+    .back-to-dashboard-btn {
         padding: 0 5px;
         font-size: 1.2rem;
         margin-right: 10px;
     }
 
     .title-wrapper {
-        flex-direction: column; /* Stack title and datetime vertically */
-        width: 100%;
+        flex-direction: column;
         align-items: flex-start;
+        flex-grow: 1;
     }
 
     .navbar h1 {
         font-size: 1rem;
         text-align: left;
-        width: auto; /* Fit content, align with hamburger */
-        overflow: visible; /* Prevent cutoff */
-        text-overflow: clip; /* Prevent ellipsis */
+        width: auto;
+        overflow: visible;
+        text-overflow: clip;
     }
 
     .datetime {
         font-size: 0.7rem;
-        padding: 4px 8px;
-        margin-left: 0; /* Align to the left */
+        padding: 0;
+        margin-left: 0;
         text-align: left;
-        background-color: rgba(255,255,255,0.1);
+        margin-top: 2px;
     }
 
     .sidebar {
@@ -301,7 +304,7 @@ button {
     }
 
     .main-content {
-        margin-top: var(--header-height);
+        margin-top: 80px; /* Adjusted for taller navbar */
     }
 
     .main-content.sidebar-active {

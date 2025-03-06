@@ -4,10 +4,14 @@
     --item-highlight: #2980b9;
     --sidebar-width: 250px;
     --header-height: 60px;
+    --error-color: #c0392b;
+    --border-radius: 6px;
 }
 
 * {
     box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 body {
@@ -37,11 +41,11 @@ body {
 .navbar-brand {
     display: flex;
     align-items: center;
-    min-width: 0;
     justify-content: flex-start;
+    flex-shrink: 0;
 }
 
-.toggle-btn {
+.back-to-dashboard-btn {
     background: none;
     border: none;
     color: white;
@@ -49,12 +53,19 @@ body {
     cursor: pointer;
     padding: 0 8px;
     margin-right: 8px;
+    transition: color 0.3s ease;
+    font-weight: bold;
+    order: -1;
+}
+
+.back-to-dashboard-btn:hover {
+    color: var(--item-highlight);
 }
 
 .title-wrapper {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: row;
+    align-items: center;
     flex-grow: 1;
 }
 
@@ -72,12 +83,13 @@ body {
 .datetime {
     font-size: 1rem;
     padding: 6px 10px;
-    background-color: rgba(255,255,255,0.1);
+    background-color: transparent;
     border-radius: 4px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    margin-left: auto; /* Pushes datetime to the right on larger screens */
+    margin-left: auto;
+    color: white;
 }
 
 .sidebar {
@@ -204,67 +216,44 @@ h2 {
     min-height: 40px;
 }
 
-.button-row {
-    display: flex;
-    justify-content: flex-start;
-    gap: 15px;
-    margin-bottom: 25px;
-    flex-wrap: wrap;
-}
-
-button {
-    padding: 10px 20px;
-    font-size: 1rem;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    background-color: var(--secondary-color);
-    color: white;
-}
-
-button:hover {
-    background-color: #a93226;
-}
-
 @media (max-width: 480px) {
     .navbar {
-        height: auto; /* Allow height to adjust based on content */
+        height: auto;
         padding: 5px 10px;
     }
 
     .navbar-brand {
-        width: 100%;
+        width: auto;
         justify-content: flex-start;
         align-items: center;
     }
 
-    .toggle-btn {
+    .back-to-dashboard-btn {
         padding: 0 5px;
         font-size: 1.2rem;
         margin-right: 10px;
     }
 
     .title-wrapper {
-        flex-direction: column; /* Stack title and datetime vertically */
-        width: 100%;
+        flex-direction: column;
         align-items: flex-start;
+        flex-grow: 1;
     }
 
     .navbar h1 {
         font-size: 1rem;
         text-align: left;
-        width: auto; /* Fit content, align with hamburger */
-        overflow: visible; /* Prevent cutoff */
-        text-overflow: clip; /* Prevent ellipsis */
+        width: auto;
+        overflow: visible;
+        text-overflow: clip;
     }
 
     .datetime {
         font-size: 0.7rem;
-        padding: 4px 8px;
-        margin-left: 0; /* Align to the left */
+        padding: 0;
+        margin-left: 0;
         text-align: left;
-        background-color: rgba(255,255,255,0.1);
+        margin-top: 2px;
     }
 
     .sidebar {
@@ -272,7 +261,7 @@ button:hover {
     }
 
     .main-content {
-        margin-top: var(--header-height);
+        margin-top: 80px; /* Adjusted for taller navbar */
     }
 
     .main-content.sidebar-active {
@@ -314,32 +303,22 @@ button:hover {
         padding: 8px;
         min-height: 35px;
     }
-
-    .button-row {
-        flex-wrap: wrap;
-        gap: 8px;
-    }
-
-    button {
-        width: calc(50% - 4px);
-        padding: 8px;
-        font-size: 0.875rem;
-    }
 }
 
 @media (min-width: 481px) and (max-width: 768px) {
     .navbar {
         flex-wrap: nowrap;
+        padding: 0 15px;
+    }
+
+    .navbar h1 {
+        font-size: 1.3rem;
     }
 
     .datetime {
         font-size: 0.9rem;
         padding: 6px 10px;
         max-width: 40%;
-    }
-
-    .navbar h1 {
-        font-size: 1.3rem;
     }
 
     .sidebar {
@@ -366,10 +345,6 @@ button:hover {
 
     .detail-group {
         min-width: 100%;
-    }
-
-    button {
-        padding: 10px 20px;
     }
 }
 
@@ -411,10 +386,5 @@ button:hover {
 
     .detail-group {
         min-width: 320px;
-    }
-
-    button {
-        padding: 12px 24px;
-        font-size: 1.1rem;
     }
 }

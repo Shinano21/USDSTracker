@@ -7,12 +7,11 @@
     <link rel="icon" type="image/png" href="images/USDS.png">
     <link rel="stylesheet" href="css/update.css">
     <title>Update Proposal</title>
-    
 </head>
 <body>
     <div class="navbar">
         <div class="navbar-brand">
-            <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
+            <button class="back-to-dashboard-btn" onclick="goBack()" title="Back to Dashboard">←</button>
             <div class="title-wrapper">
                 <h1>Update Proposal</h1>
                 <div class="datetime" id="datetime"></div>
@@ -213,7 +212,6 @@
 
                 <div class="button-row">
                     <button type="submit" class="submit-btn">Update</button>
-                    <button type="button" class="back-btn" onclick="goBack()">Back to Dashboard</button>
                 </div>
             </form>
         </div>
@@ -230,34 +228,15 @@
 
         function updateDateTime() {
             const now = new Date();
-            const isMobile = window.innerWidth <= 480;
-            const options = isMobile
-                ? { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true }
-                : { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
+            const options = {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+            };
             document.getElementById('datetime').textContent = now.toLocaleString('en-US', options);
-        }
-
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const mainContent = document.querySelector('.main-content');
-            sidebar.classList.toggle('active');
-            mainContent.classList.toggle('sidebar-active');
-        }
-
-        function setActiveSidebarItem() {
-            const sidebarItems = document.querySelectorAll('.sidebar ul li a');
-            const currentPage = window.location.pathname.split('/').pop() || 'update.html';
-            
-            sidebarItems.forEach(item => {
-                const page = item.getAttribute('data-page');
-                if (page !== 'sheets' && (page === currentPage)) {
-                    item.classList.add('active');
-                }
-                item.addEventListener('click', function(e) {
-                    sidebarItems.forEach(i => i.classList.remove('active'));
-                    this.classList.add('active');
-                });
-            });
         }
 
         function showLogoutModal() {
@@ -270,7 +249,6 @@
         window.onload = function() {
             updateDateTime();
             setInterval(updateDateTime, 1000);
-            setActiveSidebarItem();
             loadProposalData();
             initializeDateTimeFields();
         };
