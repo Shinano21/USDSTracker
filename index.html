@@ -128,7 +128,6 @@
             font-size: 0.8125rem;
         }
 
-        /* Media Queries for Responsive Design */
         @media (max-width: 480px) {
             .login-container {
                 padding: 15px;
@@ -193,8 +192,8 @@
 
     <script>
         const API_URL = 'https://script.google.com/macros/s/AKfycbyHKJ6-qlH4F3dLdUNuu2mcyiQHhv7kTd7cfWnqustB9nD3aquVk0xkmmp4t7Uj620/exec';
-        const DASHBOARD_URL = 'dashboard.html';
-        const INDEX_URL = 'index.html';
+        const ADMIN_URL = 'dashboard.html';
+        const GUEST_URL = 'addg.html';
 
         document.getElementById('showPassword').addEventListener('change', function() {
             const passwordInput = document.getElementById('password');
@@ -230,10 +229,11 @@
 
                 if (result.success) {
                     localStorage.setItem('authToken', 'loggedIn');
+                    localStorage.setItem('userPosition', result.position);
                     messageDiv.style.color = 'green';
                     messageDiv.textContent = 'Login successful! Redirecting...';
                     setTimeout(() => {
-                        window.location.href = DASHBOARD_URL;
+                        window.location.href = result.position === 'admin' ? ADMIN_URL : GUEST_URL;
                     }, 1000);
                 } else {
                     messageDiv.style.color = 'red';
@@ -246,8 +246,10 @@
             }
         });
 
-        if (localStorage.getItem('authToken') === 'loggedIn') {
-            window.location.href = DASHBOARD_URL;
+        const authToken = localStorage.getItem('authToken');
+        const userPosition = localStorage.getItem('userPosition');
+        if (authToken === 'loggedIn') {
+            window.location.href = userPosition === 'admin' ? ADMIN_URL : GUEST_URL;
         }
     </script>
 </body>

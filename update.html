@@ -221,9 +221,25 @@
         const API_URL = 'https://script.google.com/macros/s/AKfycbyHKJ6-qlH4F3dLdUNuu2mcyiQHhv7kTd7cfWnqustB9nD3aquVk0xkmmp4t7Uj620/exec';
         const DASHBOARD_URL = 'dashboard.html';
         const INDEX_URL = 'index.html';
+        const GUEST_URL = 'addg.html';
 
-        if (localStorage.getItem('authToken') !== 'loggedIn') {
-            window.location.href = INDEX_URL;
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuthAndRole();
+        });
+
+        function checkAuthAndRole() {
+            const authToken = localStorage.getItem('authToken');
+            const userPosition = localStorage.getItem('userPosition');
+
+            if (authToken !== 'loggedIn') {
+                window.location.replace(INDEX_URL);
+                return;
+            }
+
+            if (userPosition !== 'admin') {
+                window.location.replace(GUEST_URL);
+                return;
+            }
         }
 
         function updateDateTime() {
@@ -242,6 +258,7 @@
         function showLogoutModal() {
             if (confirm('Are you sure you want to logout?')) {
                 localStorage.removeItem('authToken');
+                localStorage.removeItem('userPosition');
                 window.location.href = INDEX_URL;
             }
         }
@@ -553,6 +570,12 @@
 
         document.getElementById('updateForm').addEventListener('submit', async function(event) {
             event.preventDefault();
+
+            if (localStorage.getItem('userPosition') !== 'admin') {
+                alert('You do not have permission to update proposals.');
+                window.location.replace(GUEST_URL);
+                return;
+            }
 
             let valid = true;
             let amount = document.getElementById('amount');

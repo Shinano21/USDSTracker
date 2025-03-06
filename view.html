@@ -197,19 +197,29 @@
         const API_URL = 'https://script.google.com/macros/s/AKfycbyHKJ6-qlH4F3dLdUNuu2mcyiQHhv7kTd7cfWnqustB9nD3aquVk0xkmmp4t7Uj620/exec';
         const DASHBOARD_URL = 'dashboard.html';
         const INDEX_URL = 'index.html';
+        const GUEST_URL = 'addg.html';
 
-        function checkAuth() {
-            if (localStorage.getItem('authToken') !== 'loggedIn') {
-                window.location.replace(INDEX_URL);
-            }
-        }
-
-        checkAuth();
-
-        window.history.pushState(null, null, window.location.href);
-        window.addEventListener('popstate', function () {
-            checkAuth();
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuthAndRole();
         });
+
+        function checkAuthAndRole() {
+            const authToken = localStorage.getItem('authToken');
+            const userPosition = localStorage.getItem('userPosition');
+
+            if (authToken !== 'loggedIn') {
+                window.location.replace(INDEX_URL);
+                return;
+            }
+
+            // Both admins and guests can view, but we can redirect guests to a different page if needed
+            // For now, we'll allow both roles to view this page
+            // Uncomment the following if you want to restrict guests to a different page:
+            // if (userPosition !== 'admin') {
+            //     window.location.replace(GUEST_URL);
+            //     return;
+            // }
+        }
 
         function updateDateTime() {
             const now = new Date();
@@ -227,12 +237,15 @@
         function showLogoutModal() {
             if (confirm('Are you sure you want to logout?')) {
                 localStorage.removeItem('authToken');
+                localStorage.removeItem('userPosition');
                 window.location.href = INDEX_URL;
             }
         }
 
         function goBack() {
-            window.location.href = DASHBOARD_URL;
+            const userPosition = localStorage.getItem('userPosition');
+            // Redirect based on role: admins to dashboard, guests to addg.html
+            window.location.href = userPosition === 'admin' ? DASHBOARD_URL : GUEST_URL;
         }
 
         async function loadProposalData() {
@@ -240,7 +253,7 @@
             const proposalId = urlParams.get('proposalId');
             if (!proposalId) {
                 alert('No proposal ID provided.');
-                window.location.href = DASHBOARD_URL;
+                goBack();
                 return;
             }
 
@@ -254,42 +267,42 @@
                 
                 if (data.error) {
                     alert('Proposal not found: ' + data.message);
-                    window.location.href = DASHBOARD_URL;
+                    goBack();
                     return;
                 }
 
-                document.getElementById('proposalId').textContent = data.proposalId || '';
-                document.getElementById('particulars').textContent = data.particulars || '';
-                document.getElementById('college').textContent = data.college || '';
-                document.getElementById('department').textContent = data.department || '';
-                document.getElementById('others').textContent = data.others || '';
-                document.getElementById('objectives').textContent = data.objectives || '';
-                document.getElementById('nature').textContent = data.nature || '';
-                document.getElementById('locale').textContent = data.locale || '';
-                document.getElementById('duration').textContent = data.duration || '';
-                document.getElementById('funding').textContent = data.funding || '';
-                document.getElementById('amount').textContent = data.amount || '';
-                document.getElementById('contact').textContent = data.contact || '';
-                document.getElementById('documents').textContent = data.documents || '';
-                document.getElementById('csac').textContent = data.csac || '';
-                document.getElementById('remarks').textContent = data.remarks || '';
-                document.getElementById('docSeq').textContent = data.docSeq || '';
-                document.getElementById('copies').textContent = data.copies || '';
-                document.getElementById('receiver').textContent = data.receiver || '';
-                document.getElementById('dateTime').textContent = data.dateTime || '';
-                document.getElementById('durationOfProcess').textContent = data.durationOfProcess || '';
-                document.getElementById('expectedDate').textContent = data.expectedDate || '';
-                document.getElementById('usds').textContent = data.usds || '';
-                document.getElementById('notations').textContent = data.notations || '';
-                document.getElementById('status').textContent = data.status || '';
-                document.getElementById('statusDate').textContent = data.statusDate || '';
-                document.getElementById('officeDestination').textContent = data.officeDestination || '';
-                document.getElementById('accomplished').textContent = data.accomplished || '';
-                document.getElementById('returnedDate').textContent = data.returnedDate || '';
+                document.getElementById('proposalId').textContent = data.proposalId || 'N/A';
+                document.getElementById('particulars').textContent = data.particulars || 'N/A';
+                document.getElementById('college').textContent = data.college || 'N/A';
+                document.getElementById('department').textContent = data.department || 'N/A';
+                document.getElementById('others').textContent = data.others || 'N/A';
+                document.getElementById('objectives').textContent = data.objectives || 'N/A';
+                document.getElementById('nature').textContent = data.nature || 'N/A';
+                document.getElementById('locale').textContent = data.locale || 'N/A';
+                document.getElementById('duration').textContent = data.durationOfActivity || 'N/A';
+                document.getElementById('funding').textContent = data.funding || 'N/A';
+                document.getElementById('amount').textContent = data.amount || 'N/A';
+                document.getElementById('contact').textContent = data.contact || 'N/A';
+                document.getElementById('documents').textContent = data.documents || 'N/A';
+                document.getElementById('csac').textContent = data.csac || 'N/A';
+                document.getElementById('remarks').textContent = data.remarks || 'N/A';
+                document.getElementById('docSeq').textContent = data.docSeq || 'N/A';
+                document.getElementById('copies').textContent = data.copies || 'N/A';
+                document.getElementById('receiver').textContent = data.receiver || 'N/A';
+                document.getElementById('dateTime').textContent = data.dateTime || 'N/A';
+                document.getElementById('durationOfProcess').textContent = data.durationOfProcess || 'N/A';
+                document.getElementById('expectedDate').textContent = data.expectedDate || 'N/A';
+                document.getElementById('usds').textContent = data.usds || 'N/A';
+                document.getElementById('notations').textContent = data.notations || 'N/A';
+                document.getElementById('status').textContent = data.status || 'N/A';
+                document.getElementById('statusDate').textContent = data.statusDate || 'N/A';
+                document.getElementById('officeDestination').textContent = data.officeDestination || 'N/A';
+                document.getElementById('accomplished').textContent = data.accomplished || 'N/A';
+                document.getElementById('returnedDate').textContent = data.returnedDate || 'N/A';
             } catch (error) {
                 console.error('Error fetching proposal data:', error);
                 alert(`Failed to load proposal data: ${error.message}`);
-                window.location.href = DASHBOARD_URL;
+                goBack();
             }
         }
 
@@ -298,6 +311,11 @@
             setInterval(updateDateTime, 1000);
             loadProposalData();
         };
+
+        window.history.pushState(null, null, window.location.href);
+        window.addEventListener('popstate', function () {
+            checkAuthAndRole();
+        });
     </script>
 </body>
 </html>

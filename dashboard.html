@@ -229,7 +229,6 @@
       background-color: #1f6692;
     }
 
-    /* Table styles for desktop */
     .proposal-table {
       width: 100%;
       border-collapse: collapse;
@@ -276,7 +275,6 @@
       text-align: center;
     }
 
-    /* Card styles for mobile */
     .proposal-cards {
       display: none;
     }
@@ -437,7 +435,6 @@
         max-width: 100%;
       }
 
-      /* Switch to card layout on mobile */
       .proposal-table {
         display: none;
       }
@@ -506,7 +503,7 @@
             </select>
           </div>
         </div>
-        <div class="button-container">
+        <div class="button-container" id="adminButtons">
           <button onclick="window.location.href='add.html'">+ Add Record</button>
         </div>
       </div>
@@ -544,7 +541,12 @@
     const UPDATE_URL = 'update.html';
     const VIEW_URL = 'view.html';
     const LOGIN_URL = 'index.html';
+    const GUEST_URL = 'addg.html';
     let allProposals = [];
+
+    document.addEventListener('DOMContentLoaded', function() {
+      checkAuthAndRole();
+    });
 
     window.onload = function() {
       const currentMonth = new Date().getMonth() + 1;
@@ -555,6 +557,24 @@
       setInterval(updateDateTime, 1000);
       setActiveSidebarItem();
     };
+
+    function checkAuthAndRole() {
+      const authToken = localStorage.getItem('authToken');
+      const userPosition = localStorage.getItem('userPosition');
+
+      if (authToken !== 'loggedIn') {
+        window.location.replace(LOGIN_URL);
+        return;
+      }
+
+      if (userPosition !== 'admin') {
+        window.location.replace(GUEST_URL);
+        return;
+      }
+
+      // Show admin-specific elements
+      document.getElementById('adminButtons').style.display = 'flex';
+    }
 
     function updateDateTime() {
       const now = new Date();
@@ -598,20 +618,13 @@
 
     function performLogout() {
       localStorage.removeItem('authToken');
+      localStorage.removeItem('userPosition');
       window.location.replace(LOGIN_URL);
     }
 
-    function checkAuth() {
-      if (localStorage.getItem('authToken') !== 'loggedIn') {
-        window.location.replace(LOGIN_URL);
-      }
-    }
-
-    checkAuth();
-
     window.history.pushState(null, null, window.location.href);
     window.addEventListener('popstate', function () {
-      checkAuth();
+      checkAuthAndRole();
     });
 
     async function fetchProposals() {
@@ -639,6 +652,7 @@
     function populateTableAndCards(proposals) {
       const tbody = document.getElementById('proposalTable');
       const cards = document.getElementById('proposalCards');
+      const isAdmin = localStorage.getItem('userPosition') === 'admin';
       tbody.innerHTML = '';
       cards.innerHTML = '';
 
@@ -653,7 +667,7 @@
             <select class="action-select" onchange="handleAction(this, '${proposal.proposalId}')">
               <option value="">Select</option>
               <option value="view">View</option>
-              <option value="update">Update</option>
+              ${isAdmin ? '<option value="update">Update</option>' : ''}
             </select>
           </td>
         `;
@@ -670,7 +684,7 @@
             <select class="action-select" onchange="handleAction(this, '${proposal.proposalId}')">
               <option value="">Select Action</option>
               <option value="view">View</option>
-              <option value="update">Update</option>
+              ${isAdmin ? '<option value="update">Update</option>' : ''}
             </select>
           </div>
         `;
@@ -720,8 +734,10 @@
 
       if (action === 'view') {
         window.location.href = `${VIEW_URL}?proposalId=${encodeURIComponent(proposalId)}`;
-      } else if (action === 'update') {
+      } else if (action === 'update' && localStorage.getItem('userPosition') === 'admin') {
         window.location.href = `${UPDATE_URL}?proposalId=${encodeURIComponent(proposalId)}`;
+      } else if (action === 'update') {
+        alert('You do not have permission to update proposals.');
       }
 
       select.value = '';

@@ -7,8 +7,6 @@
     <link rel="icon" type="image/png" href="images/USDS.png">
     <link rel="stylesheet" href="css/rg.css">
     <title>Yearly Reports</title>
-    
-    
 </head>
 <body>
     <div class="navbar">
@@ -86,6 +84,7 @@
         const API_URL = 'https://script.google.com/macros/s/AKfycbyHKJ6-qlH4F3dLdUNuu2mcyiQHhv7kTd7cfWnqustB9nD3aquVk0xkmmp4t7Uj620/exec';
         const INDEX_URL = 'index.html';
         const DASHBOARD_URL = 'dashboard.html';
+        const GUEST_URL = 'addg.html';
         const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
         const monthShorts = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
         const receivedByNames = ["Ma'am Ann", "Sir Mike", "Sir Christian", "Sir Ronald"];
@@ -93,8 +92,25 @@
         const proposalTypes = ['off_campus', 'in_campus', 'usc', 'unibe', 'ubo'];
         let allProposals = [];
 
-        if (localStorage.getItem('authToken') !== 'loggedIn') {
-            window.location.href = INDEX_URL;
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuthAndRole();
+            populateYearFilter();
+            fetchAndDisplayData();
+        });
+
+        function checkAuthAndRole() {
+            const authToken = localStorage.getItem('authToken');
+            const userPosition = localStorage.getItem('userPosition');
+
+            if (authToken !== 'loggedIn') {
+                window.location.replace(INDEX_URL);
+                return;
+            }
+
+            if (userPosition !== 'admin') {
+                window.location.replace(GUEST_URL);
+                return;
+            }
         }
 
         function updateDateTime() {
@@ -132,6 +148,7 @@
         function showLogoutModal() {
             if (confirm('Are you sure you want to logout?')) {
                 localStorage.removeItem('authToken');
+                localStorage.removeItem('userPosition');
                 window.location.href = INDEX_URL;
             }
         }
@@ -319,6 +336,12 @@
         }
 
         async function submitForm() {
+            if (localStorage.getItem('userPosition') !== 'admin') {
+                alert('You do not have permission to submit reports.');
+                window.location.replace(GUEST_URL);
+                return;
+            }
+
             const reportName = document.getElementById('reportName').value.trim();
             if (!reportName) {
                 alert('Please enter a Report Name.');
@@ -366,11 +389,6 @@
                 toggleLoading(false);
             }
         }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            populateYearFilter();
-            fetchAndDisplayData();
-        });
     </script>
 </body>
 </html>
