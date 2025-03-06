@@ -28,44 +28,30 @@ body {
 
 .navbar {
     background-color: var(--primary-color);
-    color: white;
     height: var(--header-height);
     position: fixed;
     width: 100%;
     top: 0;
+    z-index: 1000;
+    padding: 0;
+    display: flex;
+    justify-content: flex-start; /* Ensure left alignment */
+    align-items: center;
+}
+
+.navbar-container {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 0 15px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    z-index: 1000;
+    width: 100%;
+    padding: 0 15px; /* Consistent padding for container */
 }
 
 .navbar-brand {
-    display: flex;
-    align-items: center;
-    min-width: 0;
-    justify-content: flex-start;
+    padding: 0;
+    margin: 0 10px 0 0; /* Adjusted margin to remove extra space */
 }
 
-.toggle-btn {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 1.5rem;
-    cursor: pointer;
-    padding: 0 8px;
-    margin-right: 8px;
-}
-
-.title-wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    flex-grow: 1;
-}
-
-.navbar h1 {
+.navbar .navbar-brand h1 {
     margin: 0;
     font-size: 1.5rem;
     font-weight: 500;
@@ -73,19 +59,65 @@ body {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    text-align: left;
 }
 
-.datetime {
-    font-size: 1rem;
-    padding: 6px 10px;
-    background-color: transparent;
-    border-radius: 4px;
+.navbar .navbar-toggler {
+    border: none;
+    padding: 0; /* Removed padding to eliminate space around hamburger */
+    font-size: 1.25rem;
+    color: white;
+    margin: 0; /* Reset margin */
+    width: 30px; /* Fixed width to ensure proper sizing */
+    height: 30px; /* Fixed height to match icon */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.navbar .navbar-toggler:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+.navbar .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255, 255, 255, 1)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+    width: 100%; /* Ensure icon fills the toggler */
+    height: 100%; /* Ensure icon fills the toggler */
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.navbar .datetime {
+    font-size: 0.9rem;
+    padding: 5px 10px;
+    color: white;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    margin-left: auto;
-    color: white;
+    margin-left: auto; /* Pushes datetime to the right */
+}
+
+@media (max-width: 480px) {
+    .navbar .navbar-brand h1 {
+        font-size: 1rem;
+    }
+
+    .navbar .datetime {
+        font-size: 0.7rem;
+        padding: 2px 5px;
+    }
+
+    .navbar .navbar-toggler {
+        font-size: 1.2rem;
+        padding: 0; /* No padding on mobile */
+        width: 25px; /* Slightly smaller on mobile */
+        height: 25px;
+    }
+
+    .navbar-container {
+        padding: 0 10px; /* Adjust padding for smaller screens */
+    }
 }
 
 .sidebar {
@@ -97,12 +129,12 @@ body {
     top: var(--header-height);
     left: 0;
     padding-top: 20px;
+    z-index: 999;
     transform: translateX(-100%);
     transition: transform 0.3s ease;
-    z-index: 999;
 }
 
-.sidebar.active {
+.sidebar.open {
     transform: translateX(0);
 }
 
@@ -150,8 +182,9 @@ body {
     transition: margin-left 0.3s ease;
 }
 
-.main-content.sidebar-active {
+.main-content.shifted {
     margin-left: var(--sidebar-width);
+    width: calc(100% - var(--sidebar-width));
 }
 
 .container {
@@ -340,54 +373,14 @@ button:active {
 }
 
 @media (max-width: 480px) {
-    .navbar {
-        height: auto;
-        padding: 5px 10px;
-    }
-
-    .navbar-brand {
-        width: 100%;
-        justify-content: flex-start;
-        align-items: center;
-    }
-
-    .toggle-btn {
-        padding: 0 5px;
-        font-size: 1.2rem;
-        margin-right: 10px;
-    }
-
-    .title-wrapper {
-        flex-direction: column;
-        width: 100%;
-        align-items: flex-start;
-    }
-
-    .navbar h1 {
-        font-size: 1rem;
-        text-align: left;
-        width: auto;
-        overflow: visible;
-        text-overflow: clip;
-    }
-
-    .datetime {
-        font-size: 0.7rem;
-        padding: 4px 8px;
-        margin-left: 0;
-        text-align: left;
-    }
-
     .sidebar {
-        width: 100%;
+        width: 200px;
     }
 
     .main-content {
-        margin-top: var(--header-height);
-    }
-
-    .main-content.sidebar-active {
         margin-left: 0;
+        width: 100%;
+        margin-top: var(--header-height);
     }
 
     .container {
@@ -444,26 +437,22 @@ button:active {
 }
 
 @media (min-width: 481px) and (max-width: 768px) {
-    .navbar {
-        flex-wrap: nowrap;
-    }
-
-    .datetime {
-        font-size: 0.9rem;
-        padding: 6px 10px;
-        max-width: 40%;
-    }
-
-    .navbar h1 {
+    .navbar .navbar-brand h1 {
         font-size: 1.3rem;
+    }
+
+    .navbar .datetime {
+        font-size: 0.9rem;
+        padding: 5px 10px;
     }
 
     .sidebar {
         width: 200px;
     }
 
-    .main-content.sidebar-active {
-        margin-left: 200px;
+    .main-content {
+        margin-left: 0;
+        width: 100%;
     }
 
     .container {
