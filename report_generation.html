@@ -162,6 +162,17 @@
         </div>
     </div>
 
+    <!-- Report Name Error Modal -->
+    <div id="reportNameErrorModal" class="modal">
+        <div class="modal-content">
+            <h2>Error</h2>
+            <p>Please enter a Report Name before proceeding.</p>
+            <div class="modal-buttons">
+                <button class="confirm-btn" onclick="hideReportNameErrorModal()">OK</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         const API_URL = 'https://script.google.com/macros/s/AKfycbyHKJ6-qlH4F3dLdUNuu2mcyiQHhv7kTd7cfWnqustB9nD3aquVk0xkmmp4t7Uj620/exec';
         const INDEX_URL = 'index.html';
@@ -241,6 +252,16 @@
             localStorage.removeItem('authToken');
             localStorage.removeItem('userPosition');
             window.location.href = INDEX_URL;
+        }
+
+        function showReportNameErrorModal() {
+            const modal = document.getElementById('reportNameErrorModal');
+            modal.style.display = 'flex';
+        }
+
+        function hideReportNameErrorModal() {
+            const modal = document.getElementById('reportNameErrorModal');
+            modal.style.display = 'none';
         }
 
         window.onload = function() {
@@ -429,7 +450,7 @@
         function handlePrint() {
             const reportName = document.getElementById('reportName').value.trim();
             if (!reportName) {
-                alert('Please enter a Report Name before proceeding.');
+                showReportNameErrorModal();
                 return;
             }
 
