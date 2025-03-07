@@ -201,17 +201,16 @@
         const DASHBOARD_URL = 'dashboard.html';
         const INDEX_URL = 'index.html';
 
-        // Immediate authentication check: Runs before page renders
-        // Redirects to index.html if not logged in (authToken !== 'loggedIn')
+        // Immediate authentication check
         (function enforceAuth() {
             const authToken = localStorage.getItem('authToken');
             if (authToken !== 'loggedIn') {
-                window.location.replace(INDEX_URL); // Replace ensures no history entry
+                window.location.replace(INDEX_URL);
                 throw new Error('Authentication check failed - halting script execution');
             }
         })();
 
-        // Secondary check after DOM loads (backup)
+        // Secondary auth check after DOM loads
         document.addEventListener('DOMContentLoaded', function() {
             checkAuthAndRole();
         });
@@ -245,9 +244,9 @@
             document.getElementById('logoutModal').style.display = 'none';
         }
 
-        // Logout removes token and redirects without adding to history
         function confirmLogout() {
             localStorage.removeItem('authToken');
+            localStorage.removeItem('userPosition'); // Clear all session data
             window.location.replace(INDEX_URL); // Replace prevents back navigation
         }
 
