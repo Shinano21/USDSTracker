@@ -7,12 +7,73 @@
     <link rel="icon" type="image/png" href="images/USDS.png">
     <link rel="stylesheet" href="css/rg.css">
     <title>Yearly Reports</title>
-    <!-- Add html2pdf.js library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <style>
-        /* Ensure all elements are fully rendered for PDF */
-        body.pdf-rendering * {
-            transition: none !important;
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .modal-content h2 {
+            margin: 0 0 15px;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .modal-content p {
+            margin: 0 0 20px;
+            font-size: 1rem;
+            color: var(--text-color);
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .modal-buttons button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            border-radius: var(--border-radius);
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .modal-buttons .confirm-btn {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .modal-buttons .confirm-btn:hover {
+            background-color: #a93226;
+        }
+
+        .modal-buttons .cancel-btn {
+            background-color: #ccc;
+            color: var(--text-color);
+        }
+
+        .modal-buttons .cancel-btn:hover {
+            background-color: #b3b3b3;
         }
     </style>
 </head>
@@ -82,10 +143,21 @@
                 <div id="errorMessage" class="error-message">Failed to load data. Please try again or enter manually.</div>
                 <div class="button-group">
                     <button onclick="fetchAndDisplayData()">Load Data</button>
-                    <button onclick="saveAsPDF()">Save as PDF</button>
-                    <button onclick="printReport()">Print</button>
+                    <button onclick="handlePrint()">Print</button>
                     <button class="go-back-btn" onclick="goBack()">Go Back</button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Logout Modal -->
+    <div id="logoutModal" class="modal">
+        <div class="modal-content">
+            <h2>Confirm Logout</h2>
+            <p>Are you sure you want to logout?</p>
+            <div class="modal-buttons">
+                <button class="confirm-btn" onclick="confirmLogout()">Yes</button>
+                <button class="cancel-btn" onclick="hideLogoutModal()">No</button>
             </div>
         </div>
     </div>
@@ -156,11 +228,19 @@
         }
 
         function showLogoutModal() {
-            if (confirm('Are you sure you want to logout?')) {
-                localStorage.removeItem('authToken');
-                localStorage.removeItem('userPosition');
-                window.location.href = INDEX_URL;
-            }
+            const modal = document.getElementById('logoutModal');
+            modal.style.display = 'flex';
+        }
+
+        function hideLogoutModal() {
+            const modal = document.getElementById('logoutModal');
+            modal.style.display = 'none';
+        }
+
+        function confirmLogout() {
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('userPosition');
+            window.location.href = INDEX_URL;
         }
 
         window.onload = function() {
@@ -182,10 +262,6 @@
 
         function goBack() {
             window.location.href = DASHBOARD_URL;
-        }
-
-        function printReport() {
-            window.print();
         }
 
         function populateYearFilter() {
@@ -345,62 +421,27 @@
             createMonthRows(filteredData);
         }
 
-        async function saveAsPDF() {
-            if (localStorage.getItem('userPosition') !== 'admin') {
-                alert('You do not have permission to save reports as PDF.');
-                window.location.replace(GUEST_URL);
-                return;
-            }
-
-            const reportName = document.getElementById('reportName').value.trim();
-            if (!reportName) {
-                alert('Please enter a Report Name.');
-                return;
-            }
-
-            toggleLoading(true);
-            const element = document.querySelector('.container');
-            
-            // Add a class to disable transitions during PDF rendering
-            document.body.classList.add('pdf-rendering');
-
-            // Wait for styles to fully apply
-            await new Promise(resolve => setTimeout(resolve, 100));
-
-            const opt = {
-                margin: [0.5, 0.5, 0.5, 0.5], // Top, Right, Bottom, Left
-                filename: `${reportName}.pdf`,
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { 
-                    scale: 2, // Higher scale for better quality
-                    useCORS: true,
-                    logging: false,
-                    windowWidth: element.scrollWidth,
-                    width: element.scrollWidth,
-                    height: element.scrollHeight
-                },
-                jsPDF: { 
-                    unit: 'in', 
-                    format: 'letter', // 11in x 8.5in in landscape
-                    orientation: 'landscape' // Explicitly set to landscape
-                }
-            };
-
-            try {
-                await html2pdf().set(opt).from(element).save();
-                alert('PDF saved successfully in landscape mode!');
-            } catch (error) {
-                console.error('Error generating PDF:', error);
-                showError('Failed to save as PDF. Please try again.');
-            } finally {
-                document.body.classList.remove('pdf-rendering');
-                toggleLoading(false);
-            }
-        }
-
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             sidebar.classList.toggle('open');
+        }
+
+        function handlePrint() {
+            const reportName = document.getElementById('reportName').value.trim();
+            if (!reportName) {
+                alert('Please enter a Report Name before proceeding.');
+                return;
+            }
+
+            // Set the document title to the report name for the print dialog's PDF filename
+            const originalTitle = document.title;
+            document.title = reportName;
+
+            // Trigger the print dialog
+            window.print();
+
+            // Restore the original document title after printing
+            document.title = originalTitle;
         }
     </script>
 </body>
