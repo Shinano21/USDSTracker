@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Prevent caching -->
+    <!-- Prevent caching to ensure fresh load and auth check on every access -->
     <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -201,15 +201,17 @@
         const DASHBOARD_URL = 'dashboard.html';
         const INDEX_URL = 'index.html';
 
-        // Immediate authentication enforcement
+        // Immediate authentication check: Runs before page renders
+        // Redirects to index.html if not logged in (authToken !== 'loggedIn')
         (function enforceAuth() {
             const authToken = localStorage.getItem('authToken');
             if (authToken !== 'loggedIn') {
-                window.location.replace(INDEX_URL);
+                window.location.replace(INDEX_URL); // Replace ensures no history entry
                 throw new Error('Authentication check failed - halting script execution');
             }
         })();
 
+        // Secondary check after DOM loads (backup)
         document.addEventListener('DOMContentLoaded', function() {
             checkAuthAndRole();
         });
@@ -243,9 +245,10 @@
             document.getElementById('logoutModal').style.display = 'none';
         }
 
+        // Logout removes token and redirects without adding to history
         function confirmLogout() {
             localStorage.removeItem('authToken');
-            window.location.replace(INDEX_URL); // Replace instead of href to prevent back navigation
+            window.location.replace(INDEX_URL); // Replace prevents back navigation
         }
 
         function showSuccessModal(proposalId) {
