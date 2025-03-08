@@ -25,16 +25,22 @@
             position: fixed;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%) scale(0.9);
             z-index: 1050;
-            background-color: rgba(0, 0, 0, 0.85); /* Semi-transparent dark background */
+            background-color: rgba(240, 248, 255, 0.95); /* Soft light blue */
+            border: 2px solid #28a745;
             border-radius: var(--border-radius);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
             padding: 25px;
             text-align: center;
             max-width: 400px;
             width: 90%;
-            color: #fff; /* White text for contrast */
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        .success-modal.active {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
         }
         .success-modal .modal-content {
             padding: 0; /* Override default padding */
@@ -47,26 +53,30 @@
         .success-modal p {
             margin: 0 0 20px;
             font-size: 1.1rem;
+            color: #333; /* Softer dark gray */
         }
         .success-modal .modal-footer {
             display: flex;
             justify-content: center; /* Center the button */
             margin-top: 20px;
-            border-top: none; /* Remove border for cleaner look */
+            border-top: none; /* Remove border */
             padding-top: 0;
         }
         .success-modal .ok-btn {
-            background-color: var(--item-highlight); /* Use CSS variable from addg.css */
+            background-color: #28a745; /* Green to match success */
             color: white;
             border: none;
-            padding: 10px 24px;
+            padding: 10px 30px;
             border-radius: var(--border-radius);
             cursor: pointer;
             font-size: 1rem;
-            transition: background-color 0.3s ease;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease, transform 0.2s ease;
         }
         .success-modal .ok-btn:hover {
-            background-color: #1f6692; /* Darker shade from addg.css */
+            background-color: #218838; /* Darker green on hover */
+            transform: translateY(-2px); /* Slight lift */
         }
     </style>
 </head>
@@ -107,10 +117,10 @@
     <!-- Enhanced Success Modal -->
     <div id="successModal" class="success-modal">
         <div class="modal-content">
-            <h5>Submitted Successfully!</h5>
-            <p id="successMessage">Your Proposal ID is: </p>
+            <h5>Awesome Work! <span style="font-size: 1.2rem;">✅</span></h5>
+            <p id="successMessage">Your proposal (ID: [proposalId]) is successfully submitted!</p>
             <div class="modal-footer">
-                <button class="ok-btn" onclick="hideSuccessModal()">OK</button>
+                <button class="ok-btn" onclick="hideSuccessModal()">Got it!</button>
             </div>
         </div>
     </div>
@@ -276,13 +286,18 @@
         function showSuccessModal(proposalId) {
             const successModal = document.getElementById('successModal');
             const successMessage = document.getElementById('successMessage');
-            successMessage.textContent = `Your Proposal ID is: ${proposalId}`;
+            successMessage.textContent = `Your proposal (ID: ${proposalId}) is successfully submitted!`;
             successModal.style.display = 'block';
+            setTimeout(() => successModal.classList.add('active'), 10); // Small delay for transition
         }
 
         function hideSuccessModal() {
-            document.getElementById('successModal').style.display = 'none';
-            window.location.href = DASHBOARD_URL;
+            const successModal = document.getElementById('successModal');
+            successModal.classList.remove('active');
+            setTimeout(() => {
+                successModal.style.display = 'none';
+                window.location.href = DASHBOARD_URL;
+            }, 300); // Match transition duration
         }
 
         window.onload = function() {
