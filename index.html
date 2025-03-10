@@ -200,10 +200,14 @@
             border-top: 2px solid transparent;
             border-radius: 50%;
             animation: spin 1s linear infinite;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
         }
 
         button.loading .spinner {
-            display: inline-block;
+            display: block;
         }
 
         button.loading span {
@@ -211,7 +215,7 @@
         }
 
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
         }
 
         #message {
