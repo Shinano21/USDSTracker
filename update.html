@@ -223,26 +223,26 @@
         const DASHBOARD_URL = 'dashboard.html';
         const INDEX_URL = 'index.html';
         const GUEST_URL = 'addg.html';
-
+    
         document.addEventListener('DOMContentLoaded', function() {
             checkAuthAndRole();
         });
-
+    
         function checkAuthAndRole() {
             const authToken = localStorage.getItem('authToken');
             const userPosition = localStorage.getItem('userPosition');
-
+    
             if (authToken !== 'loggedIn') {
                 window.location.replace(INDEX_URL);
                 return;
             }
-
+    
             if (userPosition !== 'admin') {
                 window.location.replace(GUEST_URL);
                 return;
             }
         }
-
+    
         function updateDateTime() {
             const now = new Date();
             const options = {
@@ -255,7 +255,7 @@
             };
             document.getElementById('datetime').textContent = now.toLocaleString('en-US', options);
         }
-
+    
         function showLogoutModal() {
             if (confirm('Are you sure you want to logout?')) {
                 localStorage.removeItem('authToken');
@@ -263,16 +263,16 @@
                 window.location.href = INDEX_URL;
             }
         }
-
+    
         window.onload = function() {
             updateDateTime();
             setInterval(updateDateTime, 1000);
             loadProposalData();
             initializeDateTimeFields();
         };
-
+    
         const collegeData = {
-            "BU COLLEGE OF EDUCATION (BUCE)": [
+           "BU COLLEGE OF EDUCATION (BUCE)": [
                 "Bachelor of Culture and Arts Education (BCAEd)",
                 "Bachelor of Early Childhood Education (BECEd)",
                 "Bachelor of Elementary Education (BEED)",
@@ -390,7 +390,7 @@
                 "Bachelor of Technology and Livelihood Education, major in ICT (BTLED-ICT)"
             ]
         };
-
+    
         function formatToManilaTime(date, includeSeconds = true) {
             const options = {
                 timeZone: 'Asia/Manila',
@@ -413,29 +413,30 @@
             const period = parts.find(p => p.type === 'dayPeriod').value;
             return `${month}/${day}/${year} @ ${hour}:${minute}:${second} ${period}`;
         }
-
+    
         function setDateTimeLocalValue(inputId, date) {
             const isoString = date.toLocaleString('sv', { timeZone: 'Asia/Manila' }).slice(0, 16);
             document.getElementById(inputId).value = isoString;
         }
-
+    
         function initializeDateTimeFields() {
             const now = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila' }));
             const fields = [
-                { input: 'dateTime', hidden: 'dateTimeFormatted' },
-                { input: 'statusDate', hidden: 'statusDateFormatted' },
-                { input: 'returnedDate', hidden: 'returnedDateFormatted' }
+                { input: 'dateTime', hidden: 'dateTimeFormatted', setDefault: true },
+                { input: 'statusDate', hidden: 'statusDateFormatted', setDefault: true },
+                { input: 'returnedDate', hidden: 'returnedDateFormatted', setDefault: false } // No default for returnedDate
             ];
-
-            fields.forEach(({ input, hidden }) => {
+    
+            fields.forEach(({ input, hidden, setDefault }) => {
                 const inputEl = document.getElementById(input);
                 const hiddenEl = document.getElementById(hidden);
-
-                if (!inputEl.value) {
+    
+                // Only set default value if setDefault is true and no value exists
+                if (setDefault && !inputEl.value) {
                     setDateTimeLocalValue(input, now);
                     hiddenEl.value = formatToManilaTime(now, false);
                 }
-
+    
                 inputEl.addEventListener('change', () => {
                     const date = new Date(inputEl.value);
                     if (!isNaN(date)) {
@@ -444,11 +445,11 @@
                 });
             });
         }
-
+    
         function goBack() {
             window.location.href = DASHBOARD_URL;
         }
-
+    
         function populateColleges(selectedCollege = '') {
             const collegeSelect = document.getElementById('college');
             collegeSelect.innerHTML = '<option value="">Select College</option>';
@@ -460,12 +461,12 @@
                 collegeSelect.appendChild(option);
             });
         }
-
+    
         function updateDepartments(selectedDepartment = '') {
             const college = document.getElementById('college').value;
             const departmentSelect = document.getElementById('department');
             departmentSelect.innerHTML = '<option value="">Select Department</option>';
-
+    
             if (college && collegeData[college]) {
                 collegeData[college].forEach(dept => {
                     const option = document.createElement('option');
@@ -476,7 +477,7 @@
                 });
             }
         }
-
+    
         async function populateReceiver(selectedReceiver = '') {
             try {
                 const response = await fetch(`${API_URL}?action=getReceivers`, {
@@ -500,7 +501,7 @@
                 alert(`Failed to load receivers: ${error.message}`);
             }
         }
-
+    
         async function loadProposalData() {
             const urlParams = new URLSearchParams(window.location.search);
             const proposalId = urlParams.get('proposalId');
@@ -509,7 +510,7 @@
                 window.location.href = DASHBOARD_URL;
                 return;
             }
-
+    
             try {
                 const response = await fetch(`${API_URL}?action=getProposalById&proposalId=${encodeURIComponent(proposalId)}`, {
                     method: 'GET',
@@ -523,7 +524,7 @@
                     window.location.href = DASHBOARD_URL;
                     return;
                 }
-
+    
                 document.getElementById('proposalId').value = data.proposalId || '';
                 document.getElementById('particulars').value = data.particulars || '';
                 populateColleges(data.college || '');
@@ -542,7 +543,7 @@
                 document.getElementById('docSeq').value = data.docSeq || '';
                 document.getElementById('copies').value = data.copies || '';
                 populateReceiver(data.receiver || '');
-
+    
                 if (data.dateTime) {
                     const date = new Date(data.dateTime.replace(" @ ", " "));
                     setDateTimeLocalValue('dateTime', date);
@@ -558,7 +559,7 @@
                     setDateTimeLocalValue('returnedDate', date);
                     document.getElementById('returnedDateFormatted').value = formatToManilaTime(date, false);
                 }
-
+    
                 document.getElementById('usds').value = data.usds || '';
                 document.getElementById('notations').value = data.notations || '';
                 document.getElementById('status').value = data.status || '';
@@ -568,16 +569,16 @@
                 alert(`Failed to load proposal data: ${error.message}`);
             }
         }
-
+    
         document.getElementById('updateForm').addEventListener('submit', async function(event) {
             event.preventDefault();
-
+    
             if (localStorage.getItem('userPosition') !== 'admin') {
                 alert('You do not have permission to update proposals.');
                 window.location.replace(GUEST_URL);
                 return;
             }
-
+    
             let valid = true;
             let amount = document.getElementById('amount');
             let amountError = document.getElementById('amountError');
@@ -587,7 +588,7 @@
             } else {
                 amountError.textContent = '';
             }
-
+    
             let docSeq = document.getElementById('docSeq');
             let docSeqError = document.getElementById('docSeqError');
             if (!docSeq.value) {
@@ -596,7 +597,7 @@
             } else {
                 docSeqError.textContent = '';
             }
-
+    
             let copies = document.getElementById('copies');
             let copiesError = document.getElementById('copiesError');
             if (!copies.value || isNaN(copies.value) || copies.value < 1) {
@@ -605,12 +606,12 @@
             } else {
                 copiesError.textContent = '';
             }
-
+    
             if (!valid) return;
-
+    
             const formData = new FormData(this);
             const updates = Object.fromEntries(formData.entries());
-
+    
             try {
                 console.log('Sending request:', { action: 'update', proposalId: updates.proposalId, updates });
                 const response = await fetch(API_URL, {
