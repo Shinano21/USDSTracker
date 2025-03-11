@@ -105,10 +105,9 @@
                         </div>
                         <div class="form-group">
                             <label for="amount">Total Amount<span class="required-asterisk">*</span>:</label>
-                            <input type="number" id="amount" name="amount" step="0.01" placeholder="Enter amount" min="0">
+                            <input type="number" id="amount" name="amount" step="0.01" placeholder="Enter amount" min="0" required>
                             <div id="amountError" class="error"></div>
                         </div>
-                        
                     </div>
                 </div>
 
@@ -153,7 +152,6 @@
                             <input type="number" id="copies" name="copies" min="0" placeholder="Enter number of copies">
                             <div id="copiesError" class="error"></div>
                         </div>
-                        
                         <div class="form-group">
                             <label for="receiver">Received By:</label>
                             <select id="receiver" name="receiver">
@@ -584,8 +582,8 @@
             let valid = true;
             let amount = document.getElementById('amount');
             let amountError = document.getElementById('amountError');
-            if (!amount.value || isNaN(amount.value) || amount.value <= 0) {
-                amountError.textContent = 'Total amount must be a positive number.';
+            if (!amount.value || isNaN(amount.value) || amount.value < 0) {
+                amountError.textContent = 'Total amount must be a non-negative number.';
                 valid = false;
             } else {
                 amountError.textContent = '';
