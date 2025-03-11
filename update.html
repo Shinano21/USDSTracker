@@ -104,10 +104,11 @@
                             <input type="text" id="funding" name="funding" placeholder="Enter funding source" required>
                         </div>
                         <div class="form-group">
-                            <label for="amount">Total Amount:</label>
-                            <input type="number" id="amount" name="amount" step="0.01" placeholder="Enter amount" required>
+                            <label for="amount">Total Amount<span class="required-asterisk">*</span>:</label>
+                            <input type="number" id="amount" name="amount" step="0.01" placeholder="Enter amount" min="0">
                             <div id="amountError" class="error"></div>
                         </div>
+                        
                     </div>
                 </div>
 
@@ -149,9 +150,10 @@
                         </div>
                         <div class="form-group">
                             <label for="copies">No of Copies:</label>
-                            <input type="number" id="copies" name="copies" min="1" placeholder="Enter number of copies" required>
+                            <input type="number" id="copies" name="copies" min="0" placeholder="Enter number of copies">
                             <div id="copiesError" class="error"></div>
                         </div>
+                        
                         <div class="form-group">
                             <label for="receiver">Received By:</label>
                             <select id="receiver" name="receiver">
