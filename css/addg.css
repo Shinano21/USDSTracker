@@ -188,7 +188,7 @@ body {
     background-color: #a93226;
 }
 
-/* Success Modal Styles */
+/* Success Modal Styles (Overridden by inline styles where applicable) */
 .success-modal {
     display: none;
     position: fixed;
@@ -281,11 +281,14 @@ h2 {
     flex-wrap: wrap;
     gap: 15px;
     margin-bottom: 15px;
+    align-items: stretch; /* Ensure all form groups stretch to the same height */
 }
 
 .form-group {
     flex: 1;
     min-width: 250px;
+    display: flex;
+    flex-direction: column;
 }
 
 label {
@@ -294,6 +297,21 @@ label {
     display: block;
     margin-bottom: 5px;
     font-size: 0.75rem;
+    line-height: 1.2;
+    min-height: 2rem; /* Reserve space for multi-line labels */
+}
+
+/* Specific styling for the documents label */
+.documents-label {
+    display: block;
+}
+
+.documents-label em {
+    font-size: 0.7rem;
+    color: #666;
+    font-style: italic;
+    display: block;
+    margin-top: 2px;
 }
 
 input, select, textarea {
@@ -304,6 +322,8 @@ input, select, textarea {
     font-size: 0.875rem;
     background-color: #fff;
     transition: border-color 0.3s;
+    box-sizing: border-box;
+    margin-top: auto; /* Push input to the bottom of the form-group */
 }
 
 input::placeholder,
@@ -443,6 +463,10 @@ button {
         font-size: 0.75rem;
     }
 
+    .documents-label em {
+        font-size: 0.65rem;
+    }
+
     textarea {
         min-height: 60px;
     }
@@ -508,6 +532,10 @@ button {
 
     .form-group {
         min-width: 100%;
+    }
+
+    .documents-label em {
+        font-size: 0.65rem;
     }
 
     button {

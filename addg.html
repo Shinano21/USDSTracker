@@ -155,7 +155,7 @@
     <div id="successModal" class="success-modal">
         <div class="modal-content">
             <h5>Awesome Work! <span style="font-size: 1.2rem;">✅</span></h5>
-            <p id="successMessage">Your proposal is successfully submitted! Rename your Google Drive folder to this ID: <strong id="proposalIdDisplay">[proposalId]</strong></p>
+            <p id="successMessage">Your proposal id is [proposalId] PLEASE RENAME THE FOLDER IN YOUR DRIVE</p>
             <div class="modal-footer">
                 <button class="copy-btn" onclick="copyProposalId()">Copy ID</button>
                 <button class="ok-btn" onclick="hideSuccessModal()">Got it!</button>
@@ -254,8 +254,11 @@
                             <input type="text" id="contact" name="contact" placeholder="Enter contact info" required>
                         </div>
                         <div class="form-group">
-                            <label for="documents">Google Drive Folder Link for Documents <em>(rename to the Proposal ID provided after submission)</em>:</label>
-                            <input type="text" id="documents" name="documents" placeholder="Paste Google Drive folder URL" required>
+                            <label for="documents" class="required-label documents-label">
+                                Scanned Copy of Documents:
+                                <em>(Enter Google Drive folder URL or 'NA' if not applicable)</em>
+                            </label>
+                            <input type="text" id="documents" name="documents" placeholder="Paste Google Drive folder URL or 'NA'" required>
                         </div>
                     </div>
                 </div>
@@ -382,9 +385,7 @@
             currentProposalId = proposalId; // Store the ID
             const successModal = document.getElementById('successModal');
             const successMessage = document.getElementById('successMessage');
-            const proposalIdDisplay = document.getElementById('proposalIdDisplay');
-            proposalIdDisplay.textContent = proposalId;
-            successMessage.innerHTML = `Your proposal is successfully submitted! Rename your Google Drive folder to this ID: <strong>${proposalId}</strong>`;
+            successMessage.textContent = `Your proposal id is ${proposalId} PLEASE RENAME THE FOLDER IN YOUR DRIVE`;
             successModal.style.display = 'block';
             setTimeout(() => successModal.classList.add('active'), 10); // Small delay for transition
         }
@@ -617,9 +618,9 @@
                 amountError.textContent = '';
             }
 
-            const documents = document.getElementById('documents');
-            if (!documents.value || !documents.value.match(/^https:\/\/drive\.google\.com\//)) {
-                alert('Please provide a valid Google Drive folder URL.');
+            const documents = document.getElementById('documents').value.trim().toUpperCase();
+            if (!documents || (!documents.match(/^https:\/\/drive\.google\.com\//) && documents !== 'NA')) {
+                alert('Please provide a valid Google Drive folder URL or enter "NA" if not applicable.');
                 valid = false;
             }
 
@@ -628,6 +629,8 @@
             const formData = new FormData(this);
             const data = Object.fromEntries(formData.entries());
             data.action = "add";
+            // If documents is "NA", send it as is; otherwise, it will be the URL
+            data.documents = documents;
 
             try {
                 const response = await fetch(API_URL, {
