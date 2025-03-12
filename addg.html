@@ -57,16 +57,17 @@
         }
         .success-modal .modal-footer {
             display: flex;
-            justify-content: center; /* Center the button */
+            justify-content: center;
+            gap: 10px; /* Space between buttons */
             margin-top: 20px;
-            border-top: none; /* Remove border */
+            border-top: none;
             padding-top: 0;
         }
-        .success-modal .ok-btn {
+        .success-modal .ok-btn, .success-modal .copy-btn {
             background-color: #28a745; /* Green to match success */
             color: white;
             border: none;
-            padding: 10px 30px;
+            padding: 10px 20px;
             border-radius: var(--border-radius);
             cursor: pointer;
             font-size: 1rem;
@@ -74,9 +75,16 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             transition: background-color 0.3s ease, transform 0.2s ease;
         }
+        .success-modal .copy-btn {
+            background-color: #007bff; /* Blue for copy button */
+        }
         .success-modal .ok-btn:hover {
             background-color: #218838; /* Darker green on hover */
             transform: translateY(-2px); /* Slight lift */
+        }
+        .success-modal .copy-btn:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+            transform: translateY(-2px);
         }
 
         /* Checklist Styling */
@@ -147,8 +155,9 @@
     <div id="successModal" class="success-modal">
         <div class="modal-content">
             <h5>Awesome Work! <span style="font-size: 1.2rem;">✅</span></h5>
-            <p id="successMessage">Your proposal (ID: [proposalId]) is successfully submitted!</p>
+            <p id="successMessage">Your proposal is successfully submitted! Rename your Google Drive folder to this ID: <strong id="proposalIdDisplay">[proposalId]</strong></p>
             <div class="modal-footer">
+                <button class="copy-btn" onclick="copyProposalId()">Copy ID</button>
                 <button class="ok-btn" onclick="hideSuccessModal()">Got it!</button>
             </div>
         </div>
@@ -245,8 +254,8 @@
                             <input type="text" id="contact" name="contact" placeholder="Enter contact info" required>
                         </div>
                         <div class="form-group">
-                            <label for="documents">Scanned Copy of Documents:</label>
-                            <input type="text" id="documents" name="documents" placeholder="URL or file reference">
+                            <label for="documents">Google Drive Folder Link for Documents <em>(rename to the Proposal ID provided after submission)</em>:</label>
+                            <input type="text" id="documents" name="documents" placeholder="Paste Google Drive folder URL" required>
                         </div>
                     </div>
                 </div>
@@ -367,10 +376,15 @@
             window.location.replace(INDEX_URL);
         }
 
+        let currentProposalId = ''; // Store the proposal ID for copying
+
         function showSuccessModal(proposalId) {
+            currentProposalId = proposalId; // Store the ID
             const successModal = document.getElementById('successModal');
             const successMessage = document.getElementById('successMessage');
-            successMessage.textContent = `Your proposal (ID: ${proposalId}) is successfully submitted!`;
+            const proposalIdDisplay = document.getElementById('proposalIdDisplay');
+            proposalIdDisplay.textContent = proposalId;
+            successMessage.innerHTML = `Your proposal is successfully submitted! Rename your Google Drive folder to this ID: <strong>${proposalId}</strong>`;
             successModal.style.display = 'block';
             setTimeout(() => successModal.classList.add('active'), 10); // Small delay for transition
         }
@@ -382,6 +396,15 @@
                 successModal.style.display = 'none';
                 window.location.href = DASHBOARD_URL;
             }, 300); // Match transition duration
+        }
+
+        function copyProposalId() {
+            navigator.clipboard.writeText(currentProposalId).then(() => {
+                alert('Proposal ID copied to clipboard!');
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+                alert('Failed to copy ID. Please copy it manually.');
+            });
         }
 
         window.onload = function() {
@@ -592,6 +615,12 @@
                 valid = false;
             } else {
                 amountError.textContent = '';
+            }
+
+            const documents = document.getElementById('documents');
+            if (!documents.value || !documents.value.match(/^https:\/\/drive\.google\.com\//)) {
+                alert('Please provide a valid Google Drive folder URL.');
+                valid = false;
             }
 
             if (!valid) return;
