@@ -78,6 +78,35 @@
             background-color: #218838; /* Darker green on hover */
             transform: translateY(-2px); /* Slight lift */
         }
+
+        /* Checklist Styling */
+        .checklist {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .checklist li {
+            position: relative;
+            padding-left: 25px;
+            margin-bottom: 8px;
+        }
+        .checklist li:before {
+            content: "□"; /* Empty checkbox symbol */
+            position: absolute;
+            left: 0;
+            color: #666;
+        }
+        .checklist ul {
+            padding-left: 20px;
+        }
+        .checklist em {
+            font-style: italic;
+            color: #555;
+        }
+        #activityRequirements h6 {
+            margin-top: 15px;
+            color: #333;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -222,6 +251,61 @@
                     </div>
                 </div>
 
+                <!-- Activity Requirements Section -->
+                <div class="form-section" id="activityRequirements">
+                    <div class="section-title">Activity Requirements</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <p><strong>Note:</strong> The following documents are required based on the activity type:</p>
+                            
+                            <!-- Off-Campus Requirements -->
+                            <div id="offCampusRequirements" style="display: none;">
+                                <h6>Off-Campus Requirements:</h6>
+                                <ul class="checklist">
+                                    <li>Letter to the President</li>
+                                    <li>Approved Activity Proposal</li>
+                                    <li>Endorsement from the College Crisis Management Committee</li>
+                                    <li>Risk Management Plan and Preventive Measures</li>
+                                    <li>Invitation with program from sponsor/organizer</li>
+                                    <li>Letter to LGUs/agencies with their acknowledgment</li>
+                                    <li>List of participants duly certified that they are officially enrolled</li>
+                                    <li>Parental consent/JURAT duly notarized</li>
+                                    <li>Health clearance from UHS</li>
+                                    <li>Insurance policy for Personal-Group-Accident coverage for the current school year</li>
+                                    <li>Designation of Faculty Chaperone/Personnel-in-Charge</li>
+                                    <li>Travel Order of FC/PIC</li>
+                                    <li>Certificate of Training for First Aid/BLS of FC/PIC</li>
+                                    <li>First Aid Kit</li>
+                                    <li>Mobility of Students</li>
+                                    <li>Other documents that the approving authority may require:
+                                        <ul>
+                                            <li>a. Syllabus</li>
+                                            <li>b. Alternative Plan</li>
+                                            <li>c. Catch-up Plan</li>
+                                            <li>d. Passport</li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <!-- On-Campus Requirements -->
+                            <div id="onCampusRequirements" style="display: none;">
+                                <h6>On-Campus Requirements:</h6>
+                                <ul class="checklist">
+                                    <li>Letter to the President</li>
+                                    <li>Approved Activity Proposal</li>
+                                    <li>Endorsement of activity from the College Crisis Management Committee</li>
+                                    <li>Risk Management Plan and Preventive Measures</li>
+                                    <li>List of participants duly certified that they are officially enrolled <em>(if activity falls on a weekend or beyond 5:00 P.M.)</em></li>
+                                    <li>Parental consent/JURAT <em>(if activity falls on a weekend or beyond 5:00 P.M.)</em></li>
+                                    <li>List of participating Faculty/Personnel duly signed <em>(if activity falls on a weekend or beyond 5:00 P.M.)</em></li>
+                                    <li>Other documents that the approving authority may require</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="button-row">
                     <button type="submit" class="submit-btn">Submit</button>
                 </div>
@@ -307,7 +391,7 @@
         };
 
         const collegeData = {
-          "BU COLLEGE OF EDUCATION (BUCE)": [
+            "BU COLLEGE OF EDUCATION (BUCE)": [
                 "Bachelor of Culture and Arts Education (BCAEd)",
                 "Bachelor of Early Childhood Education (BECEd)",
                 "Bachelor of Elementary Education (BEED)",
@@ -327,11 +411,8 @@
                 "Bachelor of Science in Information Technology (BSIT)",
                 "Bachelor of Science in Meteorology (BSMet)"
             ],
-            "BU COLLEGE OF MEDICINE (BUCM)": 
-            ["Doctor of Medicine (MD)"],
-            "BU DENTAL MEDICINE" : [
-                "Doctor of Dental Medicine (DMD)"
-             ],
+            "BU COLLEGE OF MEDICINE (BUCM)": ["Doctor of Medicine (MD)"],
+            "BU DENTAL MEDICINE": ["Doctor of Dental Medicine (DMD)"],
             "BU COLLEGE OF ARTS AND LETTERS (BUCAL)": [
                 "Bachelor of Arts in Broadcasting (ABBroad)",
                 "Bachelor of Arts in Communication (ABComm)",
@@ -340,7 +421,6 @@
                 "Bachelor of Arts in Literature (ABLit)",
                 "Bachelor of Performing Arts, major in Theater (BPeA)"
             ],
-          
             "BU JESSIE M. ROBREDO INSTITUTE OF GOVERNANCE AND DEVELOPMENT (BUJMRIGD)": ["Bachelor of Public Administration (BPA)"],
             "BU COLLEGE OF NURSING (BUCN)": ["Bachelor of Science in Nursing (BSN)"],
             "BU COLLEGE OF ENGINEERING (BUCENG)": [
@@ -363,12 +443,12 @@
                 "Bachelor of Science in Exercise & Sports Sciences, major in Fitness and Sport Management (BSESS-FSM)"
             ],
             "BU COLLEGE OF INDUSTRIAL TECHNOLOGY (BUCIT)": [
-            "Bachelor of Science in Civil Technology (BSCT)",
-            "Bachelor of Science in Electrical Technology (BSET)",
-            "Bachelor of Science in Electronics Technology (BSELT)",
-            "Bachelor of Science in Food Technology (BSFT)",
-            "Bachelor of Science in Industrial Education (BSIE)",
-            "Bachelor of Science in Mechanical Technology (BSMT)"
+                "Bachelor of Science in Civil Technology (BSCT)",
+                "Bachelor of Science in Electrical Technology (BSET)",
+                "Bachelor of Science in Electronics Technology (BSELT)",
+                "Bachelor of Science in Food Technology (BSFT)",
+                "Bachelor of Science in Industrial Education (BSIE)",
+                "Bachelor of Science in Mechanical Technology (BSMT)"
             ],
             "BU COLLEGE OF BUSINESS, ECONOMICS, AND MANAGEMENT (BUCBEM)": [
                 "Bachelor of Science in Accountancy (BSAcct)",
@@ -421,24 +501,23 @@
                 "Bachelor of Science in Mechanical Technology (BSMT)"
             ],
             "BU TABACO CAMPUS": [
-            "Bachelor in Secondary Education (BSEd)",
-            "Bachelor in Secondary Education Major in Mathematics (BSEd Math)",
-            "Bachelor in Secondary Education Major in Science (BSEd Sci)",
-            "Bachelor in Secondary Education Major in Biological Science (BSEd BioSci)",
-            "Bachelor of Science in Entrepreneurship (BSEnt)",
-            "Bachelor of Science in Nursing (BSN)",
-            "Bachelor of Science in Social Work (BSSW)",
-            "Bachelor of Science in Food Technology (BSFT)",
-            "Bachelor of Science in Fisheries (BSF)",
+                "Bachelor in Secondary Education (BSEd)",
+                "Bachelor in Secondary Education Major in Mathematics (BSEd Math)",
+                "Bachelor in Secondary Education Major in Science (BSEd Sci)",
+                "Bachelor in Secondary Education Major in Biological Science (BSEd BioSci)",
+                "Bachelor of Science in Entrepreneurship (BSEnt)",
+                "Bachelor of Science in Nursing (BSN)",
+                "Bachelor of Science in Social Work (BSSW)",
+                "Bachelor of Science in Food Technology (BSFT)",
+                "Bachelor of Science in Fisheries (BSF)"
             ],
-            "BU GUBAT CAMPUS": ["Bachelor in Elementary Education",
-            "Bachelor in Secondary Education Major in Filipino",
-            "Bachelor in Secondary Education Major in Social Studies",
-            "Bachelor of Science in Entrepreneurship",
-            "Bachelor in Agricultural Technology"
-],
-
-
+            "BU GUBAT CAMPUS": [
+                "Bachelor in Elementary Education",
+                "Bachelor in Secondary Education Major in Filipino",
+                "Bachelor in Secondary Education Major in Social Studies",
+                "Bachelor of Science in Entrepreneurship",
+                "Bachelor in Agricultural Technology"
+            ],
             "BU TECHNICAL-VOCATIONAL TEACHER EDUCATION (BTVTeD)": [
                 "Bachelor in Technical - Vocational Teacher Education (BTVTeD), major in:",
                 "Drafting Technology (BTVTeD-DT)",
@@ -479,6 +558,27 @@
                 });
             }
         }
+
+        // Show/Hide Activity Requirements based on Nature selection
+        document.getElementById('nature').addEventListener('change', function() {
+            const offCampusSection = document.getElementById('offCampusRequirements');
+            const onCampusSection = document.getElementById('onCampusRequirements');
+            const requirementsSection = document.getElementById('activityRequirements');
+
+            // Hide both by default
+            offCampusSection.style.display = 'none';
+            onCampusSection.style.display = 'none';
+            requirementsSection.style.display = 'none';
+
+            // Show the relevant section
+            if (this.value === 'Off Campus') {
+                requirementsSection.style.display = 'block';
+                offCampusSection.style.display = 'block';
+            } else if (this.value === 'In Campus') {
+                requirementsSection.style.display = 'block';
+                onCampusSection.style.display = 'block';
+            }
+        });
 
         document.getElementById('proposalForm').addEventListener('submit', async function(event) {
             event.preventDefault();
