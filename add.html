@@ -247,16 +247,16 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script>
-        const API_URL = 'https://script.google.com/macros/s/AKfycbyHKJ6-qlH4F3dLdUNuu2mcyiQHhv7kTd7cfWnqustB9nD3aquVk0xkmmp4t7Uj620/exec';
+        const API_URL = 'https://script.google.com/macros/s/AKfycbyHKJ6-qlH4F3dLdUNuu2mcyiQHhv7kTd7cfWnqustB9nD3aquVk0xkmmp4t7Uj620/exec'; // Replace with your actual GAS URL
         const DASHBOARD_URL = 'dashboard.html';
         const INDEX_URL = 'index.html';
-
+    
         if (localStorage.getItem('authToken') !== 'loggedIn') {
             window.location.href = INDEX_URL;
         }
-
+    
         const collegeData = {
-           "BU COLLEGE OF EDUCATION (BUCE)": [
+            "BU COLLEGE OF EDUCATION (BUCE)": [
                 "Bachelor of Culture and Arts Education (BCAEd)",
                 "Bachelor of Early Childhood Education (BECEd)",
                 "Bachelor of Elementary Education (BEED)",
@@ -276,10 +276,8 @@
                 "Bachelor of Science in Information Technology (BSIT)",
                 "Bachelor of Science in Meteorology (BSMet)"
             ],
-            "BU COLLEGE OF MEDICINE (BUCM)": 
-            ["Doctor of Medicine (MD)"],
-
-          "BU College of Agriculture and Forestry (BUCAF)": [
+            "BU COLLEGE OF MEDICINE (BUCM)": ["Doctor of Medicine (MD)"],
+            "BU College of Agriculture and Forestry (BUCAF)": [
                 "Bachelor of Science in Agriculture (BSA)",
                 "Bachelor of Science in Agriculture (BSA), Major in Crop Science",
                 "Bachelor of Science in Agriculture (BSA), Major in Animal Science",
@@ -294,7 +292,7 @@
                 "Master of Science in Agriculture (MS Agriculture)",
                 "Master of Science in Biodiversity and Environmental Management (MS BEM)",
                 "Master in Rural Development (MRD)"
-                ],
+            ],
             "BU COLLEGE OF ARTS AND LETTERS (BUCAL)": [
                 "Bachelor of Arts in Broadcasting (ABBroad)",
                 "Bachelor of Arts in Communication (ABComm)",
@@ -303,7 +301,6 @@
                 "Bachelor of Arts in Literature (ABLit)",
                 "Bachelor of Performing Arts, major in Theater (BPeA)"
             ],
-          
             "BU JESSIE M. ROBREDO INSTITUTE OF GOVERNANCE AND DEVELOPMENT (BUJMRIGD)": ["Bachelor of Public Administration (BPA)"],
             "BU COLLEGE OF NURSING (BUCN)": ["Bachelor of Science in Nursing (BSN)"],
             "BU COLLEGE OF ENGINEERING (BUCENG)": [
@@ -326,12 +323,12 @@
                 "Bachelor of Science in Exercise & Sports Sciences, major in Fitness and Sport Management (BSESS-FSM)"
             ],
             "BU COLLEGE OF INDUSTRIAL TECHNOLOGY (BUCIT)": [
-            "Bachelor of Science in Civil Technology (BSCT)",
-            "Bachelor of Science in Electrical Technology (BSET)",
-            "Bachelor of Science in Electronics Technology (BSELT)",
-            "Bachelor of Science in Food Technology (BSFT)",
-            "Bachelor of Science in Industrial Education (BSIE)",
-            "Bachelor of Science in Mechanical Technology (BSMT)"
+                "Bachelor of Science in Civil Technology (BSCT)",
+                "Bachelor of Science in Electrical Technology (BSET)",
+                "Bachelor of Science in Electronics Technology (BSELT)",
+                "Bachelor of Science in Food Technology (BSFT)",
+                "Bachelor of Science in Industrial Education (BSIE)",
+                "Bachelor of Science in Mechanical Technology (BSMT)"
             ],
             "BU COLLEGE OF BUSINESS, ECONOMICS, AND MANAGEMENT (BUCBEM)": [
                 "Bachelor of Science in Accountancy (BSAcct)",
@@ -351,8 +348,8 @@
                 "Bachelor of Arts in Political Science (ABPolSci)",
                 "Bachelor of Arts in Sociology (ABSocio)",
                 "Bachelor of Science in Psychology (ABPsyc)",
-                "Bachelor of Science in Social Work (BSSW)"]
-            ,
+                "Bachelor of Science in Social Work (BSSW)"
+            ],
             "BU COLLEGE OF DENTAL MEDICINE (BUDMD)": ["Doctor of Dental Medicine (DMD)"],
             "BU COLLEGE OF LAW": ["Bachelor of Laws (LLB)"],
             "BU GRADUATE SCHOOL": [],
@@ -384,24 +381,23 @@
                 "Bachelor of Science in Mechanical Technology (BSMT)"
             ],
             "BU TABACO CAMPUS": [
-            "Bachelor in Secondary Education (BSEd)",
-            "Bachelor in Secondary Education Major in Mathematics (BSEd Math)",
-            "Bachelor in Secondary Education Major in Science (BSEd Sci)",
-            "Bachelor in Secondary Education Major in Biological Science (BSEd BioSci)",
-            "Bachelor of Science in Entrepreneurship (BSEnt)",
-            "Bachelor of Science in Nursing (BSN)",
-            "Bachelor of Science in Social Work (BSSW)",
-            "Bachelor of Science in Food Technology (BSFT)",
-            "Bachelor of Science in Fisheries (BSF)",
+                "Bachelor in Secondary Education (BSEd)",
+                "Bachelor in Secondary Education Major in Mathematics (BSEd Math)",
+                "Bachelor in Secondary Education Major in Science (BSEd Sci)",
+                "Bachelor in Secondary Education Major in Biological Science (BSEd BioSci)",
+                "Bachelor of Science in Entrepreneurship (BSEnt)",
+                "Bachelor of Science in Nursing (BSN)",
+                "Bachelor of Science in Social Work (BSSW)",
+                "Bachelor of Science in Food Technology (BSFT)",
+                "Bachelor of Science in Fisheries (BSF)"
             ],
-            "BU GUBAT CAMPUS": ["Bachelor in Elementary Education",
-            "Bachelor in Secondary Education Major in Filipino",
-            "Bachelor in Secondary Education Major in Social Studies",
-            "Bachelor of Science in Entrepreneurship",
-            "Bachelor in Agricultural Technology"
-],
-
-
+            "BU GUBAT CAMPUS": [
+                "Bachelor in Elementary Education",
+                "Bachelor in Secondary Education Major in Filipino",
+                "Bachelor in Secondary Education Major in Social Studies",
+                "Bachelor of Science in Entrepreneurship",
+                "Bachelor in Agricultural Technology"
+            ],
             "BU TECHNICAL-VOCATIONAL TEACHER EDUCATION (BTVTeD)": [
                 "Bachelor in Technical - Vocational Teacher Education (BTVTeD), major in:",
                 "Drafting Technology (BTVTeD-DT)",
@@ -429,10 +425,8 @@
                 second: '2-digit',
                 hour12: true
             };
-            
             const formatter = new Intl.DateTimeFormat('en-US', options);
             const parts = formatter.formatToParts(date);
-            
             const month = parts.find(p => p.type === 'month').value;
             const day = parts.find(p => p.type === 'day').value;
             const year = parts.find(p => p.type === 'year').value;
@@ -440,10 +434,9 @@
             const minute = parts.find(p => p.type === 'minute').value.padStart(2, '0');
             const second = parts.find(p => p.type === 'second').value.padStart(2, '0');
             const period = parts.find(p => p.type === 'dayPeriod').value;
-            
             return `${month}/${day}/${year} @ ${hour}:${minute}:${second} ${period}`;
         }
-
+    
         function setDateTimeDefault(inputId) {
             const input = document.getElementById(inputId);
             const now = new Date();
@@ -452,12 +445,11 @@
             input.value = formatted;
             return formatToCustomString(manilaTime);
         }
-
+    
         function validateDateTime(inputId, errorId) {
             const input = document.getElementById(inputId);
             const error = document.getElementById(errorId);
             const value = input.value;
-            
             if (value) {
                 const date = new Date(value);
                 if (isNaN(date.getTime())) {
@@ -473,31 +465,24 @@
             }
             return !input.required;
         }
-
+    
         function initializeDateTimeFields() {
             const dateFields = [
                 { id: 'dateTime', error: 'dateTimeError', default: false },
                 { id: 'statusDate', error: 'statusDateError', default: false },
                 { id: 'returnedDate', error: 'returnedDateError', default: false }
             ];
-
             dateFields.forEach(field => {
                 const input = document.getElementById(field.id);
-                
-                if (field.default) {
-                    setDateTimeDefault(field.id);
-                }
-
-                input.addEventListener('change', () => {
-                    validateDateTime(field.id, field.error);
-                });
+                if (field.default) setDateTimeDefault(field.id);
+                input.addEventListener('change', () => validateDateTime(field.id, field.error));
             });
         }
-
+    
         function goBack() {
             window.location.href = DASHBOARD_URL;
         }
-
+    
         function populateColleges() {
             const collegeSelect = document.getElementById('college');
             collegeSelect.innerHTML = '<option value="">Select College</option>';
@@ -508,12 +493,11 @@
                 collegeSelect.appendChild(option);
             });
         }
-
+    
         function updateDepartments() {
             const college = document.getElementById("college").value;
             const departmentSelect = document.getElementById("department");
             departmentSelect.innerHTML = '<option value="">Select Department</option>';
-            
             if (college && collegeData[college]) {
                 collegeData[college].forEach(dept => {
                     const option = document.createElement("option");
@@ -523,7 +507,7 @@
                 });
             }
         }
-
+    
         async function populateReceiver(silent = false) {
             try {
                 const response = await fetch(`${API_URL}?action=getReceivers`, {
@@ -532,7 +516,6 @@
                 });
                 if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
                 const receivers = await response.json();
-                
                 const receiverSelect = document.getElementById('receiver');
                 receiverSelect.innerHTML = '<option value="" disabled selected>Select receiver</option>';
                 receivers.forEach(receiver => {
@@ -557,12 +540,26 @@
                 });
             }
         }
-
+    
+        // Double-click prevention
+        let isSubmitting = false;
+    
         document.getElementById('proposalForm').addEventListener('submit', async function(event) {
             event.preventDefault();
-
+    
+            // Prevent double submission
+            if (isSubmitting) {
+                alert('Submission is already in progress. Please wait.');
+                return;
+            }
+    
+            const submitBtn = document.querySelector('.submit-btn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+            isSubmitting = true;
+    
             let valid = true;
-
+    
             const proposalId = document.getElementById('proposalId');
             const proposalIdError = document.getElementById('proposalIdError');
             if (proposalId.value && !/^\d{2}-\d{4}-\d{4}$/.test(proposalId.value)) {
@@ -571,7 +568,7 @@
             } else {
                 proposalIdError.textContent = '';
             }
-
+    
             const amount = document.getElementById('amount');
             const amountError = document.getElementById('amountError');
             if (!amount.value || isNaN(amount.value) || amount.value < 0) {
@@ -580,7 +577,7 @@
             } else {
                 amountError.textContent = '';
             }
-
+    
             const docSeq = document.getElementById('docSeq');
             const docSeqError = document.getElementById('docSeqError');
             if (!docSeq.value) {
@@ -589,7 +586,7 @@
             } else {
                 docSeqError.textContent = '';
             }
-
+    
             const copies = document.getElementById('copies');
             const copiesError = document.getElementById('copiesError');
             if (!copies.value || isNaN(copies.value) || copies.value < 1) {
@@ -598,13 +595,18 @@
             } else {
                 copiesError.textContent = '';
             }
-
+    
             valid &= validateDateTime('dateTime', 'dateTimeError');
             valid &= validateDateTime('statusDate', 'statusDateError');
             valid &= validateDateTime('returnedDate', 'returnedDateError');
-
-            if (!valid) return;
-
+    
+            if (!valid) {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit';
+                isSubmitting = false;
+                return;
+            }
+    
             const formData = new FormData(this);
             const data = {};
             formData.forEach((value, key) => {
@@ -616,7 +618,7 @@
                 }
             });
             data.action = "add";
-
+    
             try {
                 const response = await fetch(API_URL, {
                     method: 'POST',
@@ -629,12 +631,12 @@
                 }
                 const result = await response.json();
                 console.log('Server response:', result);
-
+    
                 if (result.success) {
                     document.getElementById('modalProposalId').textContent = result.proposalId;
                     const successModal = new bootstrap.Modal(document.getElementById('successModal'));
                     successModal.show();
-
+    
                     document.getElementById('proposalForm').reset();
                     populateColleges();
                     updateDepartments();
@@ -646,9 +648,13 @@
             } catch (error) {
                 console.error('Submission error:', error);
                 alert('Error submitting proposal: ' + error.message);
+            } finally {
+                submitBtn.textContent = 'Submit';
+                submitBtn.disabled = false;
+                isSubmitting = false;
             }
         });
-
+    
         document.addEventListener('DOMContentLoaded', function() {
             updateDateTime();
             setInterval(updateDateTime, 1000);
@@ -656,7 +662,7 @@
             populateReceiver();
             initializeDateTimeFields();
         });
-
+    
         function updateDateTime() {
             const now = new Date();
             const options = {
