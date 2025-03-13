@@ -180,15 +180,15 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label for="usds">Action of USDS:</label>
-                            <select id="usds" name="usds">
-                                <option value="" disabled selected>Select USDS Action</option>
-                                <option value="Forwarded to OSAS Dean">Forwarded to</option>
-                                <option value="Favorably Forwarded to">Favorably Forwarded to</option>
-                                <option value="Returned for Compliance">Returned for Compliance</option>
-                                <option value="Pending Review">Pending Review</option>
-                                <option value="Approved">Approved</option>
-                                <option value="Disapproved">Disapproved</option>
-                            </select>
+                            <input type="text" id="usds" name="usds" list="usdsOptions" placeholder="Select or type USDS Action">
+                            <datalist id="usdsOptions">
+                                <option value="Forwarded to OSAS Dean">
+                                <option value="Favorably Forwarded to">
+                                <option value="Returned for Compliance">
+                                <option value="Pending Review">
+                                <option value="Approved">
+                                <option value="Disapproved">
+                            </datalist>
                         </div>
                         <div class="form-group">
                             <label for="notations">Notations:</label>
