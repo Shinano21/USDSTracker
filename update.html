@@ -212,13 +212,12 @@
                 </div>
 
                 <div class="button-row">
-                    <button type="submit" class="submit-btn">Update</button>
+                    <button type="submit" class="submit-btn" id="submitButton">Update</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Success Modal -->
     <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -312,8 +311,7 @@
                 "Bachelor of Science in Information Technology (BSIT)",
                 "Bachelor of Science in Meteorology (BSMet)"
             ],
-            "BU COLLEGE OF MEDICINE (BUCM)": 
-            ["Doctor of Medicine (MD)"],
+            "BU COLLEGE OF MEDICINE (BUCM)": ["Doctor of Medicine (MD)"],
             "BU College of Agriculture and Forestry (BUCAF)": [
                 "Bachelor of Science in Agriculture (BSA)",
                 "Bachelor of Science in Agriculture (BSA), Major in Crop Science",
@@ -632,9 +630,16 @@
         document.getElementById('updateForm').addEventListener('submit', async function(event) {
             event.preventDefault();
 
+            const submitButton = document.getElementById('submitButton');
+            const originalText = submitButton.textContent; // Store original text ("Update")
+            submitButton.textContent = 'Updating...'; // Change to "Updating..."
+            submitButton.disabled = true; // Disable button
+
             if (localStorage.getItem('userPosition') !== 'admin') {
                 alert('You do not have permission to update proposals.');
                 window.location.replace(GUEST_URL);
+                submitButton.textContent = originalText; // Restore text
+                submitButton.disabled = false; // Re-enable button
                 return;
             }
 
@@ -666,7 +671,11 @@
                 copiesError.textContent = '';
             }
 
-            if (!valid) return;
+            if (!valid) {
+                submitButton.textContent = originalText; // Restore text
+                submitButton.disabled = false; // Re-enable button
+                return;
+            }
 
             const formData = new FormData(this);
             const updates = Object.fromEntries(formData.entries());
@@ -689,7 +698,6 @@
                 const result = await response.json();
                 console.log('Response:', result);
                 if (result.success) {
-                    // Show the success modal
                     const successModal = new bootstrap.Modal(document.getElementById('successModal'));
                     successModal.show();
                 } else {
@@ -698,6 +706,9 @@
             } catch (error) {
                 console.error('Fetch error:', error);
                 alert(`Failed to update proposal: ${error.message}`);
+            } finally {
+                submitButton.textContent = originalText; // Restore original text ("Update")
+                submitButton.disabled = false; // Re-enable button
             }
         });
     </script>

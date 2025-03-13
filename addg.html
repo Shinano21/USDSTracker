@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Prevent caching to ensure fresh load and auth check on every access -->
     <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -12,14 +11,11 @@
     <link rel="stylesheet" href="css/addg.css">
     <title>Add Proposal (Guest)</title>
     <style>
-        /* Red Asterisk for Required Fields */
         .required-label::after {
             content: " *";
             color: red;
             font-weight: bold;
         }
-
-        /* Enhanced Success Modal Styling */
         .success-modal {
             display: none;
             position: fixed;
@@ -27,7 +23,7 @@
             left: 50%;
             transform: translate(-50%, -50%) scale(0.9);
             z-index: 1050;
-            background-color: rgba(240, 248, 255, 0.95); /* Soft light blue */
+            background-color: rgba(240, 248, 255, 0.95);
             border: 2px solid #28a745;
             border-radius: var(--border-radius);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
@@ -43,28 +39,28 @@
             transform: translate(-50%, -50%) scale(1);
         }
         .success-modal .modal-content {
-            padding: 0; /* Override default padding */
+            padding: 0;
         }
         .success-modal h5 {
-            color: #28a745; /* Green header for success */
+            color: #28a745;
             margin-bottom: 15px;
             font-size: 1.5rem;
         }
         .success-modal p {
             margin: 0 0 20px;
             font-size: 1.1rem;
-            color: #333; /* Softer dark gray */
+            color: #333;
         }
         .success-modal .modal-footer {
             display: flex;
             justify-content: center;
-            gap: 10px; /* Space between buttons */
+            gap: 10px;
             margin-top: 20px;
             border-top: none;
             padding-top: 0;
         }
         .success-modal .ok-btn, .success-modal .copy-btn {
-            background-color: #28a745; /* Green to match success */
+            background-color: #28a745;
             color: white;
             border: none;
             padding: 10px 20px;
@@ -76,18 +72,16 @@
             transition: background-color 0.3s ease, transform 0.2s ease;
         }
         .success-modal .copy-btn {
-            background-color: #007bff; /* Blue for copy button */
+            background-color: #007bff;
         }
         .success-modal .ok-btn:hover {
-            background-color: #218838; /* Darker green on hover */
-            transform: translateY(-2px); /* Slight lift */
-        }
-        .success-modal .copy-btn:hover {
-            background-color: #0056b3; /* Darker blue on hover */
+            background-color: #218838;
             transform: translateY(-2px);
         }
-
-        /* Checklist Styling */
+        .success-modal .copy-btn:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
         .checklist {
             list-style-type: none;
             padding-left: 0;
@@ -98,7 +92,7 @@
             margin-bottom: 8px;
         }
         .checklist li:before {
-            content: "□"; /* Empty checkbox symbol */
+            content: "□";
             position: absolute;
             left: 0;
             color: #666;
@@ -134,7 +128,6 @@
         </button>
     </div>
 
-    <!-- Logout Modal -->
     <div id="logoutModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -151,7 +144,6 @@
         </div>
     </div>
 
-    <!-- Enhanced Success Modal -->
     <div id="successModal" class="success-modal">
         <div class="modal-content">
             <h5>Awesome Work! <span style="font-size: 1.2rem;">✅</span></h5>
@@ -240,7 +232,7 @@
                         </div>
                         <div class="form-group">
                             <label for="amount" class="required-label">Total Amount:</label>
-                            <input type="number" id="amount" name="amount" step="0.01" placeholder="Enter amount" required>
+                            <input type="number" id="amount" name="amount" step="0.01" placeholder="Enter amount" min="0" required>
                             <div id="amountError" class="error"></div>
                         </div>
                     </div>
@@ -263,14 +255,11 @@
                     </div>
                 </div>
 
-                <!-- Activity Requirements Section -->
                 <div class="form-section" id="activityRequirements">
                     <div class="section-title">Activity Requirements</div>
                     <div class="form-row">
                         <div class="form-group">
                             <p><strong>Note:</strong> The following documents are required based on the activity type:</p>
-                            
-                            <!-- Off-Campus Requirements -->
                             <div id="offCampusRequirements" style="display: none;">
                                 <h6>Off-Campus Requirements:</h6>
                                 <ul class="checklist">
@@ -289,7 +278,7 @@
                                     <li>Certificate of Training for First Aid/BLS of FC/PIC</li>
                                     <li>First Aid Kit</li>
                                     <li>Mobility of Students</li>
-                                    <li>A List of paticipating students (SOFT COPY)</li>
+                                    <li>A List of participating students (SOFT COPY)</li>
                                     <li>Other documents that the approving authority may require:
                                         <ul>
                                             <li>a. Syllabus</li>
@@ -300,8 +289,6 @@
                                     </li>
                                 </ul>
                             </div>
-
-                            <!-- On-Campus Requirements -->
                             <div id="onCampusRequirements" style="display: none;">
                                 <h6>On-Campus Requirements:</h6>
                                 <ul class="checklist">
@@ -312,9 +299,8 @@
                                     <li>List of participants duly certified that they are officially enrolled <em>(if activity falls on a weekend or beyond 5:00 P.M.)</em></li>
                                     <li>Parental consent/JURAT <em>(if activity falls on a weekend or beyond 5:00 P.M.)</em></li>
                                     <li>List of participating Faculty/Personnel duly signed <em>(if activity falls on a weekend or beyond 5:00 P.M.)</em></li>
-                                    <li>A List of paticipating students (SOFT COPY)</li>
+                                    <li>A List of participating students (SOFT COPY)</li>
                                     <li>Other documents that the approving authority may require</li>
-                                    
                                 </ul>
                             </div>
                         </div>
@@ -322,7 +308,7 @@
                 </div>
 
                 <div class="button-row">
-                    <button type="submit" class="submit-btn">Submit</button>
+                    <button type="submit" class="submit-btn" id="submitButton">Submit</button>
                 </div>
             </form>
         </div>
@@ -333,7 +319,6 @@
         const DASHBOARD_URL = 'dashboard.html';
         const INDEX_URL = 'index.html';
 
-        // Immediate authentication check
         (function enforceAuth() {
             const authToken = localStorage.getItem('authToken');
             if (authToken !== 'loggedIn') {
@@ -342,7 +327,6 @@
             }
         })();
 
-        // Secondary auth check after DOM loads
         document.addEventListener('DOMContentLoaded', function() {
             checkAuthAndRole();
         });
@@ -382,15 +366,15 @@
             window.location.replace(INDEX_URL);
         }
 
-        let currentProposalId = ''; // Store the proposal ID for copying
+        let currentProposalId = '';
 
         function showSuccessModal(proposalId) {
-            currentProposalId = proposalId; // Store the ID
+            currentProposalId = proposalId;
             const successModal = document.getElementById('successModal');
             const successMessage = document.getElementById('successMessage');
             successMessage.textContent = `Your proposal id is ${proposalId} PLEASE RENAME THE FOLDER IN YOUR DRIVE`;
             successModal.style.display = 'block';
-            setTimeout(() => successModal.classList.add('active'), 10); // Small delay for transition
+            setTimeout(() => successModal.classList.add('active'), 10);
         }
 
         function hideSuccessModal() {
@@ -399,7 +383,7 @@
             setTimeout(() => {
                 successModal.style.display = 'none';
                 window.location.href = DASHBOARD_URL;
-            }, 300); // Match transition duration
+            }, 300);
         }
 
         function copyProposalId() {
@@ -438,10 +422,8 @@
                 "Bachelor of Science in Information Technology (BSIT)",
                 "Bachelor of Science in Meteorology (BSMet)"
             ],
-            "BU COLLEGE OF MEDICINE (BUCM)": 
-            ["Doctor of Medicine (MD)"],
-
-          "BU College of Agriculture and Forestry (BUCAF)": [
+            "BU COLLEGE OF MEDICINE (BUCM)": ["Doctor of Medicine (MD)"],
+            "BU College of Agriculture and Forestry (BUCAF)": [
                 "Bachelor of Science in Agriculture (BSA)",
                 "Bachelor of Science in Agriculture (BSA), Major in Crop Science",
                 "Bachelor of Science in Agriculture (BSA), Major in Animal Science",
@@ -456,7 +438,7 @@
                 "Master of Science in Agriculture (MS Agriculture)",
                 "Master of Science in Biodiversity and Environmental Management (MS BEM)",
                 "Master in Rural Development (MRD)"
-                ],
+            ],
             "BU COLLEGE OF ARTS AND LETTERS (BUCAL)": [
                 "Bachelor of Arts in Broadcasting (ABBroad)",
                 "Bachelor of Arts in Communication (ABComm)",
@@ -465,7 +447,6 @@
                 "Bachelor of Arts in Literature (ABLit)",
                 "Bachelor of Performing Arts, major in Theater (BPeA)"
             ],
-          
             "BU JESSIE M. ROBREDO INSTITUTE OF GOVERNANCE AND DEVELOPMENT (BUJMRIGD)": ["Bachelor of Public Administration (BPA)"],
             "BU COLLEGE OF NURSING (BUCN)": ["Bachelor of Science in Nursing (BSN)"],
             "BU COLLEGE OF ENGINEERING (BUCENG)": [
@@ -488,12 +469,12 @@
                 "Bachelor of Science in Exercise & Sports Sciences, major in Fitness and Sport Management (BSESS-FSM)"
             ],
             "BU COLLEGE OF INDUSTRIAL TECHNOLOGY (BUCIT)": [
-            "Bachelor of Science in Civil Technology (BSCT)",
-            "Bachelor of Science in Electrical Technology (BSET)",
-            "Bachelor of Science in Electronics Technology (BSELT)",
-            "Bachelor of Science in Food Technology (BSFT)",
-            "Bachelor of Science in Industrial Education (BSIE)",
-            "Bachelor of Science in Mechanical Technology (BSMT)"
+                "Bachelor of Science in Civil Technology (BSCT)",
+                "Bachelor of Science in Electrical Technology (BSET)",
+                "Bachelor of Science in Electronics Technology (BSELT)",
+                "Bachelor of Science in Food Technology (BSFT)",
+                "Bachelor of Science in Industrial Education (BSIE)",
+                "Bachelor of Science in Mechanical Technology (BSMT)"
             ],
             "BU COLLEGE OF BUSINESS, ECONOMICS, AND MANAGEMENT (BUCBEM)": [
                 "Bachelor of Science in Accountancy (BSAcct)",
@@ -513,8 +494,8 @@
                 "Bachelor of Arts in Political Science (ABPolSci)",
                 "Bachelor of Arts in Sociology (ABSocio)",
                 "Bachelor of Science in Psychology (ABPsyc)",
-                "Bachelor of Science in Social Work (BSSW)"]
-            ,
+                "Bachelor of Science in Social Work (BSSW)"
+            ],
             "BU COLLEGE OF DENTAL MEDICINE (BUDMD)": ["Doctor of Dental Medicine (DMD)"],
             "BU COLLEGE OF LAW": ["Bachelor of Laws (LLB)"],
             "BU GRADUATE SCHOOL": [],
@@ -546,24 +527,23 @@
                 "Bachelor of Science in Mechanical Technology (BSMT)"
             ],
             "BU TABACO CAMPUS": [
-            "Bachelor in Secondary Education (BSEd)",
-            "Bachelor in Secondary Education Major in Mathematics (BSEd Math)",
-            "Bachelor in Secondary Education Major in Science (BSEd Sci)",
-            "Bachelor in Secondary Education Major in Biological Science (BSEd BioSci)",
-            "Bachelor of Science in Entrepreneurship (BSEnt)",
-            "Bachelor of Science in Nursing (BSN)",
-            "Bachelor of Science in Social Work (BSSW)",
-            "Bachelor of Science in Food Technology (BSFT)",
-            "Bachelor of Science in Fisheries (BSF)",
+                "Bachelor in Secondary Education (BSEd)",
+                "Bachelor in Secondary Education Major in Mathematics (BSEd Math)",
+                "Bachelor in Secondary Education Major in Science (BSEd Sci)",
+                "Bachelor in Secondary Education Major in Biological Science (BSEd BioSci)",
+                "Bachelor of Science in Entrepreneurship (BSEnt)",
+                "Bachelor of Science in Nursing (BSN)",
+                "Bachelor of Science in Social Work (BSSW)",
+                "Bachelor of Science in Food Technology (BSFT)",
+                "Bachelor of Science in Fisheries (BSF)"
             ],
-            "BU GUBAT CAMPUS": ["Bachelor in Elementary Education",
-            "Bachelor in Secondary Education Major in Filipino",
-            "Bachelor in Secondary Education Major in Social Studies",
-            "Bachelor of Science in Entrepreneurship",
-            "Bachelor in Agricultural Technology"
-],
-
-
+            "BU GUBAT CAMPUS": [
+                "Bachelor in Elementary Education",
+                "Bachelor in Secondary Education Major in Filipino",
+                "Bachelor in Secondary Education Major in Social Studies",
+                "Bachelor of Science in Entrepreneurship",
+                "Bachelor in Agricultural Technology"
+            ],
             "BU TECHNICAL-VOCATIONAL TEACHER EDUCATION (BTVTeD)": [
                 "Bachelor in Technical - Vocational Teacher Education (BTVTeD), major in:",
                 "Drafting Technology (BTVTeD-DT)",
@@ -605,18 +585,15 @@
             }
         }
 
-        // Show/Hide Activity Requirements based on Nature selection
         document.getElementById('nature').addEventListener('change', function() {
             const offCampusSection = document.getElementById('offCampusRequirements');
             const onCampusSection = document.getElementById('onCampusRequirements');
             const requirementsSection = document.getElementById('activityRequirements');
 
-            // Hide both by default
             offCampusSection.style.display = 'none';
             onCampusSection.style.display = 'none';
             requirementsSection.style.display = 'none';
 
-            // Show the relevant section
             if (this.value === 'Off Campus') {
                 requirementsSection.style.display = 'block';
                 offCampusSection.style.display = 'block';
@@ -629,12 +606,17 @@
         document.getElementById('proposalForm').addEventListener('submit', async function(event) {
             event.preventDefault();
 
+            const submitButton = document.getElementById('submitButton');
+            const originalText = submitButton.textContent; // Store original text
+            submitButton.textContent = 'Submitting...'; // Change to "Submitting..."
+            submitButton.disabled = true; // Disable button
+
             let valid = true;
 
             const amount = document.getElementById('amount');
             const amountError = document.getElementById('amountError');
-            if (!amount.value || isNaN(amount.value) || amount.value <= 0) {
-                amountError.textContent = 'Total amount must be a positive number.';
+            if (isNaN(amount.value) || amount.value < 0) {
+                amountError.textContent = 'Total amount must be a non-negative number.';
                 valid = false;
             } else {
                 amountError.textContent = '';
@@ -646,12 +628,15 @@
                 valid = false;
             }
 
-            if (!valid) return;
+            if (!valid) {
+                submitButton.textContent = originalText; // Restore text
+                submitButton.disabled = false; // Re-enable button
+                return;
+            }
 
             const formData = new FormData(this);
             const data = Object.fromEntries(formData.entries());
             data.action = "add";
-            // If documents is "NA", send it as is; otherwise, it will be the URL
             data.documents = documents;
 
             try {
@@ -671,6 +656,9 @@
             } catch (error) {
                 console.error('Error:', error);
                 alert(`Error submitting proposal: ${error.message}`);
+            } finally {
+                submitButton.textContent = originalText; // Restore original text
+                submitButton.disabled = false; // Re-enable button
             }
         });
     </script>
