@@ -450,3 +450,52 @@ button {
         font-size: 1.1rem;
     }
 }
+
+/* Modal CSS */
+#successModal .modal-content {
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+#successModal .modal-header {
+    background-color: var(--item-highlight);
+    color: white;
+    border-bottom: none;
+    padding: 15px 20px;
+}
+
+#successModal .modal-title {
+    font-size: 1.25rem;
+    font-weight: 500;
+}
+
+#successModal .btn-close {
+    filter: invert(1) grayscale(100%) brightness(100%);
+}
+
+#successModal .modal-body {
+    padding: 20px;
+    font-size: 1rem;
+    color: #333;
+    text-align: center;
+}
+
+#successModal .modal-footer {
+    border-top: none;
+    padding: 10px 20px;
+    justify-content: center;
+}
+
+#successModal .btn-primary {
+    background-color: var(--item-highlight);
+    border-color: var(--item-highlight);
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: var(--border-radius);
+    transition: background-color 0.3s ease;
+}
+
+#successModal .btn-primary:hover {
+    background-color: #1f6692; /* Darker shade of --item-highlight */
+    border-color: #1f6692;
+}
