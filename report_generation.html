@@ -75,6 +75,29 @@
         .modal-buttons .cancel-btn:hover {
             background-color: #b3b3b3;
         }
+
+        /* Table Styling Adjustments */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        input[type="number"], input[type="text"] {
+            width: 100%;
+            border: none;
+            background: transparent;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -121,7 +144,8 @@
                             <tr>
                                 <th rowspan="2">MONTH</th>
                                 <th colspan="4">RECEIVED BY</th>
-                                <th colspan="5">TOTAL PROPOSALS RECEIVED</th>
+                                <th colspan="6">TOTAL PROPOSALS RECEIVED</th>
+                                <th colspan="4">PROPOSAL STATUS</th>
                                 <th rowspan="2" class="accomplished-on-time">ACCOMPLISHED ON TIME</th>
                                 <th rowspan="2" class="percentage">PERCENTAGE</th>
                             </tr>
@@ -135,6 +159,10 @@
                                 <th>USC</th>
                                 <th>UNIBE</th>
                                 <th>UBO</th>
+                                <th>Total</th>
+                                <th>Forwarded</th>
+                                <th>Pending</th>
+                                <th>Returned</th>
                             </tr>
                         </thead>
                         <tbody id="monthData"></tbody>
@@ -302,9 +330,11 @@
             tbody.innerHTML = '';
             const monthData = {};
             const accomplishedData = {};
+            const statusData = {};
 
             monthShorts.forEach(monthShort => {
                 monthData[monthShort] = {};
+                statusData[monthShort] = { total: 0, forwarded: 0, pending: 0, returned: 0 };
                 receivedByKeys.forEach(cat => monthData[monthShort][cat] = 0);
                 proposalTypes.forEach(type => monthData[monthShort][type] = 0);
                 accomplishedData[monthShort] = { yes: 0, total: 0 };
@@ -316,7 +346,9 @@
                     const monthNum = parseInt(monthMatch[1], 10) - 1;
                     if (monthNum >= 0 && monthNum < 12) {
                         const monthShort = monthShorts[monthNum];
-                        const receiver = (proposal.receiver || proposal.Receiver || proposal['Received By'] || '').trim();
+                        
+                        // Receiver logic
+                        const receiver = (proposal.receiver || '').trim();
                         const receiverLower = receiver.toLowerCase();
                         const receiverIndex = receivedByNames.findIndex(name => name.toLowerCase() === receiverLower);
                         if (receiverIndex !== -1) {
@@ -326,6 +358,7 @@
                             console.warn(`Unrecognized receiver: "${receiver}" in proposal ${proposal.proposalId}`);
                         }
 
+                        // Proposal types
                         const nature = (proposal.nature || '').toLowerCase().trim();
                         let natureKey = '';
                         if (nature.includes('off') && nature.includes('campus')) natureKey = 'off_campus';
@@ -333,13 +366,24 @@
                         else if (nature.includes('usc')) natureKey = 'usc';
                         else if (nature.includes('unibe')) natureKey = 'unibe';
                         else if (nature.includes('ubo')) natureKey = 'ubo';
-
                         if (proposalTypes.includes(natureKey)) {
                             monthData[monthShort][natureKey]++;
                         } else if (nature) {
                             console.warn(`Unrecognized nature: "${nature}" in proposal ${proposal.proposalId}`);
                         }
 
+                        // Total proposals and status logic (Column X = status)
+                        statusData[monthShort].total++;
+                        const status = (proposal.status || '').toLowerCase().trim();
+                        if (status === 'returned') {
+                            statusData[monthShort].returned++;
+                        } else if (status === 'forwarded') {
+                            statusData[monthShort].forwarded++;
+                        } else if (status === 'pending') {
+                            statusData[monthShort].pending++;
+                        }
+
+                        // Accomplished logic
                         if (proposal.accomplished && proposal.accomplished.toLowerCase() === 'yes') {
                             accomplishedData[monthShort].yes++;
                         }
@@ -362,20 +406,36 @@
                     ${proposalTypes.map(type => 
                         `<td><input type="number" name="${monthShort}_${type}" value="${monthData[monthShort][type]}" min="0" readonly></td>`
                     ).join('')}
+                    <td><input type="number" name="${monthShort}_total_proposals" value="${statusData[monthShort].total}" readonly></td>
+                    <td><input type="number" name="${monthShort}_forwarded" value="${statusData[monthShort].forwarded}" readonly></td>
+                    <td><input type="number" name="${monthShort}_pending" value="${statusData[monthShort].pending}" readonly></td>
+                    <td><input type="number" name="${monthShort}_returned" value="${statusData[monthShort].returned}" readonly></td>
                     <td class="accomplished-on-time"><input type="text" name="${monthShort}_acted_upon" value="${total > 0 ? `${yes}/${total}` : '0/0'}" readonly></td>
                     <td class="percentage"><input type="text" name="${monthShort}_percentage" value="${percentage}" readonly></td>
                 `;
                 tbody.appendChild(row);
             });
 
+            // Total row
             const totalYes = monthShorts.reduce((sum, month) => sum + accomplishedData[month].yes, 0);
             const totalProposals = monthShorts.reduce((sum, month) => sum + accomplishedData[month].total, 0);
             const totalPercentage = totalProposals > 0 ? ((totalYes / totalProposals) * 100).toFixed(0) + '%' : '0%';
+            const totalStatus = {
+                total: monthShorts.reduce((sum, month) => sum + statusData[month].total, 0),
+                forwarded: monthShorts.reduce((sum, month) => sum + statusData[month].forwarded, 0),
+                pending: monthShorts.reduce((sum, month) => sum + statusData[month].pending, 0),
+                returned: monthShorts.reduce((sum, month) => sum + statusData[month].returned, 0)
+            };
+
             const totalRow = document.createElement('tr');
             totalRow.innerHTML = `
                 <td><strong>TOTAL</strong></td>
                 ${receivedByKeys.map(cat => `<td><input type="number" name="total_${cat}" value="0" readonly></td>`).join('')}
                 ${proposalTypes.map(type => `<td><input type="number" name="total_${type}" value="0" readonly></td>`).join('')}
+                <td><input type="number" name="total_total_proposals" value="${totalStatus.total}" readonly></td>
+                <td><input type="number" name="total_forwarded" value="${totalStatus.forwarded}" readonly></td>
+                <td><input type="number" name="total_pending" value="${totalStatus.pending}" readonly></td>
+                <td><input type="number" name="total_returned" value="${totalStatus.returned}" readonly></td>
                 <td class="accomplished-on-time"><input type="text" name="total_acted_upon" value="${totalProposals > 0 ? `${totalYes}/${totalProposals}` : '0/0'}" readonly></td>
                 <td class="percentage"><input type="text" name="total_percentage" value="${totalPercentage}" readonly></td>
             `;
@@ -454,14 +514,9 @@
                 return;
             }
 
-            // Set the document title to the report name for the print dialog's PDF filename
             const originalTitle = document.title;
             document.title = reportName;
-
-            // Trigger the print dialog
             window.print();
-
-            // Restore the original document title after printing
             document.title = originalTitle;
         }
     </script>
