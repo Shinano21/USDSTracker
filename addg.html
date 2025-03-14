@@ -303,6 +303,77 @@
                                     <li>Other documents that the approving authority may require</li>
                                 </ul>
                             </div>
+                            <div id="ojtRequirements" style="display: none;">
+                                <h6>OJT Requirements:</h6>
+                                <ul class="checklist">
+                                    <li><strong>BU Requirements:</strong>
+                                        <ul>
+                                            <li>Letter of Request to conduct OJT addressed to the President
+                                                <ul><li>Letter of request addressed to the University President prepared/signed by the Faculty Professor, CSAS and Dean</li></ul>
+                                            </li>
+                                            <li>Travel Order
+                                                <ul><li>Issued to Faculty (chairpersons) who will be accompanying the student/group during deployment</li></ul>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li><strong>CHED Requirements:</strong>
+                                        <ul>
+                                            <li>HEI must execute a MOA with the HTE duly notarized
+                                                <ul><li>Copy of the duly notarized MOA</li></ul>
+                                            </li>
+                                            <li>HEI must develop a training manual or plan which shall be part of the training contract
+                                                <ul>
+                                                    <li>Training Manual or Plan</li>
+                                                    <li>Syllabus duly signed by concerned authorities</li>
+                                                    <li>Training contract duly signed by the trainee and co-signed by the parent/guardian</li>
+                                                </ul>
+                                            </li>
+                                            <li>Monitor and Evaluate performance of the student trainees based on the prescribed training manual/plan
+                                                <ul>
+                                                    <li>Evaluation sheet</li>
+                                                    <li>Criteria for grading</li>
+                                                </ul>
+                                            </li>
+                                            <li>Conduct general orientation for qualified student trainees and their parents/guardians
+                                                <ul>
+                                                    <li>Notice of orientation</li>
+                                                    <li>Minutes of the Orientation conducted</li>
+                                                    <li>Attendance of the Participants</li>
+                                                </ul>
+                                            </li>
+                                            <li>Set criteria on the selection of faculty practicum coordinator per program for all aspects of the student internship programs including program implementation and monitoring and evaluation
+                                                <ul>
+                                                    <li>Copy of the designation of the faculty coordinator</li>
+                                                    <li>Evaluation sheet</li>
+                                                </ul>
+                                            </li>
+                                            <li>Student trainee must be enrolled in a practicum or equivalent subject
+                                                <ul>
+                                                    <li>Certification from College Registrar that the student is officially enrolled</li>
+                                                    <li>Certification from the CHED Regional Office that the students have complied with academic requirements prior to OJT/Practicum/Affiliation</li>
+                                                </ul>
+                                            </li>
+                                            <li>Trainee shall be physically, mentally, and emotionally fit, as contained in the physical and psychological examination certified by DOH accredited clinics and hospitals
+                                                <ul>
+                                                    <li>Medical certificate duly signed by the University Physician</li>
+                                                    <li>Psychological test result (as required by the HTE or College) <em>(N/A)</em></li>
+                                                </ul>
+                                            </li>
+                                            <li>Has consent from parent/guardian
+                                                <ul><li>Parent/guardian consent duly notarized</li></ul>
+                                            </li>
+                                            <li>Insurance of students
+                                                <ul><li>Individual or group insurance of the student/s</li></ul>
+                                            </li>
+                                            <li>Emergency Awareness Plan
+                                                <ul><li>Do's and don'ts of the students before, during, and after internship</li></ul>
+                                            </li>
+                                            <li>Risk Management Plan</li>
+                                            <li>Approved proposal from the President to conduct Student Internship Program</li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -558,9 +629,7 @@
                 "Bachelor of Technology and Livelihood Education (BTLED)",
                 "Bachelor of Technology and Livelihood Education, major in ICT (BTLED-ICT)"
             ],
-            "Mixed COLLEGE (ORGS/CSC/USC)":[
-                "Please put on If others, Please specify"
-            ]
+            "Mixed COLLEGE (ORGS/CSC/USC)": ["Please put on If others, Please specify"]
         };
 
         function populateColleges() {
@@ -591,10 +660,12 @@
         document.getElementById('nature').addEventListener('change', function() {
             const offCampusSection = document.getElementById('offCampusRequirements');
             const onCampusSection = document.getElementById('onCampusRequirements');
+            const ojtSection = document.getElementById('ojtRequirements');
             const requirementsSection = document.getElementById('activityRequirements');
 
             offCampusSection.style.display = 'none';
             onCampusSection.style.display = 'none';
+            ojtSection.style.display = 'none';
             requirementsSection.style.display = 'none';
 
             if (this.value === 'Off Campus') {
@@ -603,6 +674,9 @@
             } else if (this.value === 'In Campus') {
                 requirementsSection.style.display = 'block';
                 onCampusSection.style.display = 'block';
+            } else if (this.value === 'OJT') {
+                requirementsSection.style.display = 'block';
+                ojtSection.style.display = 'block';
             }
         });
 
