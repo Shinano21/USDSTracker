@@ -8,6 +8,14 @@
     <link rel="stylesheet" href="css/rg.css">
     <title>Monthly Staff Report</title>
     <style>
+        /* CSS Variables (assumed from rg.css if not provided) */
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #c0392b;
+            --text-color: #333;
+            --border-radius: 4px;
+        }
+
         /* Modal Styles */
         .modal {
             display: none;
@@ -100,6 +108,60 @@
             color: red;
             padding: 10px;
         }
+
+        /* Sidebar Submenu Styling */
+        .sidebar ul .submenu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: none; /* Hidden by default */
+            background-color: #34495e; /* Slightly lighter shade than primary-color */
+        }
+
+        .sidebar ul li:hover .submenu {
+            display: block; /* Show submenu on hover */
+        }
+
+        .sidebar ul .submenu li a {
+            padding: 10px 20px 10px 40px; /* Indent submenu items */
+            font-size: 0.9rem;
+        }
+
+        .sidebar ul .submenu li a:hover {
+            background-color: #2980b9; /* Matches --item-highlight from dashboard */
+            padding-left: 45px; /* Slight indent on hover */
+        }
+
+        .sidebar ul .submenu li a.active {
+            background-color: #2980b9;
+            padding-left: 45px;
+            font-weight: 600;
+        }
+
+        /* Ensure sidebar links are styled consistently */
+        .sidebar ul li a {
+            color: white;
+            text-decoration: none;
+            padding: 15px 20px;
+            display: block;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar ul li a:hover:not(.logout-btn) {
+            background-color: #2980b9;
+            padding-left: 25px;
+        }
+
+        .sidebar ul li a.active:not(.logout-btn) {
+            background-color: #2980b9;
+            padding-left: 25px;
+            font-weight: 600;
+        }
+
+        .sidebar ul li a.logout-btn:hover {
+            background-color: var(--secondary-color);
+            padding-left: 25px;
+        }
     </style>
 </head>
 <body>
@@ -118,7 +180,13 @@
     <div class="sidebar" id="sidebar">
         <ul>
             <li><a href="dashboard.html" data-page="dashboard.html">Dashboard</a></li>
-            <li><a href="report_generation.html" data-page="report_generation.html">Reports</a></li>
+            <li>
+                <a href="#" data-page="reports">Reports</a>
+                <ul class="submenu">
+                    <li><a href="report_generation.html" data-page="report_generation.html">Yearly Reports</a></li>
+                    <li><a href="report_monthly.html" data-page="report_monthly.html">Monthly Reports</a></li>
+                </ul>
+            </li>
             <li><a href="https://docs.google.com/spreadsheets/d/1T5qHMQAFBd1c6ZJOF91v3moXKI5rhpvKL68u3mrjplc/edit?usp=sharing" target="_blank" data-page="sheets">Sheets</a></li>
             <li><a href="#" class="logout-btn" onclick="showLogoutModal()">Logout</a></li>
         </ul>
@@ -168,6 +236,7 @@
                                 <th>USC</th>
                                 <th>UNIBE</th>
                                 <th>UBO</th>
+                                <th>OJT</th> <!-- Added OJT column -->
                                 <th>Total</th>
                                 <th>Forwarded</th>
                                 <th>Pending</th>
@@ -213,19 +282,20 @@
     </div>
 
     <script>
-        const API_URL = 'https://script.google.com/macros/s/AKfycbyHKJ6-qlH4F3dLdUNuu2mcyiQHhv7kTd7cfWnqustB9nD3aquVk0xkmmp4t7Uj620/exec'; // Update this URL if changed
+        const API_URL = 'https://script.google.com/macros/s/AKfycbyHKJ6-qlH4F3dLdUNuu2mcyiQHhv7kTd7cfWnqustB9nD3aquVk0xkmmp4t7Uj620/exec';
         const INDEX_URL = 'index.html';
         const DASHBOARD_URL = 'dashboard.html';
         const GUEST_URL = 'addg.html';
         const staffNames = ["Ma'am Ann", "Sir Mike", "Sir Christian", "Sir Ronald"];
         const staffKeys = ['maam_ann', 'sir_mike', 'sir_christian', 'sir_ronald'];
-        const proposalTypes = ['in_campus', 'off_campus', 'usc', 'unibe', 'ubo'];
+        const proposalTypes = ['in_campus', 'off_campus', 'usc', 'unibe', 'ubo', 'ojt']; // Added 'ojt' to proposalTypes
         let allProposals = [];
 
         document.addEventListener('DOMContentLoaded', function() {
             checkAuthAndRole();
             populateYearFilter();
             fetchAndDisplayData();
+            setActiveSidebarItem();
         });
 
         function checkAuthAndRole() {
@@ -241,6 +311,33 @@
                 { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true } :
                 { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true };
             document.getElementById('datetime').textContent = now.toLocaleString('en-US', options);
+        }
+
+        function setActiveSidebarItem() {
+            const sidebarItems = document.querySelectorAll('.sidebar ul li a');
+            const currentPage = window.location.pathname.split('/').pop() || 'report_monthly.html';
+            
+            sidebarItems.forEach(item => {
+                const page = item.getAttribute('data-page');
+                if (page === currentPage && page !== 'sheets' && page !== 'reports') {
+                    item.classList.add('active');
+                    // If it's a submenu item, activate the parent "Reports" link
+                    if (item.parentElement.parentElement.classList.contains('submenu')) {
+                        item.parentElement.parentElement.previousElementSibling.classList.add('active');
+                    }
+                }
+                item.addEventListener('click', function(e) {
+                    if (this.getAttribute('data-page') !== 'sheets') {
+                        sidebarItems.forEach(i => i.classList.remove('active'));
+                        this.classList.add('active');
+                        // If it's a submenu item, keep "Reports" active
+                        if (this.parentElement.parentElement.classList.contains('submenu')) {
+                            this.parentElement.parentElement.previousElementSibling.classList.add('active');
+                        }
+                        toggleSidebar();
+                    }
+                });
+            });
         }
 
         function populateYearFilter() {
@@ -279,7 +376,7 @@
             if (proposalData.length === 0) {
                 console.log('No proposals to process, using default zeros');
                 const noDataRow = document.createElement('tr');
-                noDataRow.innerHTML = `<td colspan="12" class="no-data-message">No data available. Check console logs for details.</td>`;
+                noDataRow.innerHTML = `<td colspan="13" class="no-data-message">No data available. Check console logs for details.</td>`; // Updated colspan for new column
                 tbody.appendChild(noDataRow);
             } else {
                 let processedProposals = 0;
@@ -316,6 +413,7 @@
                     else if (nature.includes("usc")) natureKey = "usc";
                     else if (nature.includes("unibe")) natureKey = "unibe";
                     else if (nature.includes("ubo")) natureKey = "ubo";
+                    else if (nature.includes("ojt")) natureKey = "ojt"; // Added OJT parsing
                     console.log('Nature:', nature, 'Nature Key:', natureKey);
                     if (natureKey) {
                         staffData[staffKey][natureKey]++;
@@ -343,7 +441,7 @@
                 if (processedProposals === 0 && (month || year)) {
                     console.log('No proposals matched the criteria after processing');
                     const noDataRow = document.createElement('tr');
-                    noDataRow.innerHTML = `<td colspan="12" class="no-data-message">No matching data for the selected month/year. Check console logs for receiver/nature mismatches.</td>`;
+                    noDataRow.innerHTML = `<td colspan="13" class="no-data-message">No matching data for the selected month/year. Check console logs for receiver/nature mismatches.</td>`; // Updated colspan
                     tbody.appendChild(noDataRow);
                 } else {
                     let rowsRendered = 0;
@@ -415,13 +513,12 @@
             const month = document.getElementById('monthFilter').value;
             const year = document.getElementById('yearFilter').value;
             console.log('Filtering Data - Month:', month, 'Year:', year);
-            // Temporarily bypass filter to test data loading
-            const filteredData = allProposals; //allProposals.filter(proposal => {
-                //const match = proposal.proposalId.match(/^(\d{2})-(\d{4})-\d{4}$/);
-                //const passesFilter = match && (!month || !year || (match[1] === month && match[2] === year));
-                //console.log(`Proposal ${proposal.proposalId}: Match=${!!match}, MonthMatch=${match ? match[1] === month : false}, YearMatch=${match ? match[2] === year : false}, Passes=${passesFilter}`);
-                //return passesFilter;
-            //});
+            const filteredData = allProposals.filter(proposal => {
+                const match = proposal.proposalId.match(/^(\d{2})-(\d{4})-\d{4}$/);
+                const passesFilter = match && (!month || !year || (match[1] === month && match[2] === year));
+                console.log(`Proposal ${proposal.proposalId}: Match=${!!match}, MonthMatch=${match ? match[1] === month : false}, YearMatch=${match ? match[2] === year : false}, Passes=${passesFilter}`);
+                return passesFilter;
+            });
             console.log('Filtered Data:', filteredData);
             createStaffRows(filteredData);
         }
@@ -486,6 +583,7 @@
         window.onload = function() {
             updateDateTime();
             setInterval(updateDateTime, 1000);
+            setActiveSidebarItem();
         };
     </script>
 </body>

@@ -135,6 +135,28 @@
       font-weight: 600;
     }
 
+    .sidebar ul .submenu {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: none; /* Hidden by default */
+      background-color: #34495e; /* Slightly lighter shade than primary-color */
+    }
+
+    .sidebar ul li:hover .submenu {
+      display: block; /* Show submenu on hover */
+    }
+
+    .sidebar ul .submenu li a {
+      padding: 10px 20px 10px 40px; /* Indent submenu items */
+      font-size: 0.9rem;
+    }
+
+    .sidebar ul .submenu li a:hover {
+      background-color: var(--item-highlight);
+      padding-left: 45px; /* Slight indent on hover */
+    }
+
     .main-content {
       margin-left: 0;
       margin-top: var(--header-height);
@@ -463,7 +485,13 @@
   <div class="sidebar" id="sidebar">
     <ul>
       <li><a href="dashboard.html" data-page="dashboard.html">Dashboard</a></li>
-      <li><a href="report_generation.html" data-page="report_generation.html">Reports</a></li>
+      <li>
+        <a href="#" data-page="reports">Reports</a>
+        <ul class="submenu">
+          <li><a href="report_generation.html" data-page="report_generation.html">Yearly Reports</a></li>
+          <li><a href="report_monthly.html" data-page="report_monthly.html">Monthly Reports</a></li>
+        </ul>
+      </li>
       <li><a href="https://docs.google.com/spreadsheets/d/1T5qHMQAFBd1c6ZJOF91v3moXKI5rhpvKL68u3mrjplc/edit?usp=sharing" target="_blank" data-page="sheets">Sheets</a></li>
       <li><a href="#" class="logout-btn" onclick="showLogoutModal()">Logout</a></li>
     </ul>
@@ -598,12 +626,22 @@
       
       sidebarItems.forEach(item => {
         const page = item.getAttribute('data-page');
-        if (page !== 'sheets' && (page === currentPage)) {
+        if (page === currentPage && page !== 'sheets' && page !== 'reports') {
           item.classList.add('active');
+          // If it's a submenu item, activate the parent "Reports" link
+          if (item.parentElement.parentElement.classList.contains('submenu')) {
+            item.parentElement.parentElement.previousElementSibling.classList.add('active');
+          }
         }
         item.addEventListener('click', function(e) {
-          sidebarItems.forEach(i => i.classList.remove('active'));
-          this.classList.add('active');
+          if (this.getAttribute('data-page') !== 'sheets') {
+            sidebarItems.forEach(i => i.classList.remove('active'));
+            this.classList.add('active');
+            // If it's a submenu item, keep "Reports" active
+            if (this.parentElement.parentElement.classList.contains('submenu')) {
+              this.parentElement.parentElement.previousElementSibling.classList.add('active');
+            }
+          }
         });
       });
     }
