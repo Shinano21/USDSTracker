@@ -8,12 +8,23 @@
     <link rel="stylesheet" href="css/rg.css">
     <title>Yearly Reports</title>
     <style>
-        /* CSS Variables (assumed from rg.css if not provided) */
-        :root {
-            --primary-color: #2c3e50;
-            --secondary-color: #c0392b;
-            --text-color: #333;
-            --border-radius: 4px;
+        /* Additional styles specific to this page */
+        .navbar-container {
+            justify-content: space-between;
+        }
+
+        .back-btn {
+            color: white;
+            text-decoration: none;
+            padding: 0 15px;
+            font-size: 1.5rem; /* Increased font size for better visibility of arrow */
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .back-btn:hover {
+            color: #ddd;
         }
 
         /* Modal Styles */
@@ -83,112 +94,18 @@
         .modal-buttons .cancel-btn:hover {
             background-color: #b3b3b3;
         }
-
-        /* Table Styling Adjustments */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th, td {
-            padding: 8px;
-            text-align: center;
-            border: 1px solid #ddd;
-        }
-
-        th {
-            background-color: #f2f2f2;
-        }
-
-        input[type="number"], input[type="text"] {
-            width: 100%;
-            border: none;
-            background: transparent;
-            text-align: center;
-        }
-
-        /* Sidebar Submenu Styling */
-        .sidebar ul .submenu {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: none; /* Hidden by default */
-            background-color: #34495e; /* Slightly lighter shade than primary-color */
-        }
-
-        .sidebar ul li:hover .submenu {
-            display: block; /* Show submenu on hover */
-        }
-
-        .sidebar ul .submenu li a {
-            padding: 10px 20px 10px 40px; /* Indent submenu items */
-            font-size: 0.9rem;
-        }
-
-        .sidebar ul .submenu li a:hover {
-            background-color: #2980b9; /* Matches --item-highlight from dashboard */
-            padding-left: 45px; /* Slight indent on hover */
-        }
-
-        .sidebar ul .submenu li a.active {
-            background-color: #2980b9;
-            padding-left: 45px;
-            font-weight: 600;
-        }
-
-        /* Ensure sidebar links are styled consistently */
-        .sidebar ul li a {
-            color: white;
-            text-decoration: none;
-            padding: 15px 20px;
-            display: block;
-            transition: all 0.3s ease;
-        }
-
-        .sidebar ul li a:hover:not(.logout-btn) {
-            background-color: #2980b9;
-            padding-left: 25px;
-        }
-
-        .sidebar ul li a.active:not(.logout-btn) {
-            background-color: #2980b9;
-            padding-left: 25px;
-            font-weight: 600;
-        }
-
-        .sidebar ul li a.logout-btn:hover {
-            background-color: var(--secondary-color);
-            padding-left: 25px;
-        }
     </style>
 </head>
 <body>
     <nav class="navbar navbar-dark">
         <div class="navbar-container">
-            <button class="navbar-toggler" type="button" onclick="toggleSidebar()">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+            <a class="back-btn" onclick="goBack()">←</a>
             <a class="navbar-brand" href="#">
                 <h1>Yearly Reports</h1>
             </a>
             <div class="datetime" id="datetime"></div>
         </div>
     </nav>
-
-    <div class="sidebar" id="sidebar">
-        <ul>
-            <li><a href="dashboard.html" data-page="dashboard.html">Dashboard</a></li>
-            <li>
-                <a href="#" data-page="reports">Reports</a>
-                <ul class="submenu">
-                    <li><a href="report_generation.html" data-page="report_generation.html">Yearly Reports</a></li>
-                    <li><a href="report_monthly.html" data-page="report_monthly.html">Monthly Reports</a></li>
-                </ul>
-            </li>
-            <li><a href="https://docs.google.com/spreadsheets/d/1T5qHMQAFBd1c6ZJOF91v3moXKI5rhpvKL68u3mrjplc/edit?usp=sharing" target="_blank" data-page="sheets">Sheets</a></li>
-            <li><a href="#" class="logout-btn" onclick="showLogoutModal()">Logout</a></li>
-        </ul>
-    </div>
 
     <div class="main-content">
         <div class="container">
@@ -311,33 +228,6 @@
             document.getElementById('datetime').textContent = now.toLocaleString('en-US', options);
         }
 
-        function setActiveSidebarItem() {
-            const sidebarItems = document.querySelectorAll('.sidebar ul li a');
-            const currentPage = window.location.pathname.split('/').pop() || 'report_generation.html';
-            
-            sidebarItems.forEach(item => {
-                const page = item.getAttribute('data-page');
-                if (page === currentPage && page !== 'sheets' && page !== 'reports') {
-                    item.classList.add('active');
-                    // If it's a submenu item, activate the parent "Reports" link
-                    if (item.parentElement.parentElement.classList.contains('submenu')) {
-                        item.parentElement.parentElement.previousElementSibling.classList.add('active');
-                    }
-                }
-                item.addEventListener('click', function(e) {
-                    if (this.getAttribute('data-page') !== 'sheets') {
-                        sidebarItems.forEach(i => i.classList.remove('active'));
-                        this.classList.add('active');
-                        // If it's a submenu item, keep "Reports" active
-                        if (this.parentElement.parentElement.classList.contains('submenu')) {
-                            this.parentElement.parentElement.previousElementSibling.classList.add('active');
-                        }
-                        toggleSidebar();
-                    }
-                });
-            });
-        }
-
         function showLogoutModal() {
             const modal = document.getElementById('logoutModal');
             modal.style.display = 'flex';
@@ -367,7 +257,6 @@
         window.onload = function() {
             updateDateTime();
             setInterval(updateDateTime, 1000);
-            setActiveSidebarItem();
         };
 
         function toggleLoading(state) {
@@ -444,7 +333,7 @@
                             console.warn(`Unrecognized nature: "${nature}" in proposal ${proposal.proposalId}`);
                         }
 
-                        // Total proposals and status logic (Column X = status)
+                        // Total proposals and status logic
                         statusData[monthShort].total++;
                         const status = (proposal.status || '').toLowerCase().trim();
                         if (status === 'returned') {
@@ -572,11 +461,6 @@
                 });
             }
             createMonthRows(filteredData);
-        }
-
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            sidebar.classList.toggle('open');
         }
 
         function handlePrint() {
