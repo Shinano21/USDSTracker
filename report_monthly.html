@@ -7,101 +7,6 @@
     <link rel="icon" type="image/png" href="images/USDS.png">
     <link rel="stylesheet" href="css/rg2.css">
     <title>Monthly Staff Report</title>
-    <style>
-        /* Additional styles specific to this page */
-        .navbar-container {
-            justify-content: space-between;
-        }
-
-        .back-btn {
-            color: white;
-            text-decoration: none;
-            padding: 0 15px;
-            font-size: 1.5rem; /* Increased font size for better visibility of arrow */
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-        }
-
-        .back-btn:hover {
-            color: #ddd;
-        }
-
-        /* Modal Styles */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 2000;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background-color: white;
-            padding: 20px;
-            border-radius: var(--border-radius);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            width: 90%;
-            max-width: 400px;
-            text-align: center;
-        }
-
-        .modal-content h2 {
-            margin: 0 0 15px;
-            font-size: 1.5rem;
-            color: var(--primary-color);
-        }
-
-        .modal-content p {
-            margin: 0 0 20px;
-            font-size: 1rem;
-            color: var(--text-color);
-        }
-
-        .modal-buttons {
-            display: flex;
-            justify-content: space-around;
-        }
-
-        .modal-buttons button {
-            padding: 10px 20px;
-            font-size: 1rem;
-            border-radius: var(--border-radius);
-            border: none;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .modal-buttons .confirm-btn {
-            background-color: var(--secondary-color);
-            color: white;
-        }
-
-        .modal-buttons .confirm-btn:hover {
-            background-color: #a93226;
-        }
-
-        .modal-buttons .cancel-btn {
-            background-color: #ccc;
-            color: var(--text-color);
-        }
-
-        .modal-buttons .cancel-btn:hover {
-            background-color: #b3b3b3;
-        }
-
-        /* No Data Message */
-        .no-data-message {
-            text-align: center;
-            color: red;
-            padding: 10px;
-        }
-    </style>
 </head>
 <body>
     <nav class="navbar navbar-dark">
@@ -117,6 +22,7 @@
     <div class="main-content">
         <div class="container">
             <div class="header">MONTHLY STAFF REPORT GENERATION FORM</div>
+            <div id="printMonthYear" class="print-month-year"></div>
             <div class="form-container">
                 <div class="filters">
                     <div class="filter-group">
@@ -254,7 +160,6 @@
             const year = document.getElementById('yearFilter').value;
             console.log('Selected Month:', month, 'Selected Year:', year);
 
-            // Initialize staff data with zeros
             const staffData = {};
             const statusData = {};
             const accomplishedData = {};
@@ -266,7 +171,6 @@
                 accomplishedData[staff] = { yes: 0, total: 0 };
             });
 
-            // Process proposal data to update counts
             if (proposalData.length === 0) {
                 console.log('No proposals to process, using default zeros');
                 const noDataRow = document.createElement('tr');
@@ -331,7 +235,6 @@
 
                 console.log(`Processed ${processedProposals} proposals out of ${proposalData.length}`);
 
-                // Render static staff rows if there were matching proposals or force render with zeros
                 if (processedProposals === 0 && (month || year)) {
                     console.log('No proposals matched the criteria after processing');
                     const noDataRow = document.createElement('tr');
@@ -363,7 +266,6 @@
                 }
             }
 
-            // Render total row
             const totalYes = staffKeys.reduce((sum, key) => sum + (accomplishedData[key].yes || 0), 0);
             const totalProposals = staffKeys.reduce((sum, key) => sum + (accomplishedData[key].total || 0), 0);
             const totalPercentage = totalProposals > 0 ? ((totalYes / totalProposals) * 100).toFixed(0) + '%' : '0%';
@@ -434,12 +336,31 @@
 
         function handlePrint() {
             const reportName = document.getElementById('reportName').value.trim();
+            const monthFilter = document.getElementById('monthFilter').value;
+            const yearFilter = document.getElementById('yearFilter').value;
+
             if (!reportName) {
                 showReportNameErrorModal();
                 return;
             }
+
+            const monthNames = {
+                '01': 'January', '02': 'February', '03': 'March', '04': 'April',
+                '05': 'May', '06': 'June', '07': 'July', '08': 'August',
+                '09': 'September', '10': 'October', '11': 'November', '12': 'December'
+            };
+
+            const monthYearText = monthFilter && yearFilter 
+                ? `${monthNames[monthFilter]} ${yearFilter}`
+                : yearFilter 
+                ? `${yearFilter}`
+                : monthFilter 
+                ? `${monthNames[monthFilter]}`
+                : 'All Time';
+            document.getElementById('printMonthYear').textContent = monthYearText;
+
             const originalTitle = document.title;
-            document.title = reportName;
+            document.title = `${reportName} - ${monthYearText}`;
             window.print();
             document.title = originalTitle;
         }

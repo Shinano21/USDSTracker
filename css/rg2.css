@@ -35,7 +35,7 @@ body {
     z-index: 1000;
     padding: 0;
     display: flex;
-    justify-content: flex-start; /* Ensure left alignment */
+    justify-content: flex-start;
     align-items: center;
 }
 
@@ -43,12 +43,13 @@ body {
     display: flex;
     align-items: center;
     width: 100%;
-    padding: 0 15px; /* Consistent padding for container */
+    padding: 0 15px;
+    justify-content: space-between;
 }
 
 .navbar-brand {
     padding: 0;
-    margin: 0 10px 0 0; /* Adjusted margin to remove extra space */
+    margin: 0 10px 0 0;
 }
 
 .navbar .navbar-brand h1 {
@@ -61,33 +62,6 @@ body {
     text-overflow: ellipsis;
 }
 
-.navbar .navbar-toggler {
-    border: none;
-    padding: 0; /* Removed padding to eliminate space around hamburger */
-    font-size: 1.25rem;
-    color: white;
-    margin: 0; /* Reset margin */
-    width: 30px; /* Fixed width to ensure proper sizing */
-    height: 30px; /* Fixed height to match icon */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.navbar .navbar-toggler:focus {
-    outline: none;
-    box-shadow: none;
-}
-
-.navbar .navbar-toggler-icon {
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255, 255, 255, 1)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
-    width: 100%; /* Ensure icon fills the toggler */
-    height: 100%; /* Ensure icon fills the toggler */
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-}
-
 .navbar .datetime {
     font-size: 0.9rem;
     padding: 5px 10px;
@@ -95,83 +69,21 @@ body {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    margin-left: auto; /* Pushes datetime to the right */
+    margin-left: auto;
 }
 
-@media (max-width: 480px) {
-    .navbar .navbar-brand h1 {
-        font-size: 1rem;
-    }
-
-    .navbar .datetime {
-        font-size: 0.7rem;
-        padding: 2px 5px;
-    }
-
-    .navbar .navbar-toggler {
-        font-size: 1.2rem;
-        padding: 0; /* No padding on mobile */
-        width: 25px; /* Slightly smaller on mobile */
-        height: 25px;
-    }
-
-    .navbar-container {
-        padding: 0 10px; /* Adjust padding for smaller screens */
-    }
-}
-
-.sidebar {
-    width: var(--sidebar-width);
-    background-color: var(--primary-color);
-    color: white;
-    position: fixed;
-    height: calc(100% - var(--header-height));
-    top: var(--header-height);
-    left: 0;
-    padding-top: 20px;
-    z-index: 999;
-    transform: translateX(-100%);
-    transition: transform 0.3s ease;
-}
-
-.sidebar.open {
-    transform: translateX(0);
-}
-
-.sidebar ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.sidebar ul li a {
+.back-btn {
     color: white;
     text-decoration: none;
-    padding: 15px 20px;
-    display: block;
-    transition: all 0.3s ease;
+    padding: 0 15px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
 }
 
-.sidebar ul li a:not(.logout-btn):hover {
-    background-color: var(--item-highlight);
-    padding-left: 25px;
-}
-
-.sidebar ul li a:not(.logout-btn).active {
-    background-color: var(--item-highlight);
-    padding-left: 25px;
-    font-weight: 600;
-}
-
-.sidebar ul li a.logout-btn:hover {
-    background-color: var(--secondary-color);
-    padding-left: 25px;
-}
-
-.sidebar ul li a.logout-btn.active {
-    background-color: var(--secondary-color);
-    padding-left: 25px;
-    font-weight: 600;
+.back-btn:hover {
+    color: #ddd;
 }
 
 .main-content {
@@ -180,11 +92,6 @@ body {
     padding: 20px;
     width: 100%;
     transition: margin-left 0.3s ease;
-}
-
-.main-content.shifted {
-    margin-left: var(--sidebar-width);
-    width: calc(100% - var(--sidebar-width));
 }
 
 .container {
@@ -205,6 +112,14 @@ body {
     font-size: 1.5rem;
     font-weight: 600;
     letter-spacing: 1px;
+}
+
+.print-month-year {
+    text-align: center;
+    font-size: 1.2rem;
+    color: var(--text-color);
+    padding: 10px 0;
+    display: none;
 }
 
 .form-container {
@@ -367,14 +282,96 @@ button:active {
     font-size: 0.875rem;
 }
 
+.no-data-message {
+    text-align: center;
+    color: red;
+    padding: 10px;
+}
+
 .loading {
     opacity: 0.7;
     pointer-events: none;
 }
 
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 2000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.modal-content h2 {
+    margin: 0 0 15px;
+    font-size: 1.5rem;
+    color: var(--primary-color);
+}
+
+.modal-content p {
+    margin: 0 0 20px;
+    font-size: 1rem;
+    color: var(--text-color);
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: space-around;
+}
+
+.modal-buttons button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: var(--border-radius);
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.modal-buttons .confirm-btn {
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+.modal-buttons .confirm-btn:hover {
+    background-color: #a93226;
+}
+
+.modal-buttons .cancel-btn {
+    background-color: #ccc;
+    color: var(--text-color);
+}
+
+.modal-buttons .cancel-btn:hover {
+    background-color: #b3b3b3;
+}
+
 @media (max-width: 480px) {
-    .sidebar {
-        width: 200px;
+    .navbar .navbar-brand h1 {
+        font-size: 1rem;
+    }
+
+    .navbar .datetime {
+        font-size: 0.7rem;
+        padding: 2px 5px;
+    }
+
+    .navbar-container {
+        padding: 0 10px;
     }
 
     .main-content {
@@ -444,10 +441,6 @@ button:active {
     .navbar .datetime {
         font-size: 0.9rem;
         padding: 5px 10px;
-    }
-
-    .sidebar {
-        width: 200px;
     }
 
     .main-content {
@@ -563,10 +556,10 @@ button:active {
 
     body {
         padding: 0;
-        font-size: 10pt;
+        font-size: 9pt; /* Reduced from 10pt for better fit */
     }
 
-    .navbar, .sidebar {
+    .navbar {
         display: none;
     }
 
@@ -586,12 +579,19 @@ button:active {
         background: none;
         color: black;
         border-bottom: 2px solid #000;
-        padding: 10px;
-        font-size: 14pt;
+        padding: 8px; /* Reduced padding */
+        font-size: 12pt; /* Slightly smaller for space */
+    }
+
+    .print-month-year {
+        display: block;
+        font-size: 10pt; /* Reduced for better fit */
+        color: black;
+        padding: 4px 0; /* Reduced padding */
     }
 
     .form-container {
-        padding: 10px;
+        padding: 8px; /* Reduced padding */
     }
 
     .button-group, .filters, .report-name label, .error-message {
@@ -601,7 +601,7 @@ button:active {
     .report-name input {
         border: none;
         padding: 0;
-        font-size: 12pt;
+        font-size: 10pt; /* Reduced size */
         font-weight: bold;
         background: none;
         width: auto;
@@ -614,34 +614,40 @@ button:active {
 
     table {
         width: 100%;
-        font-size: 8pt;
+        font-size: 7pt; /* Reduced from 8pt to fit all columns */
+        table-layout: fixed; /* Ensures columns distribute evenly */
     }
 
     th, td {
-        padding: 6px;
+        padding: 4px; /* Reduced padding to save space */
         border: 1px solid #000;
-        min-width: 0;
-        white-space: normal;
+        min-width: 0; /* Remove min-width to allow shrinkage */
+        width: auto; /* Let columns adjust naturally */
+        white-space: normal; /* Allow wrapping if needed */
         word-wrap: break-word;
+        overflow: hidden; /* Prevent content overflow */
     }
 
     th {
         background-color: white !important;
     }
 
+    /* Specific column widths removed to allow dynamic adjustment */
     th.accomplished-on-time, td.accomplished-on-time {
-        width: 50px;
+        width: auto; /* Dynamic width */
     }
 
     th.percentage, td.percentage {
-        width: 60px;
+        width: auto; /* Dynamic width */
     }
 
     input {
         border: none;
         padding: 0;
         background: none;
-        font-size: 8pt;
+        font-size: 7pt; /* Match table font size */
         width: 100%;
+        overflow: hidden; /* Prevent text overflow */
+        text-overflow: ellipsis; /* Truncate if too long */
     }
 }

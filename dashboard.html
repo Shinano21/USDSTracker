@@ -8,12 +8,14 @@
   <link rel="stylesheet" href="css/dash.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
   <title>USDS Proposal Tracker</title>
-  
 </head>
 <body>
   <div class="navbar">
     <div class="navbar-brand">
-      <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
+      <button class="toggle-btn" onclick="toggleSidebar()">
+        <span class="menu-icon closed">☰</span>
+        <span class="menu-icon opened">✕</span>
+      </button>
       <h1>USDS Proposal Tracker</h1>
     </div>
     <div class="datetime" id="datetime"></div>
