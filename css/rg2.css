@@ -182,15 +182,26 @@ table {
     width: 100%;
     border-collapse: collapse;
     font-size: 0.9rem;
-    min-width: 900px;
+    min-width: 0; /* Remove fixed min-width for responsiveness */
+    table-layout: auto; /* Allow columns to adjust based on content */
 }
 
 th, td {
     padding: 12px 8px;
     text-align: center;
     border: 1px solid #eee;
-    min-width: 60px;
-    white-space: nowrap;
+    min-width: 60px; /* Base min-width */
+    white-space: normal; /* Allow wrapping */
+    word-wrap: break-word;
+}
+
+/* Specific column adjustments */
+th.usc, td.usc,
+th.unibe, td.unibe,
+th.ubo, td.ubo,
+th.ojt, td.ojt,
+th.total, td.total {
+    min-width: 70px; /* Slightly larger for these columns */
 }
 
 th.accomplished-on-time, td.accomplished-on-time {
@@ -207,6 +218,7 @@ th {
     position: sticky;
     top: 0;
     z-index: 1;
+    white-space: nowrap; /* Keep headers nowrap by default */
 }
 
 tr:nth-child(even) {
@@ -362,6 +374,7 @@ button:active {
     background-color: #b3b3b3;
 }
 
+/* Responsive Media Queries */
 @media (max-width: 480px) {
     .navbar .navbar-brand h1 {
         font-size: 1rem;
@@ -380,6 +393,7 @@ button:active {
         margin-left: 0;
         width: 100%;
         margin-top: var(--header-height);
+        padding: 10px;
     }
 
     .container {
@@ -404,10 +418,23 @@ button:active {
         min-width: 100%;
     }
 
+    table {
+        font-size: 0.7rem;
+    }
+
     th, td {
         padding: 6px 4px;
-        font-size: 0.65rem;
         min-width: 40px;
+        font-size: 0.65rem;
+        white-space: normal; /* Allow wrapping on small screens */
+    }
+
+    th.usc, td.usc,
+    th.unibe, td.unibe,
+    th.ubo, td.ubo,
+    th.ojt, td.ojt,
+    th.total, td.total {
+        min-width: 50px;
     }
 
     th.accomplished-on-time, td.accomplished-on-time {
@@ -426,7 +453,7 @@ button:active {
     }
 
     .button-group {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: 1fr; /* Stack buttons vertically */
         gap: 8px;
     }
 
@@ -449,10 +476,11 @@ button:active {
     .main-content {
         margin-left: 0;
         width: 100%;
+        padding: 15px;
     }
 
     .container {
-        max-width: 700px;
+        max-width: 100%;
     }
 
     .header {
@@ -464,18 +492,37 @@ button:active {
         gap: 15px;
     }
 
-    th, td {
-        padding: 8px;
+    table {
         font-size: 0.8rem;
+    }
+
+    th, td {
+        padding: 8px 6px;
         min-width: 50px;
+        font-size: 0.8rem;
+    }
+
+    th.usc, td.usc,
+    th.unibe, td.unibe,
+    th.ubo, td.ubo,
+    th.ojt, td.ojt,
+    th.total, td.total {
+        min-width: 60px;
     }
 
     th.accomplished-on-time, td.accomplished-on-time {
-        min-width: 40px;
+        min-width: 60px;
     }
 
     th.percentage, td.percentage {
         min-width: 50px;
+    }
+
+    input[type="number"],
+    input[type="text"] {
+        min-width: 40px;
+        padding: 5px 3px;
+        font-size: 0.8rem;
     }
 
     .button-group {
@@ -490,7 +537,7 @@ button:active {
 
 @media (min-width: 769px) and (max-width: 1200px) {
     .container {
-        max-width: 1000px;
+        max-width: 100%;
     }
 
     .header {
@@ -501,8 +548,12 @@ button:active {
         gap: 15px;
     }
 
+    table {
+        font-size: 0.9rem;
+    }
+
     th, td {
-        padding: 10px;
+        padding: 10px 8px;
     }
 
     .button-group {
@@ -530,13 +581,13 @@ button:active {
     }
 
     th, td {
-        padding: 14px;
+        padding: 14px 10px;
         font-size: 1rem;
     }
 
     input[type="number"],
     input[type="text"] {
-        padding: 8px;
+        padding: 8px 6px;
         font-size: 0.9rem;
     }
 
@@ -628,6 +679,14 @@ button:active {
         width: auto;
         white-space: normal;
         word-wrap: break-word;
+    }
+
+    th.usc, td.usc,
+    th.unibe, td.unibe,
+    th.ubo, td.ubo,
+    th.ojt, td.ojt,
+    th.total, td.total {
+        min-width: 0;
     }
 
     th {
