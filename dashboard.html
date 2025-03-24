@@ -46,7 +46,7 @@
         </ul>
       </li>
       <li>
-        <a href="https://docs.google.com/spreadsheets/d/1T5qHMQAFBd1c6ZJOF91v3moXKI5rhpvKL68u3mrjplc/edit?usp=sharing" target="_blank" data-page="sheets">
+        <a href="#" onclick="showSheetsModal()" data-page="sheets">
           <i class="bi bi-table"></i> Sheets
         </a>
       </li>
@@ -121,6 +121,16 @@
       <div class="modal-buttons">
         <button class="modal-button confirm-btn" onclick="performLogout()">Yes</button>
         <button class="modal-button cancel-btn" onclick="hideLogoutModal()">No</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sheets Access Modal -->
+  <div id="sheetsModal" class="modal">
+    <div class="modal-content">
+      <p>Please contact your local administrator for access to the Sheets.</p>
+      <div class="modal-buttons">
+        <button class="modal-button cancel-btn" onclick="hideSheetsModal()">Close</button>
       </div>
     </div>
   </div>
@@ -216,6 +226,14 @@
       localStorage.removeItem('authToken');
       localStorage.removeItem('userPosition');
       window.location.replace(LOGIN_URL);
+    }
+
+    function showSheetsModal() {
+      document.getElementById('sheetsModal').style.display = 'block';
+    }
+
+    function hideSheetsModal() {
+      document.getElementById('sheetsModal').style.display = 'none';
     }
 
     window.history.pushState(null, null, window.location.href);
