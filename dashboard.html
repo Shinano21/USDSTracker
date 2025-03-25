@@ -91,6 +91,15 @@
               </script>
             </select>
           </div>
+          <div class="filter-group">
+            <label for="statusFilter">Status:</label>
+            <select id="statusFilter" onchange="filterProposals()">
+              <option value="">All</option>
+              <option value="Pending">Pending</option>
+              <option value="Forwarded">Forwarded</option>
+              <option value="Returned">Returned</option>
+            </select>
+          </div>
         </div>
         <div class="button-container" id="adminButtons">
           <button onclick="window.location.href='add.html'">+ Add Record</button>
@@ -105,6 +114,7 @@
             <th>Proposal ID</th>
             <th>College</th>
             <th>Title of Activity</th>
+            <th>Status</th>
             <th>Action</th>
           </tr>
         </thead>
@@ -253,7 +263,7 @@
           return;
         }
         if (!Array.isArray(data) || data.length === 0) {
-          document.getElementById('proposalTable').innerHTML = '<tr><td colspan="4">No proposals found</td></tr>';
+          document.getElementById('proposalTable').innerHTML = '<tr><td colspan="5">No proposals found</td></tr>';
           document.getElementById('proposalCards').innerHTML = '<p>No proposals found</p>';
           return;
         }
@@ -278,6 +288,7 @@
           <td>${proposal.proposalId || ''}</td>
           <td>${proposal.college || ''}</td>
           <td>${proposal.particulars || 'Untitled'}</td>
+          <td>${proposal.status || 'Pending'}</td>
           <td>
             <select class="action-select" onchange="handleAction(this, '${proposal.proposalId}')">
               <option value="">Select</option>
@@ -294,6 +305,7 @@
           <div><label>Proposal ID:</label> ${proposal.proposalId || ''}</div>
           <div><label>College:</label> ${proposal.college || ''}</div>
           <div><label>Title:</label> ${proposal.particulars || 'Untitled'}</div>
+          <div><label>Status:</label> ${proposal.status || 'Pending'}</div>
           <div>
             <select class="action-select" onchange="handleAction(this, '${proposal.proposalId}')">
               <option value="">Select Action</option>
@@ -309,6 +321,7 @@
     function filterProposals() {
       const month = document.getElementById('monthFilter').value;
       const year = document.getElementById('yearFilter').value;
+      const status = document.getElementById('statusFilter').value;
       const searchTerm = document.getElementById('searchInput').value.toLowerCase();
       let filteredProposals = [...allProposals];
 
@@ -326,13 +339,20 @@
         });
       }
 
+      if (status) {
+        filteredProposals = filteredProposals.filter(proposal => 
+          (proposal.status || 'Pending').toLowerCase() === status.toLowerCase()
+        );
+      }
+
       if (searchTerm) {
         filteredProposals = filteredProposals.filter(proposal => 
           (proposal.proposalId || '').toLowerCase().includes(searchTerm) ||
           (proposal.particulars || '').toLowerCase().includes(searchTerm) ||
           (proposal.nature || '').toLowerCase().includes(searchTerm) ||
           (proposal.college || '').toLowerCase().includes(searchTerm) ||
-          (proposal.docSeq || '').toLowerCase().includes(searchTerm)
+          (proposal.docSeq || '').toLowerCase().includes(searchTerm) ||
+          (proposal.status || 'Pending').toLowerCase().includes(searchTerm)
         );
       }
 
