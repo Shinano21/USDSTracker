@@ -212,13 +212,11 @@
                 return;
             }
 
-            // Both admins and guests can view, but we can redirect guests to a different page if needed
-            // For now, we'll allow both roles to view this page
-            // Uncomment the following if you want to restrict guests to a different page:
-            // if (userPosition !== 'admin') {
-            //     window.location.replace(GUEST_URL);
-            //     return;
-            // }
+            // Restrict access to admins only; redirect guests to GUEST_URL
+            if (userPosition !== 'admin') {
+                window.location.replace(GUEST_URL);
+                return;
+            }
         }
 
         function updateDateTime() {
@@ -243,9 +241,8 @@
         }
 
         function goBack() {
-            const userPosition = localStorage.getItem('userPosition');
-            // Redirect based on role: admins to dashboard, guests to addg.html
-            window.location.href = userPosition === 'admin' ? DASHBOARD_URL : GUEST_URL;
+            // Since only admins can access this page, always redirect to DASHBOARD_URL
+            window.location.href = DASHBOARD_URL;
         }
 
         async function loadProposalData() {
@@ -281,7 +278,8 @@
                 document.getElementById('locale').textContent = data.locale || 'N/A';
                 document.getElementById('duration').textContent = data.durationOfActivity || 'N/A';
                 document.getElementById('funding').textContent = data.funding || 'N/A';
-                document.getElementById('amount').textContent = data.amount || 'N/A';
+                // Show 0 instead of N/A for amount
+                document.getElementById('amount').textContent = data.amount !== undefined && data.amount !== null ? data.amount : 'N/A';
                 document.getElementById('contact').textContent = data.contact || 'N/A';
                 document.getElementById('documents').textContent = data.documents || 'N/A';
                 document.getElementById('csac').textContent = data.csac || 'N/A';

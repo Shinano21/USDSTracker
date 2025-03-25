@@ -455,11 +455,12 @@ button {
 #successModal .modal-content {
     border-radius: var(--border-radius);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    background-color: white; /* Ensure the entire modal content background is white */
 }
 
 #successModal .modal-header {
-    background-color: var(--item-highlight);
-    color: white;
+    background-color: white; /* Changed to white */
+    color: #333; /* Changed text color for visibility */
     border-bottom: none;
     padding: 15px 20px;
 }
@@ -469,8 +470,14 @@ button {
     font-weight: 500;
 }
 
+#successModal .modal-title .bi-check-circle {
+    color: #28a745; /* Green color for the check icon */
+    font-size: 1.5rem; /* Adjust the size of the icon */
+    vertical-align: middle; /* Align the icon with the text */
+}
+
 #successModal .btn-close {
-    filter: invert(1) grayscale(100%) brightness(100%);
+    filter: invert(0) grayscale(100%) brightness(0%); /* Changed to black for visibility on white background */
 }
 
 #successModal .modal-body {
@@ -478,6 +485,8 @@ button {
     font-size: 1rem;
     color: #333;
     text-align: center;
+    text-decoration: none; /* Ensure no underlining */
+    background-color: white; /* Ensure the body background is white */
 }
 
 #successModal .modal-footer {
