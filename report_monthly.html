@@ -59,8 +59,8 @@
                         <thead>
                             <tr>
                                 <th>STAFF NAME</th>
-                                <th>In Campus</th>
-                                <th>Off Campus</th>
+                                <th>On-Campus</th> <!-- Changed from In Campus -->
+                                <th>Off-Campus</th> <!-- Changed from Off Campus -->
                                 <th>USC</th>
                                 <th>UNIBE</th>
                                 <th>UBO</th>
@@ -116,7 +116,7 @@
         const GUEST_URL = 'addg.html';
         const staffNames = ["Ma'am Ann", "Sir Mike", "Sir Christian", "Sir Ronald"];
         const staffKeys = ['maam_ann', 'sir_mike', 'sir_christian', 'sir_ronald'];
-        const proposalTypes = ['in_campus', 'off_campus', 'usc', 'unibe', 'ubo', 'ojt'];
+        const proposalTypes = ['on_campus', 'off_campus', 'usc', 'unibe', 'ubo', 'ojt']; // Updated keys
         let allProposals = [];
 
         document.addEventListener('DOMContentLoaded', function() {
@@ -206,7 +206,7 @@
                     
                     const nature = (proposal.nature || '').trim().toLowerCase();
                     let natureKey;
-                    if (nature.includes("in") && nature.includes("campus")) natureKey = "in_campus";
+                    if (nature.includes("on") && nature.includes("campus")) natureKey = "on_campus"; // Updated condition
                     else if (nature.includes("off") && nature.includes("campus")) natureKey = "off_campus";
                     else if (nature.includes("usc")) natureKey = "usc";
                     else if (nature.includes("unibe")) natureKey = "unibe";

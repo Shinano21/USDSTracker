@@ -204,8 +204,8 @@
                             <label for="nature" class="required-label">Nature/Classification:</label>
                             <select id="nature" name="nature" required>
                                 <option value="" disabled selected>Select Nature/Classification</option>
-                                <option value="Off Campus">Off Campus</option>
-                                <option value="In Campus">In Campus</option>
+                                <option value="Off-Campus">Off-Campus</option>
+                                <option value="On-Campus">On-Campus</option>
                                 <option value="OJT">OJT</option>
                                 <option value="USC">USC</option>
                                 <option value="UNIBE">UNIBE</option>
@@ -357,21 +357,23 @@
                                                 <ul>
                                                     <li>Medical certificate duly signed by the University Physician</li>
                                                     <li>Psychological test result (as required by the HTE or College) <em>(N/A)</em></li>
-                                                </ul>
-                                            </li>
-                                            <li>Has consent from parent/guardian
-                                                <ul><li>Parent/guardian consent duly notarized</li></ul>
-                                            </li>
-                                            <li>Insurance of students
-                                                <ul><li>Individual or group insurance of the student/s</li></ul>
-                                            </li>
-                                            <li>Emergency Awareness Plan
-                                                <ul><li>Do's and don'ts of the students before, during, and after internship</li></ul>
-                                            </li>
-                                            <li>Risk Management Plan</li>
-                                            <li>Approved proposal from the President to conduct Student Internship Program</li>
+physics://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Flag_of_the_Philippines.svg/1200px-Flag_of_the_Philippines.svg.png" alt="Philippine Flag" width="40" height="20"/> Republic of the Philippines
+                                            <ul>
+                                                <li>Certification from the CHED Regional Office that the students have complied with academic requirements prior to OJT/Practicum/Affiliation</li>
+                                            </ul>
                                         </ul>
                                     </li>
+                                    <li>Has consent from parent/guardian
+                                        <ul><li>Parent/guardian consent duly notarized</li></ul>
+                                    </li>
+                                    <li>Insurance of students
+                                        <ul><li>Individual or group insurance of the student/s</li></ul>
+                                    </li>
+                                    <li>Emergency Awareness Plan
+                                        <ul><li>Do's and don'ts of the students before, during, and after internship</li></ul>
+                                    </li>
+                                    <li>Risk Management Plan</li>
+                                    <li>Approved proposal from the President to conduct Student Internship Program</li>
                                 </ul>
                             </div>
                         </div>
@@ -668,10 +670,10 @@
             ojtSection.style.display = 'none';
             requirementsSection.style.display = 'none';
 
-            if (this.value === 'Off Campus') {
+            if (this.value === 'Off-Campus') {
                 requirementsSection.style.display = 'block';
                 offCampusSection.style.display = 'block';
-            } else if (this.value === 'In Campus') {
+            } else if (this.value === 'On-Campus') {
                 requirementsSection.style.display = 'block';
                 onCampusSection.style.display = 'block';
             } else if (this.value === 'OJT') {
