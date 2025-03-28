@@ -11,10 +11,15 @@ body {
     background-color: #fafafa;
     min-height: 100vh;
     font-size: 16px;
+    font-family: Arial, sans-serif;
 }
 
 .navbar {
     background-color: var(--primary-color);
+}
+
+.navbar-brand {
+    margin-left: 0; /* Ensure no extra margin pushes it to the center */
 }
 
 .navbar-brand h1 {
@@ -22,11 +27,19 @@ body {
     font-size: 1.5rem;
     font-weight: 500;
     color: white;
+    text-align: left; /* Align the title to the left */
+}
+
+.container-fluid {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Align items to the left */
 }
 
 .datetime {
     font-size: 0.9rem;
     color: white;
+    margin-left: auto; /* Push datetime to the right */
 }
 
 .back-btn {
@@ -34,6 +47,7 @@ body {
     text-decoration: none;
     font-size: 1.5rem;
     cursor: pointer;
+    margin-right: 10px; /* Space between back button and title */
 }
 
 .back-btn:hover {
@@ -140,7 +154,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 10px; /* Reduced gap to match screenshot */
+    gap: 10px;
     width: 100%;
     flex-wrap: wrap;
 }
@@ -148,7 +162,7 @@ body {
 .button-group .col-md-6 {
     flex: 1 1 auto;
     padding: 0;
-    min-width: 100px; /* Reduced to make buttons narrower */
+    min-width: 100px;
     margin: 0;
     display: flex;
     align-items: center;
@@ -157,9 +171,9 @@ body {
 .btn {
     display: inline-block;
     font-size: 1rem;
-    padding: 8px 12px; /* Reduced padding for a more compact look */
-    width: auto; /* Allow button to size based on content */
-    min-width: 100px; /* Reduced min-width to match screenshot */
+    padding: 8px 12px;
+    width: auto;
+    min-width: 100px;
     text-align: center;
     white-space: nowrap;
     border-radius: var(--border-radius);
@@ -180,7 +194,70 @@ body {
     color: white;
 }
 
-/* Media Queries */
+/* Letterhead Styles */
+.letterhead {
+    padding: 5px 10px; /* Reduced padding to save vertical space */
+    border-bottom: 2px solid #000;
+    margin-bottom: 10px; /* Reduced margin */
+}
+
+.letterhead-top {
+    text-align: left;
+    margin-bottom: 5px; /* Reduced margin */
+}
+
+.letterhead-top .republic {
+    font-size: 12px; /* Reduced font size */
+    font-weight: bold;
+    margin-bottom: 3px; /* Reduced margin */
+}
+
+.letterhead-top h2 {
+    font-size: 14px; /* Reduced font size */
+    font-weight: bold;
+    margin: 0;
+}
+
+.letterhead-top .office {
+    font-size: 10px; /* Reduced font size */
+    margin: 1px 0; /* Reduced margin */
+}
+
+.letterhead-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.letterhead-logos {
+    display: flex;
+    align-items: center;
+    margin-right: 15px; /* Reduced margin */
+}
+
+.letterhead-logos img {
+    width: 60px; /* Reduced logo size to save space */
+    height: 60px;
+    margin-right: 8px; /* Reduced margin */
+}
+
+.letterhead-text {
+    font-size: 10px; /* Reduced font size */
+    line-height: 1.2; /* Reduced line height */
+}
+
+.letterhead-text p {
+    margin: 1px 0; /* Reduced margin */
+}
+
+/* Screen-specific styles */
+@media screen {
+    .letterhead {
+        display: none; /* Hide letterhead on screen */
+    }
+}
+
+/* Media Queries for Screen */
 @media (max-width: 768px) {
     body {
         font-size: 14px;
@@ -215,13 +292,13 @@ body {
 
     .btn {
         font-size: 0.875rem;
-        padding: 6px 10px; /* Slightly smaller padding on mobile */
+        padding: 6px 10px;
         min-width: 100px;
     }
 
     .button-group {
         flex-direction: column;
-        gap: 8px; /* Slightly smaller gap on mobile */
+        gap: 8px;
         align-items: stretch;
     }
 
@@ -230,19 +307,25 @@ body {
     }
 }
 
+/* Print-specific styles */
 @media print {
     @page {
         size: landscape;
-        margin: 0.5in;
+        margin: 0.3in; /* Reduced margin to maximize space */
     }
 
     body {
         padding: 0;
-        font-size: 10pt;
+        font-size: 8pt; /* Reduced font size for printing */
     }
 
-    .navbar, .button-group, .filters, .report-name label, .error-message {
-        display: none;
+    .navbar, .button-group, .filters, .report-name label, .error-message, .modal {
+        display: none !important;
+    }
+
+    .main-content {
+        margin: 0;
+        padding: 0;
     }
 
     .container {
@@ -250,41 +333,87 @@ body {
         border: none;
         max-width: 100%;
         width: 100%;
+        padding: 0;
     }
 
     .header {
         background: none;
         color: black;
         border-bottom: 2px solid #000;
-        padding: 10px;
-        font-size: 14pt;
+        padding: 5px; /* Reduced padding */
+        font-size: 12pt; /* Reduced font size */
+        text-align: center;
     }
 
     .report-name input {
         border: none;
         padding: 0;
-        font-size: 12pt;
+        font-size: 10pt; /* Reduced font size */
         font-weight: bold;
         background: none;
         width: auto;
         display: inline;
     }
 
+    .letterhead {
+        display: block; /* Ensure letterhead is visible during printing */
+        padding: 5px 10px;
+        margin-bottom: 5px; /* Reduced margin */
+    }
+
+    .table-responsive {
+        overflow: visible; /* Prevent clipping */
+    }
+
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 6pt; /* Significantly reduced font size to fit more content */
+        margin-bottom: 0;
+    }
+
     .table th, .table td {
-        padding: 6px;
+        padding: 2px; /* Reduced padding */
         border: 1px solid #000;
-        white-space: normal;
+        white-space: normal; /* Allow text wrapping */
         word-wrap: break-word;
+        text-align: center;
+        vertical-align: middle;
+        line-height: 1.1; /* Reduced line height */
     }
 
     .table th {
         background-color: white !important;
+        font-weight: bold;
     }
 
     .table input {
         border: none;
         padding: 0;
         background: none;
-        font-size: 8pt;
+        font-size: 6pt; /* Match table font size */
+        line-height: 1.1;
+    }
+
+    /* Force table to fit within page width */
+    .table th, .table td {
+        max-width: 40px; /* Set a maximum width for columns to prevent overflow */
+        min-width: 30px; /* Ensure columns are not too narrow */
+    }
+
+    /* Specific column adjustments */
+    .table th:first-child, .table td:first-child { /* MONTH column */
+        min-width: 50px;
+        max-width: 50px;
+    }
+
+    .table th:nth-child(18), .table td:nth-child(18) { /* ACCOMPLISHED ON TIME column */
+        min-width: 40px;
+        max-width: 40px;
+    }
+
+    .table th:last-child, .table td:last-child { /* PERCENTAGE column */
+        min-width: 30px;
+        max-width: 30px;
     }
 }

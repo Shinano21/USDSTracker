@@ -7,6 +7,131 @@
     <link rel="icon" type="image/png" href="images/USDS.png">
     <link rel="stylesheet" href="css/rg2.css">
     <title>Monthly Staff Report</title>
+    <style>
+        /* General styles */
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        /* Hide elements during printing */
+        @media print {
+            .navbar, .filters, .button-group, .modal, .go-back-btn {
+                display: none !important;
+            }
+
+            .main-content {
+                margin: 0;
+                padding: 0;
+            }
+
+            .container {
+                width: 100%;
+                margin: 0;
+                padding: 0;
+            }
+
+            /* Enforce landscape orientation */
+            @page {
+                size: landscape;
+                margin: 0.5in;
+            }
+
+            /* Letterhead styling */
+            .letterhead {
+                padding: 10px 20px;
+                border-bottom: 2px solid #000;
+                margin-bottom: 20px;
+            }
+
+            .letterhead-top {
+                text-align: left;
+                margin-bottom: 10px;
+            }
+
+            .letterhead-top .republic {
+                font-size: 14px;
+                font-weight: bold;
+                margin-bottom: 5px;
+            }
+
+            .letterhead-top h2 {
+                font-size: 16px;
+                font-weight: bold;
+                margin: 0;
+            }
+
+            .letterhead-top .office {
+                font-size: 12px;
+                margin: 2px 0;
+            }
+
+            .letterhead-bottom {
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+            }
+
+            .letterhead-logos {
+                display: flex;
+                align-items: center;
+                margin-right: 20px;
+            }
+
+            .letterhead-logos img {
+                width: 80px;
+                height: 80px;
+                margin-right: 10px;
+            }
+
+            .letterhead-text {
+                font-size: 12px;
+                line-height: 1.4;
+            }
+
+            .letterhead-text p {
+                margin: 2px 0;
+            }
+
+            /* Center the report title and month/year */
+            .header, .print-month-year {
+                text-align: center;
+                font-weight: bold;
+                margin-bottom: 10px;
+            }
+
+            /* Table styling for print */
+            .table-wrapper table {
+                width: 100%;
+                border-collapse: collapse;
+                font-size: 12px;
+            }
+
+            .table-wrapper th, .table-wrapper td {
+                border: 1px solid #000;
+                padding: 5px;
+                text-align: center;
+            }
+
+            .table-wrapper th {
+                background-color: #f2f2f2;
+                font-weight: bold;
+            }
+
+            .table-wrapper td input {
+                border: none;
+                width: 100%;
+                text-align: center;
+                background: transparent;
+            }
+        }
+
+        /* Screen-specific styles */
+        @media screen {
+            .letterhead {
+                display: none; /* Hide letterhead on screen */
+            }
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar navbar-dark">
@@ -20,6 +145,26 @@
     </nav>
 
     <div class="main-content">
+        <!-- Letterhead for printing -->
+        <div class="letterhead">
+            <div class="letterhead-top">
+                <p class="republic">REPUBLIC OF THE PHILIPPINES</p>
+                <h2>BICOL UNIVERSITY</h2>
+                <p class="office">OFFICE OF STUDENT DEVELOPMENT AFFAIRS AND SERVICES DIVISION</p>
+            </div>
+            <div class="letterhead-bottom">
+                <div class="letterhead-logos">
+                    <img src="images/BU LOGO.png" alt="BU Logo">
+                    <img src="images/OSAS LOGO.png" alt="OSAS Logo">
+                </div>
+                <div class="letterhead-text">
+                    <p>OFFICE OF THE DIRECTOR</p>
+                    <p>☎ (052) 480-0167</p>
+                    <p>✉ usds.buosas@bicol-u.edu.ph</p>
+                </div>
+            </div>
+        </div>
+
         <div class="container">
             <div class="header">MONTHLY STAFF REPORT GENERATION FORM</div>
             <div id="printMonthYear" class="print-month-year"></div>
@@ -59,8 +204,8 @@
                         <thead>
                             <tr>
                                 <th>STAFF NAME</th>
-                                <th>On-Campus</th> <!-- Changed from In Campus -->
-                                <th>Off-Campus</th> <!-- Changed from Off Campus -->
+                                <th>On-Campus</th>
+                                <th>Off-Campus</th>
                                 <th>USC</th>
                                 <th>UNIBE</th>
                                 <th>UBO</th>
@@ -116,7 +261,7 @@
         const GUEST_URL = 'addg.html';
         const staffNames = ["Ma'am Ann", "Sir Mike", "Sir Christian", "Sir Ronald"];
         const staffKeys = ['maam_ann', 'sir_mike', 'sir_christian', 'sir_ronald'];
-        const proposalTypes = ['on_campus', 'off_campus', 'usc', 'unibe', 'ubo', 'ojt']; // Updated keys
+        const proposalTypes = ['on_campus', 'off_campus', 'usc', 'unibe', 'ubo', 'ojt'];
         let allProposals = [];
 
         document.addEventListener('DOMContentLoaded', function() {
@@ -206,7 +351,7 @@
                     
                     const nature = (proposal.nature || '').trim().toLowerCase();
                     let natureKey;
-                    if (nature.includes("on") && nature.includes("campus")) natureKey = "on_campus"; // Updated condition
+                    if (nature.includes("on") && nature.includes("campus")) natureKey = "on_campus";
                     else if (nature.includes("off") && nature.includes("campus")) natureKey = "off_campus";
                     else if (nature.includes("usc")) natureKey = "usc";
                     else if (nature.includes("unibe")) natureKey = "unibe";
