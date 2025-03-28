@@ -19,7 +19,7 @@ body {
 }
 
 .navbar-brand {
-    margin-left: 0; /* Ensure no extra margin pushes it to the center */
+    margin-left: 0;
 }
 
 .navbar-brand h1 {
@@ -27,31 +27,19 @@ body {
     font-size: 1.5rem;
     font-weight: 500;
     color: white;
-    text-align: left; /* Align the title to the left */
+    text-align: left;
 }
 
 .container-fluid {
     display: flex;
     align-items: center;
-    justify-content: flex-start; /* Align items to the left */
+    justify-content: flex-start;
 }
 
 .datetime {
     font-size: 0.9rem;
     color: white;
-    margin-left: auto; /* Push datetime to the right */
-}
-
-.back-btn {
-    color: white;
-    text-decoration: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-    margin-right: 10px; /* Space between back button and title */
-}
-
-.back-btn:hover {
-    color: #ddd;
+    margin-left: auto;
 }
 
 .main-content {
@@ -152,20 +140,41 @@ body {
 /* Button Fixes to Match Reference Screenshot */
 .button-group {
     display: flex;
-    justify-content: space-between;
+    justify-content: center; /* Center the single button */
     align-items: center;
     gap: 10px;
     width: 100%;
     flex-wrap: wrap;
 }
 
-.button-group .col-md-6 {
-    flex: 1 1 auto;
+.button-group .col-md-12 {
+    flex: 0 1 auto; /* Allow the button to size based on content */
     padding: 0;
     min-width: 100px;
     margin: 0;
     display: flex;
     align-items: center;
+    justify-content: center; /* Center the button within the column */
+}
+
+.button-group-top {
+    display: flex;
+    justify-content: flex-end; /* Align the Print button to the right */
+    margin-bottom: 20px;
+}
+
+.button-group-top .btn {
+    display: inline-block;
+    font-size: 1rem;
+    padding: 8px 12px;
+    width: auto;
+    min-width: 100px;
+    text-align: center;
+    white-space: nowrap;
+    border-radius: var(--border-radius);
+    transition: background-color 0.3s;
+    box-sizing: border-box;
+    line-height: normal;
 }
 
 .btn {
@@ -196,31 +205,31 @@ body {
 
 /* Letterhead Styles */
 .letterhead {
-    padding: 5px 10px; /* Reduced padding to save vertical space */
+    padding: 5px 10px;
     border-bottom: 2px solid #000;
-    margin-bottom: 10px; /* Reduced margin */
+    margin-bottom: 10px;
 }
 
 .letterhead-top {
     text-align: left;
-    margin-bottom: 5px; /* Reduced margin */
+    margin-bottom: 5px;
 }
 
 .letterhead-top .republic {
-    font-size: 12px; /* Reduced font size */
+    font-size: 12px;
     font-weight: bold;
-    margin-bottom: 3px; /* Reduced margin */
+    margin-bottom: 3px;
 }
 
 .letterhead-top h2 {
-    font-size: 14px; /* Reduced font size */
+    font-size: 14px;
     font-weight: bold;
     margin: 0;
 }
 
 .letterhead-top .office {
-    font-size: 10px; /* Reduced font size */
-    margin: 1px 0; /* Reduced margin */
+    font-size: 10px;
+    margin: 1px 0;
 }
 
 .letterhead-bottom {
@@ -232,28 +241,28 @@ body {
 .letterhead-logos {
     display: flex;
     align-items: center;
-    margin-right: 15px; /* Reduced margin */
+    margin-right: 15px;
 }
 
 .letterhead-logos img {
-    width: 60px; /* Reduced logo size to save space */
+    width: 60px;
     height: 60px;
-    margin-right: 8px; /* Reduced margin */
+    margin-right: 8px;
 }
 
 .letterhead-text {
-    font-size: 10px; /* Reduced font size */
-    line-height: 1.2; /* Reduced line height */
+    font-size: 10px;
+    line-height: 1.2;
 }
 
 .letterhead-text p {
-    margin: 1px 0; /* Reduced margin */
+    margin: 1px 0;
 }
 
 /* Screen-specific styles */
 @media screen {
     .letterhead {
-        display: none; /* Hide letterhead on screen */
+        display: none;
     }
 }
 
@@ -302,7 +311,16 @@ body {
         align-items: stretch;
     }
 
-    .button-group .col-md-6 {
+    .button-group .col-md-12 {
+        min-width: 100%;
+    }
+
+    .button-group-top {
+        justify-content: center;
+    }
+
+    .button-group-top .btn {
+        width: 100%;
         min-width: 100%;
     }
 }
@@ -311,15 +329,15 @@ body {
 @media print {
     @page {
         size: landscape;
-        margin: 0.3in; /* Reduced margin to maximize space */
+        margin: 0.3in;
     }
 
     body {
         padding: 0;
-        font-size: 8pt; /* Reduced font size for printing */
+        font-size: 8pt;
     }
 
-    .navbar, .button-group, .filters, .report-name label, .error-message, .modal {
+    .navbar, .button-group-top, .button-group, .filters, .report-name label, .error-message, .modal {
         display: none !important;
     }
 
@@ -340,15 +358,15 @@ body {
         background: none;
         color: black;
         border-bottom: 2px solid #000;
-        padding: 5px; /* Reduced padding */
-        font-size: 12pt; /* Reduced font size */
+        padding: 5px;
+        font-size: 12pt;
         text-align: center;
     }
 
     .report-name input {
         border: none;
         padding: 0;
-        font-size: 10pt; /* Reduced font size */
+        font-size: 10pt;
         font-weight: bold;
         background: none;
         width: auto;
@@ -356,30 +374,30 @@ body {
     }
 
     .letterhead {
-        display: block; /* Ensure letterhead is visible during printing */
+        display: block;
         padding: 5px 10px;
-        margin-bottom: 5px; /* Reduced margin */
+        margin-bottom: 5px;
     }
 
     .table-responsive {
-        overflow: visible; /* Prevent clipping */
+        overflow: visible;
     }
 
     .table {
         width: 100%;
         border-collapse: collapse;
-        font-size: 6pt; /* Significantly reduced font size to fit more content */
+        font-size: 6pt;
         margin-bottom: 0;
     }
 
     .table th, .table td {
-        padding: 2px; /* Reduced padding */
+        padding: 2px;
         border: 1px solid #000;
-        white-space: normal; /* Allow text wrapping */
+        white-space: normal;
         word-wrap: break-word;
         text-align: center;
         vertical-align: middle;
-        line-height: 1.1; /* Reduced line height */
+        line-height: 1.1;
     }
 
     .table th {
@@ -391,28 +409,26 @@ body {
         border: none;
         padding: 0;
         background: none;
-        font-size: 6pt; /* Match table font size */
+        font-size: 6pt;
         line-height: 1.1;
     }
 
-    /* Force table to fit within page width */
     .table th, .table td {
-        max-width: 40px; /* Set a maximum width for columns to prevent overflow */
-        min-width: 30px; /* Ensure columns are not too narrow */
+        max-width: 40px;
+        min-width: 30px;
     }
 
-    /* Specific column adjustments */
-    .table th:first-child, .table td:first-child { /* MONTH column */
+    .table th:first-child, .table td:first-child {
         min-width: 50px;
         max-width: 50px;
     }
 
-    .table th:nth-child(18), .table td:nth-child(18) { /* ACCOMPLISHED ON TIME column */
+    .table th:nth-child(18), .table td:nth-child(18) {
         min-width: 40px;
         max-width: 40px;
     }
 
-    .table th:last-child, .table td:last-child { /* PERCENTAGE column */
+    .table th:last-child, .table td:last-child {
         min-width: 30px;
         max-width: 30px;
     }

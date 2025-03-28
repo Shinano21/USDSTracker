@@ -182,26 +182,25 @@ table {
     width: 100%;
     border-collapse: collapse;
     font-size: 0.9rem;
-    min-width: 0; /* Remove fixed min-width for responsiveness */
-    table-layout: auto; /* Allow columns to adjust based on content */
+    min-width: 0;
+    table-layout: auto;
 }
 
 th, td {
     padding: 12px 8px;
     text-align: center;
     border: 1px solid #eee;
-    min-width: 60px; /* Base min-width */
-    white-space: normal; /* Allow wrapping */
+    min-width: 60px;
+    white-space: normal;
     word-wrap: break-word;
 }
 
-/* Specific column adjustments */
 th.usc, td.usc,
 th.unibe, td.unibe,
 th.ubo, td.ubo,
 th.ojt, td.ojt,
 th.total, td.total {
-    min-width: 70px; /* Slightly larger for these columns */
+    min-width: 70px;
 }
 
 th.accomplished-on-time, td.accomplished-on-time {
@@ -218,7 +217,7 @@ th {
     position: sticky;
     top: 0;
     z-index: 1;
-    white-space: nowrap; /* Keep headers nowrap by default */
+    white-space: nowrap;
 }
 
 tr:nth-child(even) {
@@ -250,10 +249,38 @@ input[readonly] {
 
 .button-group {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr; /* Only one button now */
     gap: 10px;
     justify-content: center;
     padding: 20px 0;
+}
+
+.button-group-top {
+    display: flex;
+    justify-content: flex-end; /* Align the Print button to the right */
+    margin-bottom: 20px;
+}
+
+.button-group-top button {
+    padding: 12px 24px;
+    background-color: var(--item-highlight);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: background-color 0.3s, transform 0.1s;
+    width: auto; /* Allow button to size based on content */
+    min-width: 120px; /* Ensure it matches the style of other buttons */
+}
+
+.button-group-top button:hover {
+    background-color: #1f6692;
+}
+
+.button-group-top button:active {
+    transform: scale(0.98);
 }
 
 button {
@@ -275,14 +302,6 @@ button:hover {
 
 button:active {
     transform: scale(0.98);
-}
-
-.go-back-btn {
-    background-color: var(--secondary-color);
-}
-
-.go-back-btn:hover {
-    background-color: #a93226;
 }
 
 .error-message {
@@ -374,6 +393,63 @@ button:active {
     background-color: #b3b3b3;
 }
 
+/* Letterhead Styles */
+.letterhead {
+    padding: 5px 10px;
+    border-bottom: 2px solid #000;
+    margin-bottom: 10px;
+    display: none; /* Hidden by default, shown during print */
+}
+
+.letterhead-top {
+    text-align: left;
+    margin-bottom: 5px;
+}
+
+.letterhead-top .republic {
+    font-size: 12px;
+    font-weight: bold;
+    margin-bottom: 3px;
+}
+
+.letterhead-top h2 {
+    font-size: 14px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.letterhead-top .office {
+    font-size: 10px;
+    margin: 1px 0;
+}
+
+.letterhead-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.letterhead-logos {
+    display: flex;
+    align-items: center;
+    margin-right: 15px;
+}
+
+.letterhead-logos img {
+    width: 60px;
+    height: 60px;
+    margin-right: 8px;
+}
+
+.letterhead-text {
+    font-size: 10px;
+    line-height: 1.2;
+}
+
+.letterhead-text p {
+    margin: 1px 0;
+}
+
 /* Responsive Media Queries */
 @media (max-width: 480px) {
     .navbar .navbar-brand h1 {
@@ -418,6 +494,15 @@ button:active {
         min-width: 100%;
     }
 
+    .button-group-top {
+        justify-content: center;
+    }
+
+    .button-group-top button {
+        width: 100%;
+        min-width: 100%;
+    }
+
     table {
         font-size: 0.7rem;
     }
@@ -426,7 +511,7 @@ button:active {
         padding: 6px 4px;
         min-width: 40px;
         font-size: 0.65rem;
-        white-space: normal; /* Allow wrapping on small screens */
+        white-space: normal;
     }
 
     th.usc, td.usc,
@@ -453,7 +538,7 @@ button:active {
     }
 
     .button-group {
-        grid-template-columns: 1fr; /* Stack buttons vertically */
+        grid-template-columns: 1fr;
         gap: 8px;
     }
 
@@ -492,6 +577,15 @@ button:active {
         gap: 15px;
     }
 
+    .button-group-top {
+        justify-content: center;
+    }
+
+    .button-group-top button {
+        width: auto;
+        min-width: 150px;
+    }
+
     table {
         font-size: 0.8rem;
     }
@@ -526,7 +620,7 @@ button:active {
     }
 
     .button-group {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: 1fr;
         gap: 10px;
     }
 
@@ -557,7 +651,7 @@ button:active {
     }
 
     .button-group {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: 1fr;
         gap: 15px;
     }
 }
@@ -592,7 +686,7 @@ button:active {
     }
 
     .button-group {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: 1fr;
         gap: 25px;
     }
 
@@ -613,7 +707,7 @@ button:active {
         font-size: 9pt;
     }
 
-    .navbar {
+    .navbar, .button-group-top {
         display: none;
     }
 
@@ -660,6 +754,12 @@ button:active {
         background: none;
         width: auto;
         display: inline;
+    }
+
+    .letterhead {
+        display: block;
+        padding: 5px 10px;
+        margin-bottom: 5px;
     }
 
     .table-wrapper {

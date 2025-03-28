@@ -7,131 +7,6 @@
     <link rel="icon" type="image/png" href="images/USDS.png">
     <link rel="stylesheet" href="css/rg2.css">
     <title>Monthly Staff Report</title>
-    <style>
-        /* General styles */
-        body {
-            font-family: Arial, sans-serif;
-        }
-
-        /* Hide elements during printing */
-        @media print {
-            .navbar, .filters, .button-group, .modal, .go-back-btn {
-                display: none !important;
-            }
-
-            .main-content {
-                margin: 0;
-                padding: 0;
-            }
-
-            .container {
-                width: 100%;
-                margin: 0;
-                padding: 0;
-            }
-
-            /* Enforce landscape orientation */
-            @page {
-                size: landscape;
-                margin: 0.5in;
-            }
-
-            /* Letterhead styling */
-            .letterhead {
-                padding: 10px 20px;
-                border-bottom: 2px solid #000;
-                margin-bottom: 20px;
-            }
-
-            .letterhead-top {
-                text-align: left;
-                margin-bottom: 10px;
-            }
-
-            .letterhead-top .republic {
-                font-size: 14px;
-                font-weight: bold;
-                margin-bottom: 5px;
-            }
-
-            .letterhead-top h2 {
-                font-size: 16px;
-                font-weight: bold;
-                margin: 0;
-            }
-
-            .letterhead-top .office {
-                font-size: 12px;
-                margin: 2px 0;
-            }
-
-            .letterhead-bottom {
-                display: flex;
-                align-items: center;
-                justify-content: flex-start;
-            }
-
-            .letterhead-logos {
-                display: flex;
-                align-items: center;
-                margin-right: 20px;
-            }
-
-            .letterhead-logos img {
-                width: 80px;
-                height: 80px;
-                margin-right: 10px;
-            }
-
-            .letterhead-text {
-                font-size: 12px;
-                line-height: 1.4;
-            }
-
-            .letterhead-text p {
-                margin: 2px 0;
-            }
-
-            /* Center the report title and month/year */
-            .header, .print-month-year {
-                text-align: center;
-                font-weight: bold;
-                margin-bottom: 10px;
-            }
-
-            /* Table styling for print */
-            .table-wrapper table {
-                width: 100%;
-                border-collapse: collapse;
-                font-size: 12px;
-            }
-
-            .table-wrapper th, .table-wrapper td {
-                border: 1px solid #000;
-                padding: 5px;
-                text-align: center;
-            }
-
-            .table-wrapper th {
-                background-color: #f2f2f2;
-                font-weight: bold;
-            }
-
-            .table-wrapper td input {
-                border: none;
-                width: 100%;
-                text-align: center;
-                background: transparent;
-            }
-        }
-
-        /* Screen-specific styles */
-        @media screen {
-            .letterhead {
-                display: none; /* Hide letterhead on screen */
-            }
-        }
-    </style>
 </head>
 <body>
     <nav class="navbar navbar-dark">
@@ -169,6 +44,10 @@
             <div class="header">MONTHLY STAFF REPORT GENERATION FORM</div>
             <div id="printMonthYear" class="print-month-year"></div>
             <div class="form-container">
+                <!-- Print button moved to the top -->
+                <div class="button-group-top">
+                    <button onclick="handlePrint()">Print</button>
+                </div>
                 <div class="filters">
                     <div class="filter-group">
                         <label for="monthFilter">Month:</label>
@@ -224,8 +103,7 @@
                 <div id="errorMessage" class="error-message">Failed to load data. Please try again or enter manually.</div>
                 <div class="button-group">
                     <button onclick="fetchAndDisplayData()">Load Data</button>
-                    <button onclick="handlePrint()">Print</button>
-                    <button class="go-back-btn" onclick="goBack()">Go Back</button>
+                    <!-- Removed Go Back button -->
                 </div>
             </div>
         </div>
@@ -427,6 +305,7 @@
                 <td><input type="text" value="${totalPercentage}" readonly></td>
             `;
             tbody.appendChild(totalRow);
+            console.log('Total row appended');
         }
 
         async function fetchAndDisplayData() {
@@ -453,15 +332,23 @@
         function filterData() {
             const month = document.getElementById('monthFilter').value;
             const year = document.getElementById('yearFilter').value;
-            console.log('Filtering Data - Month:', month, 'Year:', year);
-            const filteredData = allProposals.filter(proposal => {
-                const match = proposal.proposalId.match(/^(\d{2})-(\d{4})-\d{4}$/);
-                const passesFilter = match && (!month || !year || (match[1] === month && match[2] === year));
-                console.log(`Proposal ${proposal.proposalId}: Match=${!!match}, MonthMatch=${match ? match[1] === month : false}, YearMatch=${match ? match[2] === year : false}, Passes=${passesFilter}`);
-                return passesFilter;
-            });
+            let filteredData = allProposals;
+            if (month || year) {
+                filteredData = allProposals.filter(proposal => {
+                    const match = proposal.proposalId.match(/^(\d{2})-(\d{4})-\d{4}$/);
+                    if (!match) return false;
+                    const proposalMonth = match[1];
+                    const proposalYear = match[2];
+                    return (!month || proposalMonth === month) && (!year || proposalYear === year);
+                });
+            }
             console.log('Filtered Data:', filteredData);
             createStaffRows(filteredData);
+
+            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            const monthName = month ? monthNames[parseInt(month) - 1] : 'All Months';
+            const yearText = year || 'All Years';
+            document.getElementById('printMonthYear').textContent = `${monthName} ${yearText}`;
         }
 
         function toggleLoading(state) {
@@ -479,45 +366,12 @@
             window.location.href = DASHBOARD_URL;
         }
 
-        function handlePrint() {
-            const reportName = document.getElementById('reportName').value.trim();
-            const monthFilter = document.getElementById('monthFilter').value;
-            const yearFilter = document.getElementById('yearFilter').value;
-
-            if (!reportName) {
-                showReportNameErrorModal();
-                return;
-            }
-
-            const monthNames = {
-                '01': 'January', '02': 'February', '03': 'March', '04': 'April',
-                '05': 'May', '06': 'June', '07': 'July', '08': 'August',
-                '09': 'September', '10': 'October', '11': 'November', '12': 'December'
-            };
-
-            const monthYearText = monthFilter && yearFilter 
-                ? `${monthNames[monthFilter]} ${yearFilter}`
-                : yearFilter 
-                ? `${yearFilter}`
-                : monthFilter 
-                ? `${monthNames[monthFilter]}`
-                : 'All Time';
-            document.getElementById('printMonthYear').textContent = monthYearText;
-
-            const originalTitle = document.title;
-            document.title = `${reportName} - ${monthYearText}`;
-            window.print();
-            document.title = originalTitle;
-        }
-
         function showLogoutModal() {
-            const modal = document.getElementById('logoutModal');
-            modal.style.display = 'flex';
+            document.getElementById('logoutModal').style.display = 'flex';
         }
 
         function hideLogoutModal() {
-            const modal = document.getElementById('logoutModal');
-            modal.style.display = 'none';
+            document.getElementById('logoutModal').style.display = 'none';
         }
 
         function confirmLogout() {
@@ -527,13 +381,23 @@
         }
 
         function showReportNameErrorModal() {
-            const modal = document.getElementById('reportNameErrorModal');
-            modal.style.display = 'flex';
+            document.getElementById('reportNameErrorModal').style.display = 'flex';
         }
 
         function hideReportNameErrorModal() {
-            const modal = document.getElementById('reportNameErrorModal');
-            modal.style.display = 'none';
+            document.getElementById('reportNameErrorModal').style.display = 'none';
+        }
+
+        function handlePrint() {
+            const reportName = document.getElementById('reportName').value.trim();
+            if (!reportName) {
+                showReportNameErrorModal();
+                return;
+            }
+            const originalTitle = document.title;
+            document.title = reportName;
+            window.print();
+            document.title = originalTitle;
         }
 
         window.onload = function() {
