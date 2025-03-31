@@ -42,6 +42,21 @@ body {
     margin-left: auto;
 }
 
+/* Back Button Styles */
+.back-btn {
+    color: white;
+    font-size: 1.5rem;
+    text-decoration: none;
+    margin-right: 15px;
+    padding: 5px 10px;
+    transition: color 0.3s ease;
+}
+
+.back-btn:hover {
+    color: #dcdcdc; /* Light gray for hover effect */
+    cursor: pointer;
+}
+
 .main-content {
     margin-top: 4rem;
     padding-top: 1rem;
@@ -322,6 +337,13 @@ body {
     .button-group-top .btn {
         width: 100%;
         min-width: 100%;
+    }
+
+    /* Back Button Responsive Styles */
+    .back-btn {
+        font-size: 1.2rem;
+        margin-right: 10px;
+        padding: 3px 8px;
     }
 }
 
