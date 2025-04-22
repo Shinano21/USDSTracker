@@ -31,7 +31,7 @@
 
     <div class="sidebar" id="sidebar">
         <ul>
-            <li><a href="Iterator dashboard.html" data-page="dashboard.html">Dashboard</a></li>
+            <li><a href="dashboard.html" data-page="dashboard.html">Dashboard</a></li>
             <li><a href="report_generation.html" data-page="report_generation.html">Reports</a></li>
             <li><a href="https://docs.google.com/spreadsheets/d/1T5qHMQAFBd1c6ZJOF91v3moXKI5rhpvKL68u3mrjplc/edit?usp=sharing" target="_blank" data-page="sheets">Sheets</a></li>
             <li><a href="#" class="logout-btn" onclick="showLogoutModal()">Logout</a></li>
@@ -255,6 +255,9 @@
         const INDEX_URL = 'index.html';
         const GUEST_URL = 'addg.html';
 
+        // Valid nature options for validation
+        const VALID_NATURES = ['On-Campus', 'Off-Campus', 'OJT', 'USC', 'UNIBE', 'UBO'];
+
         document.addEventListener('DOMContentLoaded', function() {
             checkAuthAndRole();
         });
@@ -269,6 +272,7 @@
             }
 
             if (userPosition !== 'admin') {
+                console.log(`Unauthorized access attempt by ${userPosition}. Redirecting to ${GUEST_URL}`);
                 window.location.replace(GUEST_URL);
                 return;
             }
@@ -605,6 +609,8 @@
                 }
                 const data = await response.json();
                 
+                console.log('Fetched proposal data:', data); // Debug: Log server response
+
                 if (data.error) {
                     alert('Proposal not found: ' + data.message);
                     window.location.href = DASHBOARD_URL;
@@ -618,12 +624,22 @@
                 updateDepartments(data.department || '');
                 document.getElementById('others').value = data.others || '';
                 document.getElementById('objectives').value = data.objectives || '';
-                document.getElementById('nature').value = data.nature || '';
+                
+                // Handle nature with validation
+                const natureValue = VALID_NATURES.includes(data.nature) ? data.nature : '';
+                console.log(`Setting nature to: ${natureValue} (received: ${data.nature})`); // Debug
+                document.getElementById('nature').value = natureValue;
+                
                 document.getElementById('locale').value = data.locale || '';
                 document.getElementById('durationOfActivity').value = data.durationOfActivity || '';
                 document.getElementById('funding').value = data.funding || '';
-                // Explicitly handle amount to ensure 0 is fetched correctly
-                document.getElementById('amount').value = data.amount !== undefined && data.amount !== null ? data.amount.toString() : '';
+                
+                // Handle amount with validation
+                let amountValue = parseFloat(data.amount);
+                amountValue = isNaN(amountValue) ? 0 : amountValue;
+                console.log(`Setting amount to: ${amountValue} (received: ${data.amount})`); // Debug
+                document.getElementById('amount').value = amountValue.toString();
+                
                 document.getElementById('contact').value = data.contact || '';
                 document.getElementById('documents').value = data.documents || '';
                 document.getElementById('csac').value = data.csac || '';
@@ -632,7 +648,7 @@
                 document.getElementById('copies').value = data.copies !== undefined ? data.copies.toString() : '';
                 populateReceiver(data.receiver || '');
 
-                // Handle date fields with error checking
+                // Handle date fields
                 if (data.dateTime) {
                     try {
                         const date = new Date(data.dateTime.replace(" @ ", " "));
@@ -674,6 +690,7 @@
             } catch (error) {
                 console.error('Error fetching proposal data:', error);
                 alert(`Failed to load proposal data: ${error.message}`);
+                window.location.href = DASHBOARD_URL;
             }
         }
 
