@@ -7,6 +7,13 @@
     <link rel="icon" type="image/png" href="images/USDS.png">
     <link rel="stylesheet" href="css/rg2.css">
     <title>Monthly Staff Report</title>
+    <style>
+        .transition-note {
+            font-size: 0.9em;
+            color: #555;
+            margin-bottom: 15px;
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar navbar-dark">
@@ -41,9 +48,10 @@
         </div>
 
         <div class="container">
-            <div class="header">MONTHLY STAFF REPORT </div>
+            <div class="header">MONTHLY STAFF REPORT</div>
             <div id="printMonthYear" class="print-month-year"></div>
             <div class="form-container">
+                <div id="receiverTransitionNote" class="transition-note"></div>
                 <!-- Print button moved to the top -->
                 <div class="button-group-top">
                     <button onclick="handlePrint()">Print</button>
@@ -103,7 +111,6 @@
                 <div id="errorMessage" class="error-message">Failed to load data. Please try again or enter manually.</div>
                 <div class="button-group">
                     <button onclick="fetchAndDisplayData()">Load Data</button>
-                    <!-- Removed Go Back button -->
                 </div>
             </div>
         </div>
@@ -137,15 +144,17 @@
         const INDEX_URL = 'index.html';
         const DASHBOARD_URL = 'dashboard.html';
         const GUEST_URL = 'addg.html';
-        const staffNames = ["Ma'am Ann", "Sir Mike", "Sir Christian", "Sir Ronald"];
-        const staffKeys = ['maam_ann', 'sir_mike', 'sir_christian', 'sir_ronald'];
+        let staffNames = ["Ma'am Ann", "Sir Mike", "Sir Christian"];
+        let staffKeys = ['maam_ann', 'sir_mike', 'sir_christian'];
         const proposalTypes = ['on_campus', 'off_campus', 'usc', 'unibe', 'ubo', 'ojt'];
         let allProposals = [];
 
         document.addEventListener('DOMContentLoaded', function() {
             checkAuthAndRole();
+            initializeReceivers();
             populateYearFilter();
             fetchAndDisplayData();
+            updateReceiverTransitionNote();
         });
 
         function checkAuthAndRole() {
@@ -161,6 +170,43 @@
                 { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true } :
                 { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true };
             document.getElementById('datetime').textContent = now.toLocaleString('en-US', options);
+        }
+
+        async function initializeReceivers() {
+            try {
+                const response = await fetch(`${API_URL}?action=getReceivers`, {
+                    method: 'GET',
+                    redirect: 'follow'
+                });
+                if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
+                const receivers = await response.json();
+                staffNames = receivers;
+                staffKeys = receivers.map(name => name.toLowerCase().replace(/[^a-z0-9]+/g, '_'));
+                console.log('Receivers fetched from API:', staffNames, staffKeys);
+            } catch (error) {
+                console.error('Error fetching receivers:', error);
+                const now = new Date();
+                const transitionDate = new Date('2025-05-01');
+                staffNames = ["Ma'am Ann", "Sir Mike", "Sir Christian"];
+                if (now < transitionDate) {
+                    staffNames.push("Sir Ronald");
+                } else {
+                    staffNames.push("Sir Hans");
+                }
+                staffKeys = staffNames.map(name => name.toLowerCase().replace(/[^a-z0-9]+/g, '_'));
+                console.log('Using fallback receivers:', staffNames, staffKeys);
+            }
+        }
+
+        function updateReceiverTransitionNote() {
+            const now = new Date();
+            const transitionDate = new Date('2025-05-01');
+            const noteElement = document.getElementById('receiverTransitionNote');
+            if (now >= new Date('2025-04-01') && now < transitionDate) {
+                noteElement.textContent = 'Note: Starting May 1, 2025, Sir Hans will replace Sir Ronald as a receiver.';
+            } else {
+                noteElement.textContent = '';
+            }
         }
 
         function populateYearFilter() {

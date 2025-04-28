@@ -7,6 +7,13 @@
     <link rel="icon" type="image/png" href="images/USDS.png">
     <link rel="stylesheet" href="css/rg.css">
     <title>Yearly Reports</title>
+    <style>
+        .transition-note {
+            font-size: 0.9em;
+            color: #555;
+            margin-bottom: 15px;
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar navbar-dark fixed-top">
@@ -43,6 +50,7 @@
         <div class="container">
             <div class="header">YEARLY REPORTS</div>
             <div class="form-container p-3">
+                <div id="receiverTransitionNote" class="transition-note"></div>
                 <!-- Print button moved to the top -->
                 <div class="button-group-top">
                     <button class="btn btn-primary" onclick="handlePrint()">Print</button>
@@ -70,11 +78,8 @@
                                 <th rowspan="2">ACCOMPLISHED ON TIME</th>
                                 <th rowspan="2">PERCENTAGE</th>
                             </tr>
-                            <tr>
-                                <th>Ma’am Ann</th>
-                                <th>Sir Mike</th>
-                                <th>Sir Christian</th>
-                                <th>Sir Ronald</th>
+                            <tr id="receiverHeaders">
+                                <!-- Receiver headers will be populated dynamically -->
                                 <th>Off-Campus</th>
                                 <th>On-Campus</th>
                                 <th>USC</th>
@@ -146,15 +151,17 @@
         const GUEST_URL = 'addg.html';
         const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
         const monthShorts = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
-        const receivedByNames = ["Ma'am Ann", "Sir Mike", "Sir Christian", "Sir Ronald"];
-        const receivedByKeys = ['maam_ann', 'sir_mike', 'sir_christian', 'sir_ronald'];
         const proposalTypes = ['off_campus', 'on_campus', 'usc', 'unibe', 'ubo', 'ojt'];
+        let receivedByNames = ["Ma'am Ann", "Sir Mike", "Sir Christian"];
+        let receivedByKeys = ['maam_ann', 'sir_mike', 'sir_christian'];
         let allProposals = [];
 
         document.addEventListener('DOMContentLoaded', function() {
             checkAuthAndRole();
+            initializeReceivers();
             populateYearFilter();
             fetchAndDisplayData();
+            updateReceiverTransitionNote();
         });
 
         function checkAuthAndRole() {
@@ -205,6 +212,57 @@
         function hideReportNameErrorModal() {
             const modal = bootstrap.Modal.getInstance(document.getElementById('reportNameErrorModal'));
             modal.hide();
+        }
+
+        function updateReceiverTransitionNote() {
+            const now = new Date();
+            const transitionDate = new Date('2025-05-01');
+            const noteElement = document.getElementById('receiverTransitionNote');
+            if (now >= new Date('2025-04-01') && now < transitionDate) {
+                noteElement.textContent = 'Note: Starting May 1, 2025, Sir Hans will replace Sir Ronald as a receiver.';
+            } else {
+                noteElement.textContent = '';
+            }
+        }
+
+        async function initializeReceivers() {
+            try {
+                const response = await fetch(`${API_URL}?action=getReceivers`, {
+                    method: 'GET',
+                    redirect: 'follow'
+                });
+                if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
+                const receivers = await response.json();
+                receivedByNames = receivers;
+                receivedByKeys = receivers.map(name => name.toLowerCase().replace(/[^a-z0-9]+/g, '_'));
+                updateReceiverHeaders();
+            } catch (error) {
+                console.error('Error fetching receivers:', error);
+                const now = new Date();
+                const transitionDate = new Date('2025-05-01');
+                receivedByNames = ["Ma'am Ann", "Sir Mike", "Sir Christian"];
+                if (now < transitionDate) {
+                    receivedByNames.push("Sir Ronald");
+                } else {
+                    receivedByNames.push("Sir Hans");
+                }
+                receivedByKeys = receivedByNames.map(name => name.toLowerCase().replace(/[^a-z0-9]+/g, '_'));
+                updateReceiverHeaders();
+            }
+        }
+
+        function updateReceiverHeaders() {
+            const receiverHeadersRow = document.getElementById('receiverHeaders');
+            // Clear existing receiver headers (before proposal types)
+            while (receiverHeadersRow.children.length > 11) { // 11 = 7 proposal types + 4 status columns
+                receiverHeadersRow.removeChild(receiverHeadersRow.children[0]);
+            }
+            // Add new receiver headers
+            receivedByNames.forEach(name => {
+                const th = document.createElement('th');
+                th.textContent = name;
+                receiverHeadersRow.insertBefore(th, receiverHeadersRow.children[0]);
+            });
         }
 
         window.onload = function() {
